@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import DropdownInput from "../../../Components/DropdownInput.vue";
 
 const props = defineProps({
     user: Object,
@@ -15,8 +16,13 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
+    first_name: props.user.first_name,
+    last_name: props.user.last_name,
+    position: props.user.position,
+    company: props.user.company,
+    employees: props.user.employees,
     email: props.user.email,
+    phone_number: props.user.phone_number,
     photo: null,
 });
 
@@ -100,7 +106,7 @@ const clearPhotoFileInput = () => {
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    <img :src="user.profile_photo_url" :alt="user.first_name" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -127,17 +133,63 @@ const clearPhotoFileInput = () => {
                 <InputError :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- Name -->
+            <!-- First Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="first_name" value="First Name" />
                 <TextInput
-                    id="name"
-                    v-model="form.name"
+                    id="first_name"
+                    v-model="form.first_name"
                     type="text"
                     class="mt-1 block w-full"
-                    autocomplete="name"
+                    autocomplete="given-name"
                 />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputError :message="form.errors.first_name" class="mt-2" />
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="last_name" value="Last Name" />
+                <TextInput
+                    id="last_name"
+                    v-model="form.last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="family_name"
+                />
+                <InputError :message="form.errors.last_name" class="mt-2" />
+            </div>
+
+            <!-- Position -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="position" value="Position" />
+                <TextInput
+                    id="position"
+                    v-model="form.position"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="organization-title"
+                />
+                <InputError :message="form.errors.position" class="mt-2" />
+            </div>
+
+            <!-- Company -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="company" value="Company" />
+                <TextInput
+                    id="company"
+                    v-model="form.company"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="organization"
+                />
+                <InputError :message="form.errors.company" class="mt-2" />
+            </div>
+
+            <!-- Employees -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="employees" value="Employees" />
+                <DropdownInput :options="['1-10', '11-20', '21-99', '100-350', '351-1.000', '1.001-1.999', '2.000+']" v-model="form.employees"/>
+                <InputError :message="form.errors.employees" class="mt-2" />
             </div>
 
             <!-- Email -->
@@ -171,6 +223,19 @@ const clearPhotoFileInput = () => {
                         A new verification link has been sent to your email address.
                     </div>
                 </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="phone_number" value="Phone Number" />
+                <TextInput
+                    id="phone_number"
+                    v-model="form.phone_number"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="tel"
+                />
+                <InputError :message="form.errors.phone_number" class="mt-2" />
             </div>
         </template>
 

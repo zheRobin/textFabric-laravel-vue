@@ -129,6 +129,7 @@ const reCaptcha = () => {
                     v-model="form.phone_number"
                     type="text"
                     class="mt-1 block w-full"
+                    autocomplete="tel"
                 />
                 <InputError class="mt-2" :message="form.errors.phone_number" />
             </div>

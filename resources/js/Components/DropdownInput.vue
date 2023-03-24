@@ -24,8 +24,8 @@ const selectOption = (option) => {
 </script>
 
 <template>
-        <button type="button" @click="toggleDropdown" class="text-gray-400 mt-1 justify-between inline-flex w-full items-center px-4 py-2 shadow-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-            <span v-if="!modelValue">Select an item</span>
+        <button type="button" @click="toggleDropdown" class="mt-1 justify-between inline-flex w-full items-center px-4 py-2 shadow-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 transition ease-in-out duration-150">
+            <span class="text-gray-400" v-if="!modelValue">Select an item</span>
             <span v-else> {{modelValue}} </span>
             <svg v-if="!state.active" id="arrow-down" class="w-6 h-6 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
             <svg v-if="state.active" id="arrow-up" class="w-6 h-6 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>

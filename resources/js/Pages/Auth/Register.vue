@@ -19,7 +19,6 @@ const form = useForm({
     email: '',
     phone_number: '',
     password: '',
-    password_confirmation: '',
     google_recaptcha: '',
     terms: false,
 });
@@ -144,18 +143,6 @@ const reCaptcha = () => {
                     autocomplete="new-password"
                 />
                 <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
             <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">

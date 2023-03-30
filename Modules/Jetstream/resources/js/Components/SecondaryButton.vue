@@ -1,0 +1,14 @@
+<script setup>
+defineProps({
+    type: {
+        type: String,
+        default: 'button',
+    },
+});
+</script>
+
+<template>
+    <button :type="type" class="flex w-full justify-center rounded-md bg-gray-200 py-2 px-3 text-sm font-semibold shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <slot />
+    </button>
+</template>

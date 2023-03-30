@@ -21,6 +21,7 @@ export default defineConfig({
     resolve: {
         alias: {
             Modules: path.resolve(__dirname, 'Modules'),
+            Jetstream: path.resolve(__dirname, 'Modules/Jetstream/resources/js'),
         }
     }
 });

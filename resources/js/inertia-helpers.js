@@ -5,11 +5,11 @@ export async function resolvePageComponent(path) {
 
     const pagePath = child
         ? `/Modules/${root}/resources/js/Pages/${child}.vue`
-        : `./Pages/${root}.vue`;
+        : `/Modules/Jetstream/resources/js/Pages/${root}.vue`;
 
     const pages = child
         ? import.meta.glob('Modules/*/resources/js/Pages/**/*.vue')
-        : import.meta.glob('./Pages/**/*.vue')
+        : import.meta.glob('Modules/Jetstream/resources/js/Pages/**/*.vue')
 
     const page = pages[pagePath];
     if (typeof page === 'undefined') {

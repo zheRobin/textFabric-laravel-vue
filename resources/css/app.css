@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#app {
+    @apply h-full;
+}
+
+.grecaptcha-badge {
+    visibility: hidden;
+}

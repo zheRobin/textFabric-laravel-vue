@@ -22,7 +22,7 @@ defineProps({
                 </a>
                 <a v-else-if="step === currentStep" class="relative flex items-center justify-center" aria-current="step">
                     <span class="absolute flex h-5 w-5 p-px" aria-hidden="true">
-                        <span class="h-full w-full rounded-full bg-tf-blue-300" />
+                        <span class="h-full w-full rounded-full bg-tf-blue-50" />
                     </span>
                     <span class="relative block h-2.5 w-2.5 rounded-full bg-tf-blue-500" aria-hidden="true" />
                     <span class="sr-only"></span>

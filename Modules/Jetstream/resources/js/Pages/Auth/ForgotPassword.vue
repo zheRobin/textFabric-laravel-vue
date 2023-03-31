@@ -52,7 +52,7 @@ const submit = () => {
             </div>
 
             <div>
-                <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing">
+                <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing" class="w-full">
                     Email Password Reset Link
                 </PrimaryButton>
             </div>

@@ -116,7 +116,7 @@ const firstErrorStep = () => {
             <p class="mt-2 text-gray-600">
                 Or
                 {{ ' ' }}
-                <Link :href="route('login')" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link :href="route('login')" class="font-medium text-tf-blue-500 hover:text-tf-blue-400">
                     sign in
                 </Link>
             </p>
@@ -125,7 +125,7 @@ const firstErrorStep = () => {
             <KeepAlive>
                 <component :is="currentComponent" :form="form" />
             </KeepAlive>
-            <div class="mt-8 flex items-center justify-between">
+            <div class="mt-8 flex items-center justify-between flex-wrap-reverse gap-4">
                 <div class="flex justify-start">
                     <div class="flex mr-3" v-if="currentIndex > 0">
                         <SecondaryButton type="button" class="uppercase pr-4 pl-4" @click="prevStep">Back</SecondaryButton>

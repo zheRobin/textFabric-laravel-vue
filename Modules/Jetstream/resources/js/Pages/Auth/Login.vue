@@ -30,16 +30,12 @@ const submit = () => {
 
 <template>
     <AuthLayout title="Sign in">
-        <template #logo>
-            <img class="h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-        </template>
-
         <template #header>
             <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
             <p class="mt-2 text-gray-600">
                 Or
                 {{ ' ' }}
-                <Link :href="route('register')" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link :href="route('register')" class="font-medium text-tf-blue-500 hover:text-tf-blue-400">
                     create one
                 </Link>
             </p>
@@ -83,20 +79,20 @@ const submit = () => {
                         id="remember-me"
                         v-model:checked="form.remember"
                         name="remember"
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        class="h-4 w-4 rounded border-gray-300 text-tf-blue-600 focus:ring-tf-blue-600"
                     />
                     <InputLabel for="remember-me" value="Remember me" class="ml-2 font-normal leading-5 text-gray-90" />
                 </div>
 
                 <div class="text-sm">
-                    <Link v-if="canResetPassword" :href="route('password.request')" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link v-if="canResetPassword" :href="route('password.request')" class="font-medium text-tf-blue-500 hover:text-tf-blue-400">
                         Forgot your password?
                     </Link>
                 </div>
             </div>
 
             <div>
-                <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing">
+                <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing" class="w-full">
                     Sign in
                 </PrimaryButton>
             </div>

@@ -16,6 +16,21 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'tf-blue': {
+                    50: '#a7d8ff',
+                    100: '#93cfff',
+                    200: '#80c5ff',
+                    300: '#5cb5ff',
+                    400: '#2fa9ff',
+                    500: '#0094ff',
+                    600: '#007ad3',
+                    700: '#006dbb',
+                    800: '#005fa4',
+                    900: '#00528c',
+                    950: '#00497c',
+                }
+            }
         },
     },
 

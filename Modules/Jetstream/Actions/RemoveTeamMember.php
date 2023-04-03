@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Jetstream;
+namespace Modules\Jetstream\Actions;
 
 use App\Models\Team;
 use App\Models\User;

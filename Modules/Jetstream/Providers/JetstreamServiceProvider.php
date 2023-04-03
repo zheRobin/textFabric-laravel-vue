@@ -2,16 +2,16 @@
 
 namespace Modules\Jetstream\Providers;
 
-use App\Actions\Jetstream\AddTeamMember;
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\DeleteTeam;
-use App\Actions\Jetstream\DeleteUser;
-use App\Actions\Jetstream\InviteTeamMember;
-use App\Actions\Jetstream\RemoveTeamMember;
-use App\Actions\Jetstream\UpdateTeamName;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
+use Modules\Jetstream\Actions\AddTeamMember;
+use Modules\Jetstream\Actions\CreateTeam;
+use Modules\Jetstream\Actions\DeleteTeam;
+use Modules\Jetstream\Actions\DeleteUser;
+use Modules\Jetstream\Actions\InviteTeamMember;
+use Modules\Jetstream\Actions\RemoveTeamMember;
+use Modules\Jetstream\Actions\UpdateTeamName;
 
 class JetstreamServiceProvider extends ServiceProvider
 {

@@ -22,8 +22,12 @@ class JetstreamServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->group(function () {
-                $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
+                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
             });
+
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        Jetstream::ignoreRoutes();
     }
 
     /**

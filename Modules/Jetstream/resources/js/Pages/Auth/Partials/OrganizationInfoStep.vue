@@ -18,7 +18,7 @@ const props = defineProps({
                 autofocus
                 v-model="form.company"
                 type="text"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="organization"
             />
@@ -37,7 +37,7 @@ const props = defineProps({
                 id="phone_number"
                 v-model="form.phone_number"
                 type="text"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="tel"
             />

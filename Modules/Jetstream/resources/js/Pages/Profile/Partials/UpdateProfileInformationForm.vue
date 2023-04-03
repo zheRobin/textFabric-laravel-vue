@@ -188,7 +188,10 @@ const clearPhotoFileInput = () => {
             <!-- Employees -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="employees" value="Employees" />
-                <DropdownInput :options="['1-10', '11-20', '21-99', '100-350', '351-1.000', '1.001-1.999', '2.000+']" v-model="form.employees"/>
+                <DropdownInput
+                    :options="['1-10', '11-20', '21-99', '100-350', '351-1.000', '1.001-1.999', '2.000+']"
+                    v-model="form.employees"
+                />
                 <InputError :message="form.errors.employees" class="mt-2" />
             </div>
 

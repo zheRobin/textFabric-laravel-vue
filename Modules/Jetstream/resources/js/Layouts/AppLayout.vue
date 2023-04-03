@@ -142,6 +142,10 @@ const logout = () => {
                                             Profile
                                         </DropdownLink>
 
+                                        <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
+                                            Team Settings
+                                        </DropdownLink>
+
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                             API Tokens
                                         </DropdownLink>

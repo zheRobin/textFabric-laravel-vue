@@ -52,7 +52,7 @@ const submit = () => {
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-2"
+                    class="w-full mt-2"
                     required
                     autofocus
                     autocomplete="username"
@@ -66,7 +66,7 @@ const submit = () => {
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-2"
+                    class="w-full mt-2"
                     required
                     autocomplete="current-password"
                 />

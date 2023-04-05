@@ -20,14 +20,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Route::middleware('web')
-            ->group(function () {
-                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-            });
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-
-        Jetstream::ignoreRoutes();
     }
 
     /**
@@ -35,8 +28,11 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureRoutes();
+        $this->registerMigrations();
         $this->configurePermissions();
 
+        Jetstream::ignoreRoutes();
         Jetstream::createTeamsUsing(CreateTeam::class);
         Jetstream::updateTeamNamesUsing(UpdateTeamName::class);
         Jetstream::addTeamMembersUsing(AddTeamMember::class);
@@ -65,5 +61,24 @@ class JetstreamServiceProvider extends ServiceProvider
             'create',
             'update',
         ])->description('Editor users have the ability to read, create, and update.');
+    }
+
+    /**
+     * Configure routes.
+     */
+    protected function configureRoutes(): void
+    {
+        Route::middleware('web')
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            });
+    }
+
+    /**
+     * Configure publishing.
+     */
+    protected function registerMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 }

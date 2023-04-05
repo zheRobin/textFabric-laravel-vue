@@ -1,0 +1,83 @@
+<?php
+
+namespace Modules\Subscriptions\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
+/**
+ * @property int $id
+ * @property string $subscriber_type
+ * @property int $subscriber_id
+ * @property int $plan_id
+ * @property string $name
+ * @property string $description
+ * @property Carbon|null $trial_ends_at
+ * @property Carbon|null $starts_at
+ * @property Carbon|null $ends_at
+ * @property Carbon|null $cancels_at
+ * @property Carbon|null $canceled_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
+class PlanSubscription extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'plan_id',
+        'slug',
+        'name',
+        'description',
+        'trial_ends_at',
+        'starts_at',
+        'ends_at',
+    ];
+
+    /**
+     * @return MorphTo
+     */
+    public function subscriber(): MorphTo
+    {
+        return $this->morphTo('subscriber');
+    }
+
+    /**
+     * @return bool
+     */
+    public function active(): bool
+    {
+        return !$this->ended() || $this->onTrial();
+    }
+
+    /**
+     * @return bool
+     */
+    public function inActive(): bool
+    {
+        return !$this->active();
+    }
+
+    /**
+     * @return bool
+     */
+    public function ended(): bool
+    {
+        return $this->ends_at && Carbon::now()->gte($this->ends_at);
+    }
+
+    /**
+     * @return bool
+     */
+    public function onTrial(): bool
+    {
+        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
+    }
+}

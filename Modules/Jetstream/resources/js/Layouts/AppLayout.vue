@@ -7,6 +7,7 @@ import Dropdown from 'Jetstream/Components/Dropdown.vue';
 import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
+import SubscriptionBanner from "Jetstream/Components/SubscriptionBanner.vue";
 
 defineProps({
     title: String,
@@ -32,6 +33,8 @@ const logout = () => {
         <Head :title="title" />
 
         <Banner />
+
+        <SubscriptionBanner />
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">

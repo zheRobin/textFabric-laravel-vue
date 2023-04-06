@@ -3,7 +3,6 @@
 namespace Modules\Subscriptions\Services;
 
 use Carbon\Carbon;
-use LogicException;
 
 class Period
 {

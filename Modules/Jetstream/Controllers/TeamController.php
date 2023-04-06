@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Jetstream\Http\Controllers;
+namespace Modules\Jetstream\Controllers;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;

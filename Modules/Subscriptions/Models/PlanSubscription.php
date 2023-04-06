@@ -3,6 +3,7 @@
 namespace Modules\Subscriptions\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -27,6 +28,16 @@ class PlanSubscription extends Model
     use HasFactory;
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'active_trial',
+        'active_invoice',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -40,6 +51,36 @@ class PlanSubscription extends Model
         'starts_at',
         'ends_at',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'trial_ends_at' => 'datetime',
+        'ends_at' => 'datetime',
+    ];
+
+    /**
+     * @return Attribute
+     */
+    protected function activeInvoice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !$this->ended()
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function activeTrial(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->onTrial(),
+        );
+    }
 
     /**
      * @return MorphTo

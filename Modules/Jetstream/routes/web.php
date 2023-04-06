@@ -84,7 +84,7 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
                     ->name('team-invitations.destroy');
 
                 // extended team routes
-                Route::get('teams', [\Modules\Jetstream\Http\Controllers\TeamController::class, 'index'])
+                Route::get('teams', [\Modules\Jetstream\Controllers\TeamController::class, 'index'])
                     ->name('teams.index');
             }
         });

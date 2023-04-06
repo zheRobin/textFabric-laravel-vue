@@ -22,7 +22,7 @@ class PlanSeeder extends Seeder
         ]);
 
         $basic->features()->saveMany([
-            new PlanFeature(['slug' => 'basic-collections-limit', 'name' => 'Collections', 'value' => 1]),
+            new PlanFeature(['slug' => 'basic-collections-limit', 'name' => 'Collections', 'description' => 'up to 1 collection', 'value' => 1]),
         ]);
 
         $pro = $createPlan([
@@ -34,7 +34,7 @@ class PlanSeeder extends Seeder
         ]);
 
         $pro->features()->saveMany([
-            new PlanFeature(['slug' => 'pro-collections-limit', 'name' => 'Collections', 'value' => 5]),
+            new PlanFeature(['slug' => 'pro-collections-limit', 'name' => 'Collections', 'description' => 'up to 5 collections', 'value' => 5]),
         ]);
 
         $enterprise = $createPlan([
@@ -46,7 +46,7 @@ class PlanSeeder extends Seeder
         ]);
 
         $enterprise->features()->saveMany([
-            new PlanFeature(['slug' => 'enterprise-collections-limit', 'name' => 'Collections', 'value' => 12]),
+            new PlanFeature(['slug' => 'enterprise-collections-limit', 'name' => 'Collections', 'description' => 'up to 12 collections', 'value' => 12]),
         ]);
     }
 }

@@ -7,7 +7,7 @@ import Dropdown from 'Jetstream/Components/Dropdown.vue';
 import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
-import SubscriptionBanner from "Jetstream/Components/SubscriptionBanner.vue";
+import SubscriptionBanner from "Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue";
 
 defineProps({
     title: String,

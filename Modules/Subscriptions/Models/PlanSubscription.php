@@ -37,6 +37,7 @@ class PlanSubscription extends Model
         'is_active',
         'active_trial',
         'active_invoice',
+        'valid_until',
     ];
 
     /**
@@ -70,6 +71,16 @@ class PlanSubscription extends Model
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function validUntil(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->ends_at ? $this->ends_at : $this->trial_ends_at
+        );
     }
 
     /**
@@ -131,7 +142,11 @@ class PlanSubscription extends Model
      */
     public function ended(): bool
     {
-        return $this->ends_at && Carbon::now()->gte($this->ends_at);
+        if ($this->ends_at) {
+            return Carbon::now()->gte($this->ends_at);
+        }
+
+        return true;
     }
 
     /**

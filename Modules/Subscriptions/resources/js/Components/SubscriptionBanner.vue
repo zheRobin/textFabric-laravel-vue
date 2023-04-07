@@ -1,43 +1,43 @@
 <script setup>
 import {usePage} from "@inertiajs/vue3";
+import {computed} from "vue";
+import {subscriptionContactLink} from "Modules/Subscriptions/resources/js/subscriptions";
+import {daysLeft} from "Modules/Subscriptions/resources/js/subscriptions";
 
-const planSubscription = usePage().props.auth.user.current_team.plan_subscription;
+const planSubscription = computed(() => usePage().props.planSubscription);
 
-const activeTrial = planSubscription.active_trial;
-const activeInvoice = planSubscription.active_invoice && !activeTrial;
-const expired = !activeInvoice && !activeTrial;
-
-const contactLink = 'https://www.textfabrik.io/kontakt/';
-
-const daysLeft = (date) => {
-    const total = Date.parse(date) - Date.parse(new Date().toISOString());
-
-    return  Math.floor(total/(1000*60*60*24));
-}
+const activeTrial = planSubscription.value.active_trial;
+const activeInvoice = planSubscription.value.active_invoice;
+const isActive = planSubscription.value.is_active;
+const expired = !isActive;
 </script>
 
 <template>
-    <div :class="{ 'bg-yellow-200': activeTrial || activeInvoice, 'bg-red-100': expired }" class="flex gap-x-6 px-2 py-2.5 justify-center">
-        <a v-if="activeTrial" class="text-xs text-yellow-900 leading-6 lg:text-sm" :href="contactLink">
-            <span v-if="daysLeft(planSubscription.trial_ends_at) <= 1">
-                Your trial period ends <span class="font-semibold">{{ daysLeft(planSubscription.trial_ends_at) === 0 ? 'today': 'tomorrow' }}</span>. <span class="hidden md:inline">Please <span class="font-semibold">contact us </span>to switch to a subscription that suits you the best </span><span aria-hidden="true">&rarr;</span>
-            </span>
-            <span v-else>
-                You're currently on a free trial with <span class="font-semibold">{{ daysLeft(planSubscription.trial_ends_at) }}</span> days left. <span class="hidden md:inline">Please <span class="font-semibold">contact us </span>to switch to a subscription that suits you the best </span><span aria-hidden="true">&rarr;</span>
-            </span>
-        </a>
-
-        <a v-if="activeInvoice && daysLeft(planSubscription.ends_at) <= 30" class="text-xs text-gray-600 leading-6 lg:text-sm" :href="contactLink">
-            <span v-if="daysLeft(planSubscription.ends_at) <= 1">
-                Your current subscription plan ends <span class="font-semibold">{{ daysLeft(planSubscription.ends_at) === 0 ? 'today': 'tomorrow' }}</span>. <span class="hidden md:inline">Please <span class="font-semibold">contact us </span>to renew </span><span aria-hidden="true">&rarr;</span>
-            </span>
-            <span v-else>
-                Your current subscription plan ends in <span class="font-semibold">{{ daysLeft(planSubscription.ends_at) }}</span> days. <span class="hidden md:inline">Please <span class="font-semibold">contact us </span>to renew </span><span aria-hidden="true">&rarr;</span>
-            </span>
-        </a>
-
-        <a v-if="!activeTrial && !activeInvoice" class="text-xs text-red-800 leading-6 lg:text-sm" :href="contactLink">
-            Your subscription has <span class="font-semibold">expired</span>. Please <span class="font-semibold">contact us </span> to renew<span aria-hidden="true">&rarr;</span>
+    <div :class="{ 'bg-yellow-200': isActive, 'bg-red-100': expired }" class="flex gap-x-6 px-2 py-2.5 justify-center">
+        <a class="text-xs text-yellow-900 leading-6 lg:text-sm" :href="subscriptionContactLink">
+            <div v-if="isActive">
+                <div v-if="activeTrial && !activeInvoice">
+                    <span v-if="daysLeft(planSubscription.trial_ends_at) <= 1">
+                        Your trial period ends <span class="font-semibold">{{ daysLeft(planSubscription.trial_ends_at) === 0 ? 'today': 'tomorrow' }}</span><span class="hidden md:inline">. Please <span class="font-semibold">contact us </span>to switch to a subscription that suits you the best</span> <span aria-hidden="true">&rarr;</span>
+                    </span>
+                    <span v-else>
+                        You're currently on a free trial with <span class="font-semibold">{{ daysLeft(planSubscription.trial_ends_at) }}</span> days left<span class="hidden md:inline">. Please <span class="font-semibold">contact us </span>to switch to a subscription that suits you the best</span> <span aria-hidden="true">&rarr;</span>
+                    </span>
+                </div>
+                <div v-else>
+                    <div v-if="daysLeft(planSubscription.ends_at) <= 30">
+                        <span v-if="daysLeft(planSubscription.ends_at) <= 1">
+                            Your current subscription plan ends <span class="font-semibold">{{ daysLeft(planSubscription.ends_at) === 0 ? 'today': 'tomorrow' }}</span><span class="hidden md:inline">. Please <span class="font-semibold">contact us </span>to renew</span> <span aria-hidden="true">&rarr;</span>
+                        </span>
+                        <span v-else>
+                            Your current subscription plan ends in <span class="font-semibold">{{ daysLeft(planSubscription.ends_at) }}</span> days<span class="hidden md:inline">. Please <span class="font-semibold">contact us </span>to renew</span> <span aria-hidden="true">&rarr;</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                Your subscription has <span class="font-semibold">expired</span><span class="hidden md:inline">. Please <span class="font-semibold">contact us </span>to renew</span> <span aria-hidden="true">&rarr;</span>
+            </div>
         </a>
     </div>
 </template>

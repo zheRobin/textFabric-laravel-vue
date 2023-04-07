@@ -4,6 +4,7 @@ namespace Modules\Subscriptions\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Subscriptions\Contracts\CreatesPlan;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Modules\Subscriptions\Models\PlanFeature;
 
 class PlanSeeder extends Seeder
@@ -14,11 +15,12 @@ class PlanSeeder extends Seeder
     public function run(CreatesPlan $createPlan): void
     {
         $basic = $createPlan([
-            'slug' => 'basic',
+            'slug' => SubscriptionPlanEnum::BASE->slug(),
             'name' => 'Basic plan',
             'description' => null,
             'is_active' => true,
             'trial_period' => 30,
+            'invoice_period' => 0,
         ]);
 
         $basic->features()->saveMany([
@@ -26,11 +28,12 @@ class PlanSeeder extends Seeder
         ]);
 
         $pro = $createPlan([
-            'slug' => 'pro',
+            'slug' => SubscriptionPlanEnum::PRO->slug(),
             'name' => 'Pro plan',
             'description' => null,
             'is_active' => true,
             'trial_period' => 30,
+            'invoice_period' => 0,
         ]);
 
         $pro->features()->saveMany([
@@ -38,11 +41,12 @@ class PlanSeeder extends Seeder
         ]);
 
         $enterprise = $createPlan([
-            'slug' => 'enterprise',
+            'slug' => SubscriptionPlanEnum::ENTERPRISE->slug(),
             'name' => 'Enterprise pla',
             'description' => null,
             'is_active' => true,
             'trial_period' => 30,
+            'invoice_period' => 0,
         ]);
 
         $enterprise->features()->saveMany([

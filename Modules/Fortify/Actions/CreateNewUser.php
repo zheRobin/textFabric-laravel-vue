@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
+use Modules\Subscriptions\Models\Plan;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -56,10 +58,25 @@ class CreateNewUser implements CreatesNewUsers
      */
     protected function createTeam(User $user): void
     {
-        $user->ownedTeams()->save(Team::forceCreate([
+        tap(Team::forceCreate([
             'user_id' => $user->id,
             'name' => explode(' ', $user->first_name, 2)[0]."'s Team",
             'personal_team' => true,
-        ]));
+        ]), function (Team $team) {
+            $this->createPlanSubscription($team);
+        });
+    }
+
+    /**
+     * @param Team $team
+     * @return void
+     */
+    protected function createPlanSubscription(Team $team): void
+    {
+        $plan = Plan::query()
+            ->where('slug', SubscriptionPlanEnum::PRO->slug())
+            ->firstOrFail();
+
+        $team->newPlanSubscription($plan);
     }
 }

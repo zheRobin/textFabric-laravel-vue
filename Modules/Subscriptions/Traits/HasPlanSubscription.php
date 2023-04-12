@@ -54,7 +54,9 @@ trait HasPlanSubscription
     protected static function bootHasPlanSubscription()
     {
         static::deleted(function ($subscriber) {
-            $subscriber->planSubscription->delete();
+            if ($subscriber->planSubscription) {
+                $subscriber->planSubscription->delete();
+            }
         });
     }
 }

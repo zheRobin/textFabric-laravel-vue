@@ -8,12 +8,23 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Modules\Fortify\Actions\CreateNewUser;
+use Modules\Fortify\Actions\CreateSuperAdminUser;
 use Modules\Fortify\Actions\ResetUserPassword;
 use Modules\Fortify\Actions\UpdateUserPassword;
 use Modules\Fortify\Actions\UpdateUserProfileInformation;
+use Modules\Fortify\Contracts\CreatesSuperAdminUser;
 
 class FortifyServiceProvider extends ServiceProvider
 {
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public array $bindings = [
+        CreatesSuperAdminUser::class => CreateSuperAdminUser::class,
+    ];
+
     /**
      * Register any application services.
      */

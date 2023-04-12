@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace Modules\Jetstream\Policies;
 
 use App\Models\Team;
 use App\Models\User;
@@ -9,6 +9,15 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class TeamPolicy
 {
     use HandlesAuthorization;
+
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
 
     /**
      * Determine whether the user can view any models.
@@ -31,7 +40,7 @@ class TeamPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**

@@ -14,10 +14,17 @@ class VerifySubscription
      *
      * @param Request $request
      * @param Closure $next
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|null
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
+        // skip verification if user is super admin
+        if ($request->user() &&
+            $request->user()->isSuperAdmin()) {
+            return $next($request);
+        }
+
+        // check subscription for user
         if (! $request->user() ||
             ! $request->user()->currentTeam ||
             ! $request->user()->currentTeam->planSubscription ||

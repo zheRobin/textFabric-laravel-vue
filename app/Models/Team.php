@@ -30,6 +30,7 @@ class Team extends JetstreamTeam
      */
     protected $casts = [
         'personal_team' => 'boolean',
+        'disabled' => 'boolean',
     ];
 
     /**

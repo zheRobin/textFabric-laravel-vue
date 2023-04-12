@@ -2,19 +2,42 @@
 
 namespace Modules\Jetstream\Providers;
 
+use App\Models\Team;
+// TODO: move into separate provider
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Modules\Jetstream\Actions\AddTeamMember;
 use Modules\Jetstream\Actions\CreateTeam;
 use Modules\Jetstream\Actions\DeleteTeam;
 use Modules\Jetstream\Actions\DeleteUser;
+use Modules\Jetstream\Actions\ToggleDisabledTeam;
 use Modules\Jetstream\Actions\InviteTeamMember;
 use Modules\Jetstream\Actions\RemoveTeamMember;
 use Modules\Jetstream\Actions\UpdateTeamName;
+use Modules\Jetstream\Contracts\TogglesDisabledTeam;
+use Modules\Jetstream\Policies\TeamPolicy;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public array $bindings = [
+        TogglesDisabledTeam::class => ToggleDisabledTeam::class,
+    ];
+
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        Team::class => TeamPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */
@@ -31,6 +54,7 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configureRoutes();
         $this->registerMigrations();
         $this->configurePermissions();
+        $this->registerPolicies();
 
         Jetstream::ignoreRoutes();
         Jetstream::createTeamsUsing(CreateTeam::class);

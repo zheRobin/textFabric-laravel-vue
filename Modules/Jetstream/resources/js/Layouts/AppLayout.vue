@@ -55,6 +55,12 @@ const logout = () => {
                                     Dashboard
                                 </NavLink>
                             </div>
+
+                            <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                                    Teams
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

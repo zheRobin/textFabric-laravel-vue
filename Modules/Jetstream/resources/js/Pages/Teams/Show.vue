@@ -4,6 +4,7 @@ import DeleteTeamForm from 'Jetstream/Pages/Teams/Partials/DeleteTeamForm.vue';
 import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TeamMemberManager from 'Jetstream/Pages/Teams/Partials/TeamMemberManager.vue';
 import UpdateTeamNameForm from 'Jetstream/Pages/Teams/Partials/UpdateTeamNameForm.vue';
+import ToggleDisabledTeamForm from "Jetstream/Pages/Teams/Partials/ToggleDisabledTeamForm.vue";
 
 defineProps({
     team: Object,
@@ -30,6 +31,12 @@ defineProps({
                     :available-roles="availableRoles"
                     :user-permissions="permissions"
                 />
+
+                <template v-if="$page.props.auth.user.is_admin">
+                    <SectionBorder />
+
+                    <ToggleDisabledTeamForm :team="team" />
+                </template>
 
                 <template v-if="permissions.canDeleteTeam && ! team.personal_team">
                     <SectionBorder />

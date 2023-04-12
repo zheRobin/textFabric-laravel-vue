@@ -24,7 +24,7 @@ class TeamPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -81,5 +81,13 @@ class TeamPolicy
     public function delete(User $user, Team $team): bool
     {
         return $user->ownsTeam($team);
+    }
+
+    /**
+     * @return bool
+     */
+    public function toggleDisabled(User $user): bool
+    {
+        return false;
     }
 }

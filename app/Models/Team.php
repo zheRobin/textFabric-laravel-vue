@@ -9,9 +9,6 @@ use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 use Modules\Subscriptions\Traits\HasPlanSubscription;
 
-/**
- * @method
- */
 class Team extends JetstreamTeam
 {
     use HasFactory, HasPlanSubscription;

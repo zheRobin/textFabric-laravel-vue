@@ -11,8 +11,6 @@ import TextInput from "Jetstream/Components/TextInput.vue";
 const props = defineProps({
     'planSubscription': Object,
 })
-
-console.log(props.planSubscription);
 </script>
 
 <template>

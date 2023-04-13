@@ -2,6 +2,9 @@
 import ActionSection from "Jetstream/Components/ActionSection.vue";
 import SubscriptionInfo from "Modules/Subscriptions/resources/js/Components/SubscriptionInfo.vue";
 
+defineProps({
+    'planSubscription': Object,
+})
 </script>
 
 <template>
@@ -15,7 +18,7 @@ import SubscriptionInfo from "Modules/Subscriptions/resources/js/Components/Subs
         </template>
 
         <template #content>
-            <SubscriptionInfo />
+            <SubscriptionInfo :planSubscription="planSubscription" />
         </template>
     </ActionSection>
 </template>

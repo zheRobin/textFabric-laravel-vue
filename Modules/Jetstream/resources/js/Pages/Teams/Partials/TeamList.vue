@@ -6,6 +6,7 @@ import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { teamRoleAdmin } from "Jetstream/teams.js";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 import { Link } from "@inertiajs/vue3";
+import { EnvelopeIcon, UserIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     teams: Array,
@@ -47,19 +48,23 @@ const getAdminsFromUsers = (users) => {
                         <div class="mt-2 sm:flex sm:justify-between">
                             <div class="sm:flex">
                                 <div class="flex-col">
-                                    <p class="text-sm flex font-medium text-gray-900">
+                                    <p class="text-sm flex font-medium text-gray-600">
+                                        <EnvelopeIcon class="w-5 mr-1"/>
                                         {{ team.owner.email }}
                                     </p>
                                     <p class="truncate flex text-sm text-gray-500">
+                                        <UserIcon class="w-5 mr-1 text-gray-700" />
                                         Owner
                                     </p>
                                 </div>
 
                                 <div class="flex-col sm:ml-5" v-for="member in getAdminsFromUsers(team.users)">
-                                    <p class="text-sm flex font-medium text-gray-900">
+                                    <p class="text-sm flex font-medium text-gray-600">
+                                        <EnvelopeIcon class="w-5 mr-1"/>
                                         {{ member.email }}
                                     </p>
                                     <p class="truncate flex text-sm text-gray-500 capitalize">
+                                        <UserIcon class="w-5 mr-1 text-gray-700" />
                                         {{ teamRoleAdmin }}
                                     </p>
                                 </div>

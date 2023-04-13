@@ -7,7 +7,9 @@ import {usePage} from "@inertiajs/vue3";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 
-const planSubscription = computed(() => usePage().props.planSubscription);
+defineProps({
+    'planSubscription': Object,
+})
 </script>
 
 <template>

@@ -24,8 +24,8 @@ defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div v-if="!$page.props.auth.user.is_admin">
-                    <ShowSubscriptionInfo />
+                <div v-if="$page.props.auth.user.is_common_user && $page.props.planSubscription">
+                    <ShowSubscriptionInfo :planSubscription="$page.props.planSubscription" />
 
                     <SectionBorder />
                 </div>

@@ -4,11 +4,13 @@ import {computed} from "vue";
 import {subscriptionContactLink} from "Modules/Subscriptions/resources/js/subscriptions";
 import {daysLeft} from "Modules/Subscriptions/resources/js/subscriptions";
 
-const planSubscription = computed(() => usePage().props.planSubscription);
+const props = defineProps({
+    'planSubscription': Object,
+})
 
-const activeTrial = planSubscription.value.active_trial;
-const activeInvoice = planSubscription.value.active_invoice;
-const isActive = planSubscription.value.is_active;
+const activeTrial = props.planSubscription.active_trial;
+const activeInvoice = props.planSubscription.active_invoice;
+const isActive = props.planSubscription.is_active;
 const expired = !isActive;
 </script>
 

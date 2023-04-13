@@ -4,11 +4,14 @@ namespace Modules\Jetstream\Actions;
 
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Events\AddingTeam;
 use Laravel\Jetstream\Jetstream;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
+use Modules\Subscriptions\Models\Plan;
 
 class CreateTeam implements CreatesTeams
 {
@@ -27,11 +30,29 @@ class CreateTeam implements CreatesTeams
 
         AddingTeam::dispatch($user);
 
-        $user->switchTeam($team = $user->ownedTeams()->create([
-            'name' => $input['name'],
-            'personal_team' => false,
-        ]));
+        return DB::transaction(function () use ($user, $input) {
+            $team = tap($user->ownedTeams()->create([
+                'name' => $input['name'],
+                'personal_team' => false,
+            ]), function (Team $team) {
+                $this->createPlanSubscription($team);
+            });
+            $user->switchTeam($team);
 
-        return $team;
+            return $team;
+        });
+    }
+
+    /**
+     * @param Team $team
+     * @return void
+     */
+    protected function createPlanSubscription(Team $team): void
+    {
+        $plan = Plan::query()
+            ->where('slug', SubscriptionPlanEnum::PRO->slug())
+            ->firstOrFail();
+
+        $team->newPlanSubscription($plan);
     }
 }

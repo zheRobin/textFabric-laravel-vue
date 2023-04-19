@@ -79,7 +79,7 @@ class PlanSubscription extends Model
     protected function validUntil(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->ends_at ? $this->ends_at : $this->trial_ends_at
+            get: fn () => $this->onTrial() ? $this->trial_ends_at : $this->ends_at
         );
     }
 

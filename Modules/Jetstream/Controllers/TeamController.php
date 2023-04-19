@@ -16,6 +16,7 @@ use Laravel\Jetstream\Contracts\UpdatesTeamNames;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\RedirectsActions;
 use Modules\Jetstream\Contracts\TogglesDisabledTeam;
+use Modules\Subscriptions\Models\Plan;
 
 class TeamController extends Controller
 {
@@ -53,6 +54,7 @@ class TeamController extends Controller
             'availableRoles' => array_values(Jetstream::$roles),
             'availablePermissions' => Jetstream::$permissions,
             'defaultPermissions' => Jetstream::$defaultPermissions,
+            'subscriptionPlans' => Plan::query()->get(),
             'permissions' => [
                 'canAddTeamMembers' => Gate::check('addTeamMember', $team),
                 'canDeleteTeam' => Gate::check('delete', $team),
@@ -134,6 +136,7 @@ class TeamController extends Controller
      */
     public function toggleDisabled(Request $request, int $teamId): RedirectResponse
     {
+        // TODO: move gates to actions
         Gate::authorize('toggleDisabled', Jetstream::newTeamModel());
 
         $team = Jetstream::newTeamModel()->findOrFail($teamId);

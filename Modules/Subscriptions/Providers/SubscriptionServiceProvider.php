@@ -2,9 +2,15 @@
 
 namespace Modules\Subscriptions\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+// TODO: move into separate provider
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Modules\Subscriptions\Actions\CreatePlan;
+use Modules\Subscriptions\Actions\UpdatePlanSubscription;
 use Modules\Subscriptions\Contracts\CreatesPlan;
+use Modules\Subscriptions\Contracts\UpdatesPlanSubscription;
+use Modules\Subscriptions\Models\PlanSubscription;
+use Modules\Subscriptions\Policies\PlanSubscriptionPolicy;
 
 class SubscriptionServiceProvider extends ServiceProvider
 {
@@ -15,6 +21,16 @@ class SubscriptionServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         CreatesPlan::class => CreatePlan::class,
+        UpdatesPlanSubscription::class => UpdatePlanSubscription::class,
+    ];
+
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        PlanSubscription::class => PlanSubscriptionPolicy::class,
     ];
 
     /**
@@ -32,6 +48,7 @@ class SubscriptionServiceProvider extends ServiceProvider
     {
         $this->configureRoutes();
         $this->registerMigrations();
+        $this->registerPolicies();
     }
 
     /**
@@ -39,7 +56,10 @@ class SubscriptionServiceProvider extends ServiceProvider
      */
     protected function configureRoutes(): void
     {
-
+        Route::middleware('web')
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            });
     }
 
     /**

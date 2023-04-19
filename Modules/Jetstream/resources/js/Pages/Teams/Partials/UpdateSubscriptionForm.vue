@@ -1,20 +1,59 @@
 <script setup>
 import FormSection from "Jetstream/Components/FormSection.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
-import DropdownInput from "Jetstream/Components/DropdownInput.vue";
-import Checkbox from "Jetstream/Components/Checkbox.vue";
 import PrimaryBadge from "Jetstream/Components/PrimaryBadge.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 import TextInput from "Jetstream/Components/TextInput.vue";
+import SelectMenu from "Jetstream/Components/SelectMenu.vue";
+import {useForm} from "@inertiajs/vue3";
+import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
+import Toggle from "Jetstream/Components/Toggle.vue";
+import InputError from "Jetstream/Components/InputError.vue";
+import ActionMessage from "Jetstream/Components/ActionMessage.vue";
+import {reactive} from "vue";
 
 const props = defineProps({
     'planSubscription': Object,
-})
+    'plans': Array,
+});
+
+const formatDateTime = (dateTime) => {
+    if (dateTime) {
+        const [date, time] = new Date(Date.parse(dateTime)).toISOString().split('T');
+
+        return `${date}T${time.slice(0, 5)}`;
+    }
+
+    return null;
+}
+
+const form = useForm(reactive({
+    ends_at: formatDateTime(props.planSubscription.ends_at),
+    on_trial: props.planSubscription.active_trial,
+    plan_id: props.planSubscription.plan_id,
+}));
+
+const planOptions = () => {
+    const plans = [];
+
+    props.plans.forEach((el) => {
+        plans.push({value: el.id,label: el.name});
+    })
+
+    return plans;
+}
+
+const updatePlanSubscription = () => {
+    form.put(route('plan-subscriptions.update', props.planSubscription), {
+        errorBag: 'updatePlanSubscription',
+        preserveScroll: true,
+    });
+}
 </script>
 
 <template>
-    <FormSection>
+    <FormSection @submitted="updatePlanSubscription">
         <template #title>
             Subscription Info
         </template>
@@ -30,40 +69,44 @@ const props = defineProps({
                 <DangerBadge v-else>Expired</DangerBadge>
             </div>
 
-            <!-- Plan -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="plan" value="Plan Type" />
-                <DropdownInput
-                    :options="['Basic', 'Pro', 'Enterprise']"
-                />
-<!--                <InputError :message="form.errors.employees" class="mt-2" />-->
+                <SelectMenu v-model="form.plan_id" :options="planOptions()" label="Plan type"/>
+                <InputError :message="form.errors.plan_id" class="mt-2" />
             </div>
 
-            <!-- Plan -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="ends_at" value="Invoice ends at" />
-                <TextInput class="w-full mt-2" type="date"/>
-                <!--                <InputError :message="form.errors.employees" class="mt-2" />-->
+                <TextInput v-model="form.ends_at" class="w-full mt-2" type="datetime-local"/>
+                <InputError :message="form.errors.ends_at" class="mt-2" />
             </div>
 
-            <!-- Is trial -->
-            <div class="flex items-center col-span-6 sm:col-span-4">
-                <Checkbox
-                    id="on-trial"
-                    name="trial"
-                    class="h-4 w-4 rounded border-gray-300 text-tf-blue-600 focus:ring-tf-blue-600"
-                />
-                <InputLabel for="on-trial" value="On trial" class="ml-2" />
+            <div class="col-span-6 sm:col-span-4">
+                <Toggle v-model="form.on_trial">
+                    <template #label>
+                        <span class="font-medium text-gray-900">Trial</span>
+                        {{ ' ' }}
+                        <span v-if="form.on_trial" class="text-gray-500">(toggle to deactivate)</span>
+                        <span v-else class="text-gray-500">(toggle to activate)</span>
+                    </template>
+                </Toggle>
+                <InputError :message="form.errors.on_trial" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel class="">{{ planSubscription.is_active ? 'Ends at' : 'Ended at' }}</InputLabel>
-                <time class="flex mt-q mt-1 ml-5 text-gray-800 italic text-sm" :datetime="planSubscription.valid_until">
+                <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.valid_until">
                     {{ toLocaleDate(planSubscription.valid_until, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
                 </time>
             </div>
+        </template>
+        <template #actions>
+            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
+                Updated.
+            </ActionMessage>
 
-
+            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                Update
+            </PrimaryButton>
         </template>
     </FormSection>
 </template>

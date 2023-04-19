@@ -40,7 +40,7 @@ class HandleInertiaRequests extends Middleware
             'googleRecaptchaSiteKey' => config('services.google_recaptcha.site_key'),
             'planSubscription' => function () use ($request) {
                 if ($user = $request->user()) {
-                    if ($user->currentTeam->planSubscription) {
+                    if (!$user->currentTeam->disabled && $user->currentTeam->planSubscription) {
                         $user->currentTeam->planSubscription->plan->features;
 
                         return $user->currentTeam->planSubscription;

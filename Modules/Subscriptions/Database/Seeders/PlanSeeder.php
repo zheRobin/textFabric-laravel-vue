@@ -42,7 +42,7 @@ class PlanSeeder extends Seeder
 
         $enterprise = $createPlan([
             'slug' => SubscriptionPlanEnum::ENTERPRISE->slug(),
-            'name' => 'Enterprise pla',
+            'name' => 'Enterprise plan',
             'description' => null,
             'is_active' => true,
             'trial_period' => 30,

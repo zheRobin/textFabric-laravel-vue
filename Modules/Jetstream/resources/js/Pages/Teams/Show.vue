@@ -8,11 +8,13 @@ import ToggleDisabledTeamForm from "Jetstream/Pages/Teams/Partials/ToggleDisable
 import ActionPanel from "Jetstream/Components/ActionPanel.vue";
 import {subscriptionContactLink} from "Modules/Subscriptions/resources/js/subscriptions";
 import {ExclamationTriangleIcon} from "@heroicons/vue/24/outline";
+import UpdateSubscriptionForm from "Jetstream/Pages/Teams/Partials/UpdateSubscriptionForm.vue";
 
 defineProps({
     team: Object,
     availableRoles: Array,
     permissions: Object,
+    subscriptionPlans: Array,
 });
 </script>
 
@@ -46,6 +48,12 @@ defineProps({
                     :available-roles="availableRoles"
                     :user-permissions="permissions"
                 />
+
+                <template v-if="$page.props.auth.user.is_admin && team.plan_subscription">
+                    <SectionBorder />
+
+                    <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" />
+                </template>
 
                 <template v-if="permissions.canToggleDisabled">
                     <SectionBorder />

@@ -30,7 +30,7 @@ const formatDateTime = (dateTime) => {
 
 const form = useForm(reactive({
     ends_at: formatDateTime(props.planSubscription.ends_at),
-    on_trial: props.planSubscription.active_trial,
+    on_trial: props.planSubscription.on_trial,
     plan_id: props.planSubscription.plan_id,
 }));
 
@@ -45,7 +45,7 @@ const planOptions = () => {
 }
 
 const updatePlanSubscription = () => {
-    form.put(route('plan-subscriptions.update', props.planSubscription), {
+    form.put(route('plan-subscriptions.update', props.planSubscription.id), {
         errorBag: 'updatePlanSubscription',
         preserveScroll: true,
     });
@@ -75,7 +75,7 @@ const updatePlanSubscription = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="ends_at" value="Invoice ends at" />
+                <InputLabel for="ends_at" value="Ends at" />
                 <TextInput v-model="form.ends_at" class="w-full mt-2" type="datetime-local"/>
                 <InputError :message="form.errors.ends_at" class="mt-2" />
             </div>
@@ -83,10 +83,7 @@ const updatePlanSubscription = () => {
             <div class="col-span-6 sm:col-span-4">
                 <Toggle v-model="form.on_trial">
                     <template #label>
-                        <span class="font-medium text-gray-900">Trial</span>
-                        {{ ' ' }}
-                        <span v-if="form.on_trial" class="text-gray-500">(toggle to deactivate)</span>
-                        <span v-else class="text-gray-500">(toggle to activate)</span>
+                        <span class="font-medium text-gray-900">On Trial</span>
                     </template>
                 </Toggle>
                 <InputError :message="form.errors.on_trial" class="mt-2" />
@@ -94,8 +91,8 @@ const updatePlanSubscription = () => {
 
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel class="">{{ planSubscription.is_active ? 'Ends at' : 'Ended at' }}</InputLabel>
-                <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.valid_until">
-                    {{ toLocaleDate(planSubscription.valid_until, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
+                <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
+                    {{ toLocaleDate(planSubscription.ends_at, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
                 </time>
             </div>
         </template>

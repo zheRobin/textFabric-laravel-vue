@@ -5,11 +5,11 @@ const emit = defineEmits(['update:checked']);
 
 const props = defineProps({
     checked: {
-        type: [Array, Boolean],
+        type: [Array, Boolean, String],
         default: false,
     },
     value: {
-        type: String,
+        type: [String, Number],
         default: null,
     },
 });

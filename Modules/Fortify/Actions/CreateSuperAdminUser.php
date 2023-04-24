@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Modules\Fortify\Contracts\CreatesSuperAdminUser;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
+use Modules\Subscriptions\Models\Plan;
 
 class CreateSuperAdminUser implements CreatesSuperAdminUser
 {
@@ -45,10 +47,25 @@ class CreateSuperAdminUser implements CreatesSuperAdminUser
      */
     protected function createTeam(User $user): void
     {
-        Team::forceCreate([
+        tap(Team::forceCreate([
             'user_id' => $user->id,
             'name' => explode(' ', $user->first_name, 2)[0]."'s Team",
             'personal_team' => true,
-        ]);
+        ]), function (Team $team) {
+            $this->createPlanSubscription($team);
+        });
+    }
+
+    /**
+     * @param Team $team
+     * @return void
+     */
+    protected function createPlanSubscription(Team $team): void
+    {
+        $plan = Plan::query()
+            ->where('slug', SubscriptionPlanEnum::PRO->slug())
+            ->firstOrFail();
+
+        $team->newPlanSubscription($plan);
     }
 }

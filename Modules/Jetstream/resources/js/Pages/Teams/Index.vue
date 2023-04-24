@@ -1,11 +1,12 @@
 <script setup>
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
-import TeamList from "Jetstream/Pages/Teams/Partials/TeamList.vue";
+import TeamsList from "Jetstream/Pages/Teams/Partials/TeamsList.vue";
 
 defineProps({
-    teams: Array,
+    teams: Object,
+    filters: Object,
+    subscriptionPlans: Array,
 })
-
 </script>
 
 <template>
@@ -18,7 +19,7 @@ defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <TeamList :teams="teams" />
+                <TeamsList :teams="teams" :subscriptionPlans="subscriptionPlans" :filters="filters"/>
             </div>
         </div>
     </AppLayout>

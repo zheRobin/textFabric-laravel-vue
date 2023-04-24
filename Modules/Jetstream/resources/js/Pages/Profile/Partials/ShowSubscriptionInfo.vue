@@ -14,7 +14,7 @@ defineProps({
         </template>
 
         <template #description>
-            Applicable to all team members
+            Applicable to all team members.
         </template>
 
         <template #content>

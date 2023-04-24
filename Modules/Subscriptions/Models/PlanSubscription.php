@@ -3,6 +3,7 @@
 namespace Modules\Subscriptions\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,15 +30,19 @@ class PlanSubscription extends Model
     use HasFactory;
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['plan'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
     protected $appends = [
         'is_active',
-        'active_trial',
-        'active_invoice',
-        'valid_until',
     ];
 
     /**
@@ -50,8 +55,8 @@ class PlanSubscription extends Model
         'slug',
         'name',
         'description',
-        'trial_ends_at',
         'starts_at',
+        'on_trial',
         'ends_at',
     ];
 
@@ -61,8 +66,8 @@ class PlanSubscription extends Model
      * @var array
      */
     protected $casts = [
-        'trial_ends_at' => 'datetime',
         'ends_at' => 'datetime',
+        'on_trial' => 'boolean',
     ];
 
     /**
@@ -76,40 +81,10 @@ class PlanSubscription extends Model
     /**
      * @return Attribute
      */
-    protected function validUntil(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->onTrial() ? $this->trial_ends_at : $this->ends_at
-        );
-    }
-
-    /**
-     * @return Attribute
-     */
     protected function isActive(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->active()
-        );
-    }
-
-    /**
-     * @return Attribute
-     */
-    protected function activeInvoice(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => !$this->ended()
-        );
-    }
-
-    /**
-     * @return Attribute
-     */
-    protected function activeTrial(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->onTrial(),
         );
     }
 
@@ -126,7 +101,7 @@ class PlanSubscription extends Model
      */
     public function active(): bool
     {
-        return !$this->ended() || $this->onTrial();
+        return !$this->ended();
     }
 
     /**
@@ -150,10 +125,20 @@ class PlanSubscription extends Model
     }
 
     /**
-     * @return bool
+     * @param Builder $query
+     * @return void
      */
-    public function onTrial(): bool
+    public function scopeActive(Builder $query): void
     {
-        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
+        $query->where('ends_at', '>', Carbon::now());
+    }
+
+    /**
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeInActive(Builder $query): void
+    {
+        $query->where('ends_at', '<=', Carbon::now());
     }
 }

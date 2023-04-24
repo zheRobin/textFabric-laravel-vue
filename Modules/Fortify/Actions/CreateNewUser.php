@@ -60,7 +60,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         tap(Team::forceCreate([
             'user_id' => $user->id,
-            'name' => explode(' ', $user->first_name, 2)[0]."'s Team",
+            'name' => explode(' ', $user->company, 2)[0]."'s Team",
             'personal_team' => true,
         ]), function (Team $team) {
             $this->createPlanSubscription($team);

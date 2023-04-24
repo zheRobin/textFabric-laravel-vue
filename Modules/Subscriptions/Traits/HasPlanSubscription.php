@@ -3,7 +3,6 @@
 namespace Modules\Subscriptions\Traits;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Modules\Subscriptions\Models\Plan;
 use Modules\Subscriptions\Models\PlanSubscription;
@@ -39,12 +38,12 @@ trait HasPlanSubscription
      */
     public function newPlanSubscription(Plan $plan, Carbon $startDate = null): PlanSubscription
     {
-        $trial = new Period($plan->trial_period, $startDate ?? Carbon::now());
-        // $period = new Period($plan->invoice_period, $trial->getEndDate());
+        $period = new Period($plan->trial_period ?? $plan->invoice_period, $startDate ?? Carbon::now());
 
         return $this->planSubscription()->create([
             'plan_id' => $plan->getKey(),
-            'trial_ends_at' => $trial->getEndDate(),
+            'ends_at' => $period->getEndDate(),
+            'on_trial' => boolval($plan->trial_period),
         ]);
     }
 

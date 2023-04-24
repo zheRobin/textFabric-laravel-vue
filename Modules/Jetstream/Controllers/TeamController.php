@@ -3,7 +3,6 @@
 namespace Modules\Jetstream\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -16,6 +15,7 @@ use Laravel\Jetstream\Contracts\UpdatesTeamNames;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\RedirectsActions;
 use Modules\Jetstream\Contracts\TogglesDisabledTeam;
+use Modules\Jetstream\Services\TeamsFilterService;
 use Modules\Subscriptions\Models\Plan;
 
 class TeamController extends Controller
@@ -25,14 +25,20 @@ class TeamController extends Controller
     /**
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         Gate::authorize('viewAny', Jetstream::newTeamModel());
 
-        $teams = Team::with(['users', 'owner'])->get();
+        $teamsFilterer = app(TeamsFilterService::class);
+
+        $filters = $request->offsetGet('filters') ?? [];
+
+        $teams = $teamsFilterer->apply($filters);
 
         return Inertia::render('Teams/Index', [
             'teams' => $teams,
+            'filters' => $filters,
+            'subscriptionPlans' => Plan::all(),
         ]);
     }
 

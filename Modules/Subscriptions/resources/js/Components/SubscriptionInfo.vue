@@ -2,8 +2,6 @@
 import {CheckIcon} from "@heroicons/vue/20/solid";
 import PrimaryBadge from "Jetstream/Components/PrimaryBadge.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
-import {computed} from "vue";
-import {usePage} from "@inertiajs/vue3";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 
@@ -20,7 +18,9 @@ defineProps({
 
         <InputLabel class="mt-5">Plan Type</InputLabel>
         <p class="flex-1 mt-1 text-base uppercase font-semibold">
-            <span v-if="planSubscription.active_trial && !planSubscription.active_invoice" class="text-gray-400 capitalize">(Trial)</span> <span class="text-tf-blue-800">Pro</span>
+            <span v-if="planSubscription.on_trial" class="text-gray-400 capitalize">(Trial)</span>
+            {{ ' ' }}
+            <span class="text-tf-blue-800">{{ planSubscription.plan.name }}</span>
         </p>
 
         <InputLabel class="mt-5">Plan Features</InputLabel>
@@ -32,8 +32,8 @@ defineProps({
         </ul>
 
         <InputLabel class="mt-5">{{ planSubscription.is_active ? 'Ends at' : 'Ended at' }}</InputLabel>
-        <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.valid_until">
-            {{ toLocaleDate(planSubscription.valid_until, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
+        <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
+            {{ toLocaleDate(planSubscription.ends_at, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
         </time>
     </div>
 </template>

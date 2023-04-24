@@ -7,10 +7,18 @@ use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Modules\Subscriptions\Traits\HasPlanSubscription;
 
 class Team extends JetstreamTeam
 {
-    use HasFactory;
+    use HasFactory, HasPlanSubscription;
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['planSubscription'];
 
     /**
      * The attributes that should be cast.
@@ -19,6 +27,7 @@ class Team extends JetstreamTeam
      */
     protected $casts = [
         'personal_team' => 'boolean',
+        'disabled' => 'boolean',
     ];
 
     /**

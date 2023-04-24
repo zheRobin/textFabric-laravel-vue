@@ -17,7 +17,7 @@ const props = defineProps({
                 autofocus
                 v-model="form.email"
                 type="email"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="username"
             />
@@ -30,7 +30,7 @@ const props = defineProps({
                 id="password"
                 v-model="form.password"
                 type="password"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="new-password"
             />

@@ -6,6 +6,7 @@ import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TwoFactorAuthenticationForm from 'Jetstream/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from 'Jetstream/Pages/Profile/Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from 'Jetstream/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
+import ShowSubscriptionInfo from "Jetstream/Pages/Profile/Partials/ShowSubscriptionInfo.vue";
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
@@ -23,8 +24,14 @@ defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <div v-if="$page.props.planSubscription">
+                    <ShowSubscriptionInfo :planSubscription="$page.props.planSubscription" />
+
+                    <SectionBorder />
+                </div>
+
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                    <UpdateProfileInformationForm :user="$page.props.auth.user" />
+                    <UpdateProfileInformationForm :user="$page.props.auth.user" class="mt-10 sm:mt-0" />
 
                     <SectionBorder />
                 </div>

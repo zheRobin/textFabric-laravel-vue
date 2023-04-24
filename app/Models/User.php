@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Jetstream\Traits\HasSuperAdmin;
 
 class User extends Authenticatable
 {
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasSuperAdmin;
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +37,13 @@ class User extends Authenticatable
         'phone_number',
         'password',
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = ['is_admin'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,6 +64,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -64,5 +74,16 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'is_common_user',
     ];
+
+    /**
+     * @return Attribute
+     */
+    protected function isCommonUser(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ! $this->isSuperAdmin()
+        );
+    }
 }

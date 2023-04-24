@@ -2,28 +2,48 @@
 
 namespace Modules\Jetstream\Providers;
 
-use App\Actions\Jetstream\AddTeamMember;
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\DeleteTeam;
-use App\Actions\Jetstream\DeleteUser;
-use App\Actions\Jetstream\InviteTeamMember;
-use App\Actions\Jetstream\RemoveTeamMember;
-use App\Actions\Jetstream\UpdateTeamName;
+use App\Models\Team;
+// TODO: move into separate provider
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
+use Modules\Jetstream\Actions\AddTeamMember;
+use Modules\Jetstream\Actions\CreateTeam;
+use Modules\Jetstream\Actions\DeleteTeam;
+use Modules\Jetstream\Actions\DeleteUser;
+use Modules\Jetstream\Actions\ToggleDisabledTeam;
+use Modules\Jetstream\Actions\InviteTeamMember;
+use Modules\Jetstream\Actions\RemoveTeamMember;
+use Modules\Jetstream\Actions\UpdateTeamName;
+use Modules\Jetstream\Contracts\TogglesDisabledTeam;
+use Modules\Jetstream\Policies\TeamPolicy;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public array $bindings = [
+        TogglesDisabledTeam::class => ToggleDisabledTeam::class,
+    ];
+
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        Team::class => TeamPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */
     public function register(): void
     {
-        Route::middleware('web')
-            ->group(function () {
-                $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
-            });
+
     }
 
     /**
@@ -31,8 +51,12 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureRoutes();
+        $this->registerMigrations();
         $this->configurePermissions();
+        $this->registerPolicies();
 
+        Jetstream::ignoreRoutes();
         Jetstream::createTeamsUsing(CreateTeam::class);
         Jetstream::updateTeamNamesUsing(UpdateTeamName::class);
         Jetstream::addTeamMembersUsing(AddTeamMember::class);
@@ -61,5 +85,24 @@ class JetstreamServiceProvider extends ServiceProvider
             'create',
             'update',
         ])->description('Editor users have the ability to read, create, and update.');
+    }
+
+    /**
+     * Configure routes.
+     */
+    protected function configureRoutes(): void
+    {
+        Route::middleware('web')
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            });
+    }
+
+    /**
+     * Configure publishing.
+     */
+    protected function registerMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 }

@@ -198,8 +198,9 @@ return [
         /*
          * Modules Service Providers...
          */
-        Modules\Jetstream\Providers\FortifyServiceProvider::class,
+        Modules\Fortify\Providers\FortifyServiceProvider::class,
         Modules\Jetstream\Providers\JetstreamServiceProvider::class,
+        Modules\Subscriptions\Providers\SubscriptionServiceProvider::class,
 
     ],
 

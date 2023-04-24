@@ -16,7 +16,7 @@ const props = defineProps({
                 id="first_name"
                 v-model="props.form.first_name"
                 type="text"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autofocus
                 autocomplete="given-name"
@@ -30,7 +30,7 @@ const props = defineProps({
                 id="last_name"
                 v-model="props.form.last_name"
                 type="text"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="family-name"
             />
@@ -43,7 +43,7 @@ const props = defineProps({
                 id="position"
                 v-model="form.position"
                 type="text"
-                class="mt-2"
+                class="mt-2 w-full"
                 required
                 autocomplete="organization-title"
             />

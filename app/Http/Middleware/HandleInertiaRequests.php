@@ -38,6 +38,17 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'googleRecaptchaSiteKey' => config('services.google_recaptcha.site_key'),
+            'planSubscription' => function () use ($request) {
+                if ($user = $request->user()) {
+                    if (!$user->currentTeam->disabled && $user->currentTeam->planSubscription) {
+                        $user->currentTeam->planSubscription->plan->features;
+
+                        return $user->currentTeam->planSubscription;
+                    }
+                }
+
+                return null;
+            },
         ]);
     }
 }

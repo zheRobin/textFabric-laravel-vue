@@ -67,6 +67,7 @@ class TeamController extends Controller
                 'canRemoveTeamMembers' => Gate::check('removeTeamMember', $team),
                 'canUpdateTeam' => Gate::check('update', $team),
                 'canToggleDisabled' => Gate::check('toggleDisabled', Jetstream::newTeamModel()),
+                'canSwitchTeam' => Gate::check('switchTeam', Jetstream::newTeamModel(), $team),
             ],
         ]);
     }

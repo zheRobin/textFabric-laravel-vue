@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Subscriptions\Middleware;
+namespace Modules\Jetstream\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
-class VerifySubscription
+class TeamEnabled
 {
     /**
      * Handle an incoming request.
@@ -23,14 +23,13 @@ class VerifySubscription
             return $next($request);
         }
 
-        // check subscription for user
+        // check if the team is disabled
         if (! $request->user() ||
             ! $request->user()->currentTeam ||
-            ! $request->user()->currentTeam->planSubscription ||
-            $request->user()->currentTeam->planSubscription->inActive()) {
+            $request->user()->currentTeam->disabled) {
             return $request->wantsJson()
-                ? abort(403, 'Team subscription has expired')
-                : Redirect::route('profile.show');
+                ? abort(403, 'Team has been banned')
+                : Redirect::route('teams.show', $request->user()->currentTeam->id);
         }
 
         return $next($request);

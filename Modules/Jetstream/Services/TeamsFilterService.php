@@ -95,10 +95,9 @@ class TeamsFilterService
 
     public function applySearch($value): void
     {
-        if (is_string($value) && $value)
-        {
+        if (is_string($value) && $value) {
             $this->teamsQuery->where(function ($teams) use ($value) {
-                $teams->where('name', 'like', "%$value%")
+                $teams->where('teams.name', 'like', "%$value%")
                     ->orWhereHas('users', function ($query) use ($value) {
                         $query->where('email', 'like', "%$value%")
                             ->where('role', 'admin');

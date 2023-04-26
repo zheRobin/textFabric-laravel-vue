@@ -90,4 +90,14 @@ class TeamPolicy
     {
         return false;
     }
+
+    /**
+     * @param User $user
+     * @param Team $team
+     * @return bool
+     */
+    public function switchTeam(User $user, Team $team): bool
+    {
+        return false;
+    }
 }

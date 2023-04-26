@@ -9,6 +9,7 @@ import ActionPanel from "Jetstream/Components/ActionPanel.vue";
 import {subscriptionContactLink} from "Modules/Subscriptions/resources/js/subscriptions";
 import {ExclamationTriangleIcon} from "@heroicons/vue/24/outline";
 import UpdateSubscriptionForm from "Jetstream/Pages/Teams/Partials/UpdateSubscriptionForm.vue";
+import SwitchTeamForm from "Jetstream/Pages/Teams/Partials/SwitchTeamForm.vue";
 
 defineProps({
     team: Object,
@@ -28,7 +29,7 @@ defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <template v-if="team.disabled && $page.props.auth.user.is_common_user">
+                <template v-if="team.disabled">
                     <ActionPanel class="mb-10">
                         <template #header>
                             <p class="flex"><ExclamationTriangleIcon class="w-5 mr-1 text-red-900" />Team is banned</p>
@@ -53,6 +54,12 @@ defineProps({
                     <SectionBorder />
 
                     <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" />
+                </template>
+
+                <template v-if="permissions.canSwitchTeam">
+                    <SectionBorder />
+
+                    <SwitchTeamForm :team="team" :user="$page.props.auth.user" />
                 </template>
 
                 <template v-if="permissions.canToggleDisabled">

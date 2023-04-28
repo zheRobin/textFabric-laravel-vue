@@ -86,4 +86,25 @@ class User extends Authenticatable
             get: fn () => ! $this->isSuperAdmin()
         );
     }
+
+    /**
+     * Switch the user's context to the given team.
+     *
+     * @param  mixed  $team
+     * @return bool
+     */
+    public function switchTeam($team)
+    {
+        if (! $this->belongsToTeam($team) && !$this->isSuperAdmin()) {
+            return false;
+        }
+
+        $this->forceFill([
+            'current_team_id' => $team->id,
+        ])->save();
+
+        $this->setRelation('currentTeam', $team);
+
+        return true;
+    }
 }

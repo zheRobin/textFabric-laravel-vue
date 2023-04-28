@@ -6,12 +6,19 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Actions\AttemptToAuthenticate;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Modules\Fortify\Actions\AuthenticateUserTeams;
 use Modules\Fortify\Actions\CreateNewUser;
 use Modules\Fortify\Actions\CreateSuperAdminUser;
 use Modules\Fortify\Actions\ResetUserPassword;
 use Modules\Fortify\Actions\UpdateUserPassword;
 use Modules\Fortify\Actions\UpdateUserProfileInformation;
+use Modules\Fortify\Contracts\AuthenticatesUserTeams;
 use Modules\Fortify\Contracts\CreatesSuperAdminUser;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -23,6 +30,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         CreatesSuperAdminUser::class => CreateSuperAdminUser::class,
+        AuthenticatesUserTeams::class => AuthenticateUserTeams::class,
     ];
 
     /**
@@ -51,6 +59,16 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+
+        Fortify::authenticateThrough(function (Request $request) {
+            return array_filter([
+                config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
+                Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+                AuthenticatesUserTeams::class,
+                AttemptToAuthenticate::class,
+                PrepareAuthenticatedSession::class,
+            ]);
         });
     }
 }

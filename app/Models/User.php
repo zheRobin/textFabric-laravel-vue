@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Collections\Models\Collection;
 use Modules\Jetstream\Traits\HasSuperAdmin;
 
 class User extends Authenticatable
@@ -21,6 +23,14 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasSuperAdmin;
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['currentCollection'];
+
 
     /**
      * The attributes that are mass assignable.
@@ -106,5 +116,32 @@ class User extends Authenticatable
         $this->setRelation('currentTeam', $team);
 
         return true;
+    }
+
+    /**
+     * Get the current collection through team's context.
+     *
+     * @return BelongsTo|null
+     */
+    public function currentCollection(): ?BelongsTo
+    {
+        return $this->belongsTo(Collection::class, 'current_collection_id');
+    }
+
+    /**
+     * @param Collection $collection
+     * @return bool
+     */
+    public function switchCollection(Collection $collection): bool
+    {
+        if ($this->currentTeam->ownsCollection($collection)) {
+            $this->forceFill([
+                'current_collection_id' => $collection->getKey()
+            ])->save();
+
+            return true;
+        }
+
+        return false;
     }
 }

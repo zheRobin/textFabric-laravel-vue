@@ -16,6 +16,7 @@ defineProps({
 const showingNavigationDropdown = ref(false);
 
 const currentTeam = computed(() => usePage().props.auth.user.current_team);
+const currentCollection = computed( () => usePage().props.auth.user.current_collection);
 
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
@@ -24,6 +25,12 @@ const switchToTeam = (team) => {
         preserveState: false,
     });
 };
+
+const switchToCollection = (collection) => {
+    router.put(route('current-collection.update', collection.id), {}, {
+        preserveState: false,
+    })
+}
 
 const logout = () => {
     router.post(route('logout'));
@@ -66,13 +73,13 @@ const logout = () => {
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <!-- Collection Dropdown -->
                             <div class="ml-3 relative">
-                                <!-- Teams Dropdown -->
-                                <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
+                                <Dropdown align="right" width="60">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                                {{ currentTeam.name }}
+                                                {{ currentCollection ? currentCollection.name : 'Collections' }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
@@ -80,43 +87,44 @@ const logout = () => {
                                             </button>
                                         </span>
                                     </template>
-
                                     <template #content>
                                         <div class="w-60">
-                                            <!-- Team Management -->
+                                            <!-- Collection Management -->
                                             <template v-if="$page.props.jetstream.hasTeamFeatures">
                                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Manage Team
+                                                    Manage Collections
                                                 </div>
 
                                                 <!-- Team Settings -->
-                                                <DropdownLink :href="route('teams.show', currentTeam)">
-                                                    Team Settings
+                                                <DropdownLink v-if="currentCollection" :href="route('collections.show', currentCollection)">
+                                                    Collection Settings
                                                 </DropdownLink>
 
-                                                <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                                    Create New Team
+                                                <DropdownLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')">
+                                                    Create New Collection
                                                 </DropdownLink>
 
-                                                <div class="border-t border-gray-200 dark:border-gray-600" />
+                                                <template v-if="$page.props.auth.user.current_team.collections.length">
+                                                    <div class="border-t border-gray-200 dark:border-gray-600" />
 
-                                                <!-- Team Switcher -->
-                                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Switch Teams
-                                                </div>
+                                                    <!-- Collection Switcher -->
+                                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                                        Switch Collections
+                                                    </div>
 
-                                                <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
-                                                    <form @submit.prevent="switchToTeam(team)">
-                                                        <DropdownLink as="button">
-                                                            <div class="flex items-center">
-                                                                <svg v-if="team.id == $page.props.auth.user.current_team_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg>
+                                                    <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
+                                                        <form @submit.prevent="switchToCollection(collection)">
+                                                            <DropdownLink as="button">
+                                                                <div class="flex items-center">
+                                                                    <svg v-if="collection.id == $page.props.auth.user.current_collection_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg>
 
-                                                                <div>{{ team.name }}</div>
-                                                            </div>
-                                                        </DropdownLink>
-                                                    </form>
+                                                                    <div>{{ collection.name }}</div>
+                                                                </div>
+                                                            </DropdownLink>
+                                                        </form>
+                                                    </template>
                                                 </template>
                                             </template>
                                         </div>
@@ -157,9 +165,32 @@ const logout = () => {
                                             Team Settings
                                         </DropdownLink>
 
+                                        <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
+                                            Create New Team
+                                        </DropdownLink>
+
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                             API Tokens
                                         </DropdownLink>
+
+                                        <!-- Team Switch -->
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                            Switch Team
+                                        </div>
+
+                                        <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
+                                            <form @submit.prevent="switchToTeam(team)">
+                                                <DropdownLink as="button">
+                                                    <div class="flex items-center">
+                                                        <svg v-if="team.id == $page.props.auth.user.current_team_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+
+                                                        <div>{{ team.name }}</div>
+                                                    </div>
+                                                </DropdownLink>
+                                            </form>
+                                        </template>
 
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
 
@@ -243,6 +274,46 @@ const logout = () => {
                                     Log Out
                                 </ResponsiveNavLink>
                             </form>
+
+                            <!-- Collection Management -->
+                            <div>
+                                <div class="border-t border-gray-200 dark:border-gray-600" />
+
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    Manage Collection
+                                </div>
+
+                                <!-- Collection Settings -->
+                                <ResponsiveNavLink v-if="currentCollection" :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
+                                    Collection Settings
+                                </ResponsiveNavLink>
+
+                                <ResponsiveNavLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')" :active="route().current('collections.create')">
+                                    Create New Collection
+                                </ResponsiveNavLink>
+
+                                <template v-if="$page.props.auth.user.current_team.collections.length">
+                                    <div class="border-t border-gray-200 dark:border-gray-600" />
+
+                                    <!-- Collection Switcher -->
+                                    <div  class="block px-4 py-2 text-xs text-gray-400">
+                                        Switch Collections
+                                    </div>
+
+                                    <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
+                                        <form @submit.prevent="switchToCollection(collection)">
+                                            <ResponsiveNavLink as="button">
+                                                <div class="flex items-center">
+                                                    <svg v-if="collection.id == $page.props.auth.user.current_collection_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <div>{{ collection.name }}</div>
+                                                </div>
+                                            </ResponsiveNavLink>
+                                        </form>
+                                    </template>
+                                </template>
+                            </div>
 
                             <!-- Team Management -->
                             <template v-if="$page.props.jetstream.hasTeamFeatures">

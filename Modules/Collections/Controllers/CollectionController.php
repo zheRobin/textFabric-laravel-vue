@@ -4,6 +4,8 @@ namespace Modules\Collections\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 use Laravel\Jetstream\RedirectsActions;
 use Modules\Collections\Contracts\CreatesCollection;
 use Modules\Collections\Contracts\DeletesCollection;
@@ -25,9 +27,11 @@ class CollectionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        Gate::forUser($request->user())->authorize('create', Collection::class);
+
+        return Inertia::render('Collections::Create', $request);
     }
 
     /**
@@ -45,17 +49,14 @@ class CollectionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, Collection $collection)
     {
-        //
-    }
+        Gate::forUser($request->user())->authorize('view', $collection);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return Inertia::render('Collections::Show', [
+            'collection' => $collection,
+            'permissions' => [],
+        ]);
     }
 
     /**

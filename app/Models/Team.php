@@ -20,7 +20,7 @@ class Team extends JetstreamTeam
      *
      * @var array
      */
-    protected $with = ['planSubscription'];
+    protected $with = ['planSubscription', 'collections'];
 
     /**
      * The attributes that should be cast.

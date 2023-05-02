@@ -11,13 +11,12 @@ class CollectionPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, string $ability): bool|null
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Collection $collection): bool
     {
-        if ($user->isSuperAdmin()) {
-            return true;
-        }
-
-        return null;
+        return $user->currentTeam->ownsCollection($collection);
     }
 
     /**
@@ -38,7 +37,7 @@ class CollectionPolicy
      */
     public function update(User $user, Collection $collection): bool
     {
-        //
+        return $user->currentTeam->ownsCollection($collection);
     }
 
     /**

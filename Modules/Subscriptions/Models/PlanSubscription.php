@@ -159,6 +159,11 @@ class PlanSubscription extends Model
             return true;
         }
 
+        if (is_null($usage) &&
+            intval($featureValue) > 0) {
+            return true;
+        }
+
         if (!$usage ||
             is_null($featureValue) ||
             $featureValue === '0' ||

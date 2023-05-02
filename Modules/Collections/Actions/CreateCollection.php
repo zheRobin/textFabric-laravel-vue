@@ -31,6 +31,8 @@ class CreateCollection implements CreatesCollection
             $user->currentTeam->planSubscription
                 ->recordFeatureUsage(SubscriptionFeatureEnum::COLLECTIONS_LIMIT);
 
+            $user->switchCollection($collection);
+
             return $collection;
         });
     }

@@ -3,7 +3,6 @@
 namespace Modules\Subscriptions\Providers;
 
 use Illuminate\Support\Facades\Route;
-// TODO: move into separate provider
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Modules\Subscriptions\Actions\CreatePlan;
 use Modules\Subscriptions\Actions\UpdatePlanSubscription;
@@ -12,7 +11,7 @@ use Modules\Subscriptions\Contracts\UpdatesPlanSubscription;
 use Modules\Subscriptions\Models\PlanSubscription;
 use Modules\Subscriptions\Policies\PlanSubscriptionPolicy;
 
-class SubscriptionServiceProvider extends ServiceProvider
+class SubscriptionsServiceProvider extends ServiceProvider
 {
     /**
      * All of the container bindings that should be registered.

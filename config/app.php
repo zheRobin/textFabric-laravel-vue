@@ -200,7 +200,8 @@ return [
          */
         Modules\Fortify\Providers\FortifyServiceProvider::class,
         Modules\Jetstream\Providers\JetstreamServiceProvider::class,
-        Modules\Subscriptions\Providers\SubscriptionServiceProvider::class,
+        Modules\Subscriptions\Providers\SubscriptionsServiceProvider::class,
+        Modules\Collections\Providers\CollectionsServiceProvider::class,
 
     ],
 

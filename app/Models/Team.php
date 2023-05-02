@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Modules\Collections\Models\Collection;
 use Modules\Subscriptions\Traits\HasPlanSubscription;
 
 class Team extends JetstreamTeam
@@ -18,7 +20,7 @@ class Team extends JetstreamTeam
      *
      * @var array
      */
-    protected $with = ['planSubscription'];
+    protected $with = ['planSubscription', 'collections'];
 
     /**
      * The attributes that should be cast.
@@ -39,6 +41,23 @@ class Team extends JetstreamTeam
         'name',
         'personal_team',
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    /**
+     * @param Collection $collection
+     * @return bool
+     */
+    public function ownsCollection(Collection $collection): bool
+    {
+        return $this->getKey() == $collection->{$this->getForeignKey()};
+    }
 
     /**
      * The event map for the model.

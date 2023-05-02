@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
+use Modules\Collections\Models\Collection;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -49,6 +51,14 @@ class HandleInertiaRequests extends Middleware
 
                 return null;
             },
+            'collections' => function () use ($request) {
+                $user = $request->user();
+
+                return [
+                    'canCreateCollection' => $user &&
+                                             Gate::forUser($user)->check('create', Collection::class),
+                ];
+            }
         ]);
     }
 }

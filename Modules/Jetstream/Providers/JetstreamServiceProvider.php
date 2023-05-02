@@ -3,7 +3,6 @@
 namespace Modules\Jetstream\Providers;
 
 use App\Models\Team;
-// TODO: move into separate provider
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Jetstream;

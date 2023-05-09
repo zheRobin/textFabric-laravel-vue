@@ -1,0 +1,58 @@
+<?php
+
+namespace Modules\Imports\Traits;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
+trait HasImport
+{
+    /**
+     * @param UploadedFile $uploadedFile
+     * @return void
+     */
+    public function uploadImportFile(UploadedFile $uploadedFile): void
+    {
+        $this->forceFill([
+            'last_uploaded_file_path' => $uploadedFile->store(
+                $this->importFileDirectory(),
+                ['disk' => $this->importFileDisk()]
+            )
+        ])->save();
+    }
+
+    /**
+     * @return false|string
+     */
+    public function importFilePath(): string|false
+    {
+        return $this->last_uploaded_file_path
+            ? Storage::disk($this->importFileDisk())->path($this->last_uploaded_file_path)
+            : false;
+    }
+
+    /**
+     * @return string
+     */
+    public function importFileExtension(): string
+    {
+        return File::extension($this->last_uploaded_file_path);
+    }
+
+    /**
+     * @return string
+     */
+    public function importFileDisk(): string
+    {
+        return 'teams';
+    }
+
+    /**
+     * @return string
+     */
+    protected function importFileDirectory(): string
+    {
+        return "team-{$this->team_id}/collection-{$this->getKey()}";
+    }
+}

@@ -202,6 +202,7 @@ return [
         Modules\Jetstream\Providers\JetstreamServiceProvider::class,
         Modules\Subscriptions\Providers\SubscriptionsServiceProvider::class,
         Modules\Collections\Providers\CollectionsServiceProvider::class,
+        Modules\Imports\Providers\ImportServiceProvider::class,
 
     ],
 

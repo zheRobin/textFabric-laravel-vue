@@ -56,6 +56,12 @@ return [
             'throw' => false,
         ],
 
+        'teams' => [
+            'driver' => 'local',
+            'root' => storage_path('app/teams'),
+            'throw' => false,
+        ]
+
     ],
 
     /*

@@ -6,10 +6,13 @@ use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Imports\Models\CollectionItem;
+use Modules\Imports\Traits\HasImport;
 
 class Collection extends Model
 {
-    use HasFactory;
+    use HasFactory, HasImport;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +22,7 @@ class Collection extends Model
     protected $fillable = [
         'name',
         'team_id',
+        'last_uploaded_file_path',
     ];
 
     /**
@@ -37,5 +41,13 @@ class Collection extends Model
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(CollectionItem::class);
     }
 }

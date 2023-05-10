@@ -58,6 +58,14 @@ trait HasImport
     }
 
     /**
+     * @return string|null
+     */
+    public function importFileContent(): null|string
+    {
+        return Storage::disk($this->importFileDisk())->get($this->last_uploaded_file_path);
+    }
+
+    /**
      * @param string $coordinates
      * @return CollectionItem|null
      */

@@ -5,6 +5,7 @@ namespace Modules\Imports\Traits;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Modules\Imports\Models\CollectionItem;
 
 trait HasImport
 {
@@ -51,8 +52,19 @@ trait HasImport
     /**
      * @return string
      */
-    protected function importFileDirectory(): string
+    public function importFileDirectory(): string
     {
         return "team-{$this->team_id}/collection-{$this->getKey()}";
+    }
+
+    /**
+     * @param string $coordinates
+     * @return CollectionItem|null
+     */
+    public function collectionItemByCoordinates(string $coordinates): CollectionItem|null
+    {
+        return $this->items()
+            ->whereJsonContains('data', ['external_identifier' => $coordinates])
+            ->first();
     }
 }

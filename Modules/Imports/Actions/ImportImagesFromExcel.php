@@ -18,7 +18,7 @@ class ImportImagesFromExcel implements ImportsImagesFromExcel
             if ($drawing instanceof Drawing &&
                 $drawing->getPath() &&
                 $drawing->getCoordinates()) {
-                $collectionItem = $this->collectionItemByCoordinates($collection, $drawing->getCoordinates());
+                $collectionItem = $collection->collectionItemByCoordinates($drawing->getCoordinates());
 
                 if (is_null($collectionItem)) {
                     continue;
@@ -33,19 +33,12 @@ class ImportImagesFromExcel implements ImportsImagesFromExcel
 
                 fclose($zipReader);
 
-                $collectionItem->updateCellWithImage(
+                $collectionItem->putImageIntoCell(
                     $drawing->getCoordinates(),
                     $imageContents,
                     $drawing->getExtension()
                 );
             }
         }
-    }
-
-    protected function collectionItemByCoordinates(Collection $collection, string $coordinates)
-    {
-        return $collection->items()
-            ->whereJsonContains('data', ['external_identifier' => $coordinates])
-            ->first();
     }
 }

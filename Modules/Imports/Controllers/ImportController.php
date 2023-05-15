@@ -27,7 +27,7 @@ class ImportController extends Controller
 
     public function importImages(Request $request)
     {
-        // validate
+        // TODO: validation
 
         // dummy images array
         $images = [$request->images ?? null];

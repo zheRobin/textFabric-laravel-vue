@@ -32,8 +32,6 @@ class ImportImage implements ImportsImage
         foreach ($images as $image) {
             foreach ($collection->items as $item) {
                 $replaced = $item->replaceByImageReference($image);
-
-                dump($replaced);
             }
         }
     }

@@ -9,6 +9,11 @@ use Modules\Imports\Enums\HeaderTypeEnum;
 
 class ImportImage implements ImportsImage
 {
+    /**
+     * @param Collection $collection
+     * @param array $images
+     * @return void
+     */
     public function import(Collection $collection, array $images): void
     {
         $collection->load('items');
@@ -57,6 +62,11 @@ class ImportImage implements ImportsImage
         }
     }
 
+    /**
+     * @param Collection $collection
+     * @param array $images
+     * @return void
+     */
     protected function replaceImageByReference(Collection $collection, array $images): void
     {
         foreach ($images as $image) {

@@ -4,8 +4,10 @@ namespace Modules\Imports\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\Imports\Actions\ImportImage;
 use Modules\Imports\Actions\ImportImagesFromExcel;
 use Modules\Imports\Actions\StoreImportingFile;
+use Modules\Imports\Contracts\ImportsImage;
 use Modules\Imports\Contracts\ImportsImagesFromExcel;
 use Modules\Imports\Contracts\StoresImportingFile;
 
@@ -19,6 +21,7 @@ class ImportServiceProvider extends ServiceProvider
     public array $bindings = [
         StoresImportingFile::class => StoreImportingFile::class,
         ImportsImagesFromExcel::class => ImportImagesFromExcel::class,
+        ImportsImage::class => ImportImage::class,
     ];
 
     /**

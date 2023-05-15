@@ -23,6 +23,16 @@ class JsonImporter implements Importer
 
         $headers = array_keys(current($data));
 
+        $headerItems = [];
+        foreach ($headers as $header) {
+            $headerItems[] = [
+                'value' => $header,
+                'type' => 'text',
+            ];
+        }
+
+        $collection->forceFill(['headers' => $headerItems])->save();
+
         foreach ($data as $row) {
             if (!is_array($row)) {
                 continue;

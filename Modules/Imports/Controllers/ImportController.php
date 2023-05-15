@@ -4,6 +4,7 @@ namespace Modules\Imports\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Imports\Contracts\ImportsImage;
 use Modules\Imports\Contracts\StoresImportingFile;
 use Modules\Imports\Services\ImporterFactory;
 
@@ -22,5 +23,17 @@ class ImportController extends Controller
 
         // import
         $importer->import($request->user()->currentCollection);
+    }
+
+    public function importImages(Request $request)
+    {
+        // validate
+
+        // dummy images array
+        $images = [$request->images ?? null];
+
+        // ImageImporter (collection, array)
+        $importer = app(ImportsImage::class);
+        $importer->import($request->user()->currentCollection, $images);
     }
 }

@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Imports\Models\CollectionItem;
+use Modules\Imports\Traits\HasHeaders;
 use Modules\Imports\Traits\HasImport;
 
 class Collection extends Model
 {
-    use HasFactory, HasImport;
+    use HasFactory, HasImport, HasHeaders;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +24,15 @@ class Collection extends Model
         'name',
         'team_id',
         'last_uploaded_file_path',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'headers' => 'json',
     ];
 
     /**

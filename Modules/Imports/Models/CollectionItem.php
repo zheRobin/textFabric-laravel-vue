@@ -18,7 +18,7 @@ class CollectionItem extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
+        'data',
     ];
 
     /**

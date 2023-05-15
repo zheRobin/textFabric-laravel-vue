@@ -2,6 +2,7 @@
 
 namespace Modules\Imports\Traits;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,7 @@ trait HasCell
                 $imagePath = $this->imagePath($extension);
 
                 if ($this->uploadImage($imagePath, $imageContent)) {
-                    $cell['image_path'] = $imagePath;
+                    $cell['path'] = $imagePath;
                 }
             }
             $cells[] = $cell;
@@ -46,14 +47,64 @@ trait HasCell
     }
 
     /**
-     * @param string $name
-     * @param $extension
+     * @param UploadedFile $image
+     * @return string
+     */
+    public function putImage(UploadedFile $image): string
+    {
+        return Storage::disk($this->collection->importFileDisk())
+            ->putFile($this->imageDirectory(), $image);
+    }
+
+    /**
+     * @param UploadedFile $image
+     * @return bool
+     */
+    public function replaceByImageReference(UploadedFile $image): bool
+    {
+        if (empty($this->data) && !is_array($this->data)) {
+            return false;
+        }
+
+        $imageHeaders = array_column($this->collection->imageHeaders(), 'name');
+
+        $cells = [];
+
+        foreach ($this->data as $cell) {
+            if (in_array($cell['header'], $imageHeaders) &&
+                isset($cell['value']) &&
+                $cell['value'] === $image->getClientOriginalName()) {
+                $cell['path'] = $this->putImage($image);
+                unset($cell['value']);
+            }
+            $cells[] = $cell;
+        }
+
+        if ($cells !== $this->data) {
+            $this->forceFill(['data' => $cells])->save();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $extension
      * @return string
      */
     protected function imagePath(string $extension): string
     {
         $hashed = Str::random(40);
 
-        return "{$this->collection->importFileDirectory()}/images/{$hashed}.{$extension}";
+        return "{$this->imageDirectory()}/{$hashed}.{$extension}";
+    }
+
+    /**
+     * @return string
+     */
+    protected function imageDirectory(): string
+    {
+        return "{$this->collection->importFileDirectory()}/images";
     }
 }

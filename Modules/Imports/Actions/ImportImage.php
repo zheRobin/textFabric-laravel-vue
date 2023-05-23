@@ -61,22 +61,4 @@ class ImportImage implements ImportsImage
             $collectionItem->save();
         }
     }
-
-    /**
-     * @param Collection $collection
-     * @param array $images
-     * @return void
-     */
-    protected function replaceImageByReference(Collection $collection, array $images): void
-    {
-        foreach ($images as $image) {
-            foreach ($collection->imageHeaders() as $imageHeader) {
-                foreach ($collection->items as $item) {
-                    foreach ($item['data'] as $cell) {
-                        dd($image->getClientOriginalName());
-                    }
-                }
-            }
-        }
-    }
 }

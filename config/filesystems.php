@@ -77,6 +77,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        // TODO: remove temporary link
+        public_path('teams') => storage_path('app/teams'),
     ],
 
 ];

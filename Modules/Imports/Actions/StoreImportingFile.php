@@ -13,21 +13,20 @@ class StoreImportingFile implements StoresImportingFile
     {
         // TODO: add max size validation for regular files and images
         Validator::make($input, [
-            'file' => [
+            'upload' => [
                 'required',
                 File::types([
-                    'xlsx', 'xls', 'csv', 'xml', 'json',
-                    'png', 'jpg', 'webp', 'gif'
+                    'xlsx', 'xls', 'csv', 'xml', /*'json',*/
                 ]),
             ]
         ])->after(function (\Illuminate\Validation\Validator $validator) use ($user) {
             if (is_null($user->currentCollection)) {
                 $validator->errors()->add(
-                    'file', 'You need to select a collection before importing.'
+                    'upload', 'You need to select a collection before importing.'
                 );
             }
         })->validateWithBag('importFile');
 
-        $user->currentCollection->uploadImportFile($input['file']);
+        $user->currentCollection->uploadImportFile($input['upload']);
     }
 }

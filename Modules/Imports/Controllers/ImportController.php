@@ -13,7 +13,13 @@ class ImportController extends Controller
 {
     public function index(Request $request)
     {
-        return Inertia::render('Imports::Index', []);
+        // verify collection needed to be picked (or throw exception)
+
+
+        return Inertia::render('Imports::Index', [
+//            'headers' => $request->user()->currentCollection->headers,
+            'items' =>  $request->user()->currentCollection?->items()->paginate(5)
+        ]);
     }
 
     public function store(Request $request)
@@ -36,7 +42,7 @@ class ImportController extends Controller
         // TODO: validation
 
         // dummy images array
-        $images = [$request->images ?? null];
+        $images = [$request->upload ?? null];
 
         // ImageImporter (collection, array)
         $importer = app(ImportsImage::class);

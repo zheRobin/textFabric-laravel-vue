@@ -15,10 +15,9 @@ class ImportController extends Controller
     {
         // verify collection needed to be picked (or throw exception)
 
-
         return Inertia::render('Imports::Index', [
 //            'headers' => $request->user()->currentCollection->headers,
-            'items' =>  $request->user()->currentCollection?->items()->paginate(5)
+            'items' =>  $request->user()->currentCollection?->items()->paginate(5)->onEachSide(2)
         ]);
     }
 

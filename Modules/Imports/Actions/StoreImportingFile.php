@@ -11,13 +11,13 @@ class StoreImportingFile implements StoresImportingFile
 {
     public function store(User $user, array $input): void
     {
-        // TODO: add max size validation for regular files and images
+        // validate headers for attaching
+
         Validator::make($input, [
             'upload' => [
                 'required',
-                File::types([
-                    'xlsx', 'xls', 'csv', 'xml', /*'json',*/
-                ]),
+                File::types(['xlsx', 'xls', 'csv', 'xml', 'json',])
+                    ->max(5 * 1024),
             ]
         ])->after(function (\Illuminate\Validation\Validator $validator) use ($user) {
             if (is_null($user->currentCollection)) {

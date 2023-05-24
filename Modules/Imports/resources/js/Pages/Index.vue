@@ -41,9 +41,9 @@ const props = defineProps({
 
                     <CollectionDataTable v-if="props.items.data.length"
                                          :items="props.items.data"
+                                         :links="props.items.links"
                                          :headers="$page.props.auth.user.current_collection.headers" class="mt-6" />
                 </template>
-
             </div>
         </div>
     </AppLayout>

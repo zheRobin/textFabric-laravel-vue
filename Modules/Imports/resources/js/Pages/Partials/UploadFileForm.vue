@@ -78,7 +78,7 @@ const clearFileInput = () => {
 
 <template>
     <div>
-        <label for="upload-file" class="block h-32 relative overflow-hidden rounded border-2 border-gray-300 border-dashed" :class="{'border-red-400': uploadingError}">
+        <label for="upload-file" class="block h-36 sm:h-32 relative overflow-hidden rounded border-2 border-gray-300 border-dashed" :class="{'border-red-400': uploadingError}">
             <input
                 ref="fileInput"
                 id="upload-file"
@@ -94,7 +94,7 @@ const clearFileInput = () => {
                     <small v-if="canUpload" :class="`text-gray-600 block`">
                         {{ uploadInfo }}
                     </small>
-                    <span v-if="uploadingError || form.errors.upload" class="text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
+                    <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
                     <div class="block mt-2 pointer-events-auto">
                         <PrimaryButton v-if="canUpload" @click="upload">Upload</PrimaryButton>
                     </div>

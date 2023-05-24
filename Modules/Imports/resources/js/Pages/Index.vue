@@ -4,7 +4,7 @@ import { DocumentPlusIcon } from '@heroicons/vue/20/solid';
 import EmptyState from "Jetstream/Components/EmptyState.vue";
 import { Link } from '@inertiajs/vue3';
 import CollectionDataTable from "Modules/Imports/resources/js/Components/CollectionDataTable.vue";
-import UploadFile from "Modules/Imports/resources/js/Components/UploadFile.vue";
+import UploadFileForm from "Modules/Imports/resources/js/Pages/Partials/UploadFileForm.vue";
 
 const props = defineProps({
     items: Object,
@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <AppLayout title="Create Team">
+    <AppLayout title="Import">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Import page
@@ -37,7 +37,7 @@ const props = defineProps({
                 </EmptyState>
 
                 <template v-else>
-                    <UploadFile />
+                    <UploadFileForm class="px-2 sm:px-0" />
 
                     <CollectionDataTable v-if="props.items.data.length"
                                          :items="props.items.data"

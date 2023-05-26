@@ -8,6 +8,7 @@ import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
 import SubscriptionBanner from "Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue";
+import NotificationBanner from "Jetstream/Components/NotificationBanner.vue";
 
 defineProps({
     title: String,
@@ -42,6 +43,8 @@ const logout = () => {
         <Head :title="title" />
 
         <Banner />
+
+        <NotificationBanner />
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <SubscriptionBanner v-if="$page.props.planSubscription" :planSubscription="$page.props.planSubscription" />

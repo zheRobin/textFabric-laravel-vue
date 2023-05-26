@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Route;
 use Modules\Imports\Actions\ImportImage;
 use Modules\Imports\Actions\ImportImagesFromExcel;
 use Modules\Imports\Actions\StoreImportingFile;
+use Modules\Imports\Actions\UpdateCollectionItem;
+use Modules\Imports\Actions\UpdateImageInCell;
 use Modules\Imports\Contracts\ImportsImage;
 use Modules\Imports\Contracts\ImportsImagesFromExcel;
 use Modules\Imports\Contracts\StoresImportingFile;
+use Modules\Imports\Contracts\UpdatesCollectionItem;
+use Modules\Imports\Contracts\UpdatesImageInCell;
 
 class ImportServiceProvider extends ServiceProvider
 {
@@ -22,6 +26,8 @@ class ImportServiceProvider extends ServiceProvider
         StoresImportingFile::class => StoreImportingFile::class,
         ImportsImagesFromExcel::class => ImportImagesFromExcel::class,
         ImportsImage::class => ImportImage::class,
+        UpdatesCollectionItem::class => UpdateCollectionItem::class,
+        UpdatesImageInCell::class => UpdateImageInCell::class,
     ];
 
     /**

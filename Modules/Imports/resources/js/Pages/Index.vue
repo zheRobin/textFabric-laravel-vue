@@ -40,8 +40,7 @@ const props = defineProps({
                     <UploadFileForm class="px-2 sm:px-0" />
 
                     <CollectionDataTable v-if="props.items.data.length"
-                                         :items="props.items.data"
-                                         :links="props.items.links"
+                                         :items="props.items"
                                          :headers="$page.props.auth.user.current_collection.headers" class="mt-6" />
                 </template>
             </div>

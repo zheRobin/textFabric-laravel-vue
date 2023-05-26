@@ -57,6 +57,16 @@ trait HasCell
     }
 
     /**
+     * @param string $path
+     * @return bool
+     */
+    public function removeImage(string $path): bool
+    {
+        return Storage::disk($this->collection->importFileDisk())
+            ->delete($path);
+    }
+
+    /**
      * @param UploadedFile $image
      * @return bool
      */

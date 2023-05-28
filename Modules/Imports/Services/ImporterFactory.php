@@ -11,7 +11,8 @@ class ImporterFactory
     {
         return match ($fileExtension) {
             'json' => new JsonImporter,
-            'xls', 'xlsx', 'xml', 'csv' => new ExcelImporter,
+            'xls', 'xlsx' => new ExcelImporter,
+            'xml', 'csv' => new SimpleExcelImporter,
             default => throw new InvalidArgumentException("Wrong importer file extension [${$fileExtension}]")
         };
     }

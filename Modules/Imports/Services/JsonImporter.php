@@ -26,7 +26,7 @@ class JsonImporter implements Importer
         $headerItems = [];
         foreach ($headers as $header) {
             $headerItems[] = [
-                'value' => $header,
+                'name' => $header,
                 'type' => 'text',
             ];
         }

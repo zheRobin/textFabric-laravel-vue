@@ -68,6 +68,12 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('import.index')" :active="route().current('import.index')">
+                                    Import
+                                </NavLink>
+                            </div>
+
                             <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
                                     Teams
@@ -242,6 +248,18 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
+                            Import
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                            Teams
                         </ResponsiveNavLink>
                     </div>
 

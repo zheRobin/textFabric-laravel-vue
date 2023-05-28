@@ -21,4 +21,9 @@ enum HeaderTypeEnum
             self::LIST => 'list'
         };
     }
+
+    public static function values(): array
+    {
+        return array_map(fn ($el) => $el->slug(), self::cases());
+    }
 }

@@ -1,0 +1,33 @@
+<?php
+
+namespace Modules\Imports\Actions;
+
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Modules\Collections\Models\Collection;
+use Modules\Imports\Contracts\UpdatesCollectionHeader;
+use Modules\Imports\Enums\HeaderTypeEnum;
+
+class UpdateCollectionHeader implements UpdatesCollectionHeader
+{
+    public function update(Collection $collection, array $input): void
+    {
+        // TODO: authorization
+        Validator::make($input, [
+            'header' => ['required', 'string'],
+            'type' => ['required', Rule::in(HeaderTypeEnum::values())]
+        ])->validateWithBag('updateCollectionHeader');
+
+       $headers = [];
+
+       foreach ($collection->headers as $header) {
+           if ($header['name'] === $input['header']) {
+               $header['type'] = $input['type'];
+           }
+
+           $headers[] = $header;
+       }
+
+       $collection->update(['headers' => $headers]);
+    }
+}

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Imports\Controllers\CollectionHeaderController;
 use Modules\Imports\Controllers\CollectionItemController;
 use Modules\Imports\Controllers\ImportController;
 
@@ -13,3 +14,5 @@ Route::post('import/images', [ImportController::class, 'importImages'])->name('i
 
 Route::put('collection-items/{collectionItem}', [CollectionItemController::class, 'update'])->name('collection-items.update');
 Route::post('collection-items/{collectionItem}/image', [CollectionItemController::class, 'updateImage'])->name('collection-items.update-image');
+
+Route::put('collections/{collection}/update-header', [CollectionHeaderController::class, 'update'])->name('collections.update-header');

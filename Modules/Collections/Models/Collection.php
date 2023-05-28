@@ -23,6 +23,7 @@ class Collection extends Model
     protected $fillable = [
         'name',
         'team_id',
+        'headers',
         'last_uploaded_file_path',
     ];
 

@@ -13,7 +13,7 @@ class CollectionHeaderController extends Controller
     {
         $updater = app(UpdatesCollectionHeader::class);
 
-        $updater->update($collection, $request->all());
+        $updater->update($request->user(), $collection, $request->all());
 
         return back(303);
     }

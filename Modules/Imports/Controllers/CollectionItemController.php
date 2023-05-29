@@ -14,7 +14,7 @@ class CollectionItemController extends Controller
     {
         $updater = app(UpdatesCollectionItem::class);
 
-        $updater->update($collectionItem, $request->all());
+        $updater->update($request->user(), $collectionItem, $request->all());
 
         return back(303);
     }
@@ -23,7 +23,7 @@ class CollectionItemController extends Controller
     {
         $updater = app(UpdatesImageInCell::class);
 
-        $updater->update($collectionItem, $request->all());
+        $updater->update($request->user(), $collectionItem, $request->all());
 
         return back(303);
     }

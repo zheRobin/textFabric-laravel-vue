@@ -2,6 +2,8 @@
 
 namespace Modules\Imports\Actions;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Modules\Collections\Models\Collection;
@@ -10,9 +12,10 @@ use Modules\Imports\Enums\HeaderTypeEnum;
 
 class UpdateCollectionHeader implements UpdatesCollectionHeader
 {
-    public function update(Collection $collection, array $input): void
+    public function update(User $user, Collection $collection, array $input): void
     {
-        // TODO: authorization
+        Gate::forUser($user)->authorize('update', $collection);
+
         Validator::make($input, [
             'header' => ['required', 'string'],
             'type' => ['required', Rule::in(HeaderTypeEnum::values())]

@@ -16,6 +16,8 @@ use Modules\Imports\Contracts\StoresImportingFile;
 use Modules\Imports\Contracts\UpdatesCollectionHeader;
 use Modules\Imports\Contracts\UpdatesCollectionItem;
 use Modules\Imports\Contracts\UpdatesImageInCell;
+use Modules\Imports\Models\CollectionItem;
+use Modules\Imports\Policies\CollectionItemPolicy;
 
 class ImportServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,16 @@ class ImportServiceProvider extends ServiceProvider
     ];
 
     /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        CollectionItem::class => CollectionItemPolicy::class,
+    ];
+
+
+    /**
      * Register services.
      */
     public function register(): void
@@ -48,6 +60,7 @@ class ImportServiceProvider extends ServiceProvider
     {
         $this->configureRoutes();
         $this->registerMigrations();
+        $this->registerPolicies();
     }
 
     /**

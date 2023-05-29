@@ -2,6 +2,8 @@
 
 namespace Modules\Imports\Actions;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 use Modules\Imports\Contracts\UpdatesImageInCell;
@@ -9,9 +11,9 @@ use Modules\Imports\Models\CollectionItem;
 
 class UpdateImageInCell implements UpdatesImageInCell
 {
-    public function update(CollectionItem $collectionItem, array $input): void
+    public function update(User $user, CollectionItem $collectionItem, array $input): void
     {
-        // authorization
+        Gate::forUser($user)->authorize('update', $collectionItem);
 
         Validator::make($input, [
             'image' => ['required', File::image()],

@@ -30,7 +30,7 @@ class ExcelImporter implements Importer
         $imageImporter->import($collection);
     }
 
-    protected function getHeaders(Collection $collection): array
+    public function getHeaders(Collection $collection): array
     {
         return Arr::flatten(
             (new HeadingRowImport)->toArray(

@@ -25,7 +25,7 @@ class SimpleExcelImporter implements Importer
         $importer->import($collection->importFilePath());
     }
 
-    protected function getHeaders(Collection $collection): array
+    public function getHeaders(Collection $collection): array
     {
         return Arr::flatten(
             (new HeadingRowImport)->toArray(

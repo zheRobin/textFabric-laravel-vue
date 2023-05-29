@@ -2,11 +2,20 @@
 import {computed, ref} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {useForm} from "@inertiajs/vue3";
+import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
+import DangerButton from "Jetstream/Components/DangerButton.vue";
+
+const props = defineProps({
+    hasItems: Boolean,
+});
 
 const fileInput = ref(null);
 
+const confirmingAppending = ref(false);
+
 const form = useForm({
     upload: null,
+    append: false,
 });
 
 const uploadingError = ref(null);
@@ -55,7 +64,20 @@ const handleUpload = () => {
     uploadingError.value = false;
 }
 
-const upload = () => {
+const confirmUploading = () => {
+    if (!Array.isArray(form.upload) &&
+        typeof form.upload === 'object' &&
+        props.hasItems) {
+        confirmingAppending.value = true;
+    } else {
+        upload();
+    }
+}
+
+const upload = (append = false) => {
+    form.append = append;
+    confirmingAppending.value = false;
+
     if (Array.isArray(form.upload)) {
         form.post(route('import.images'), {
             errorBag: 'importImages',
@@ -95,11 +117,41 @@ const clearFileInput = () => {
                         {{ uploadInfo }}
                     </small>
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                    <div class="block mt-2 pointer-events-auto">
-                        <PrimaryButton v-if="canUpload" @click="upload">Upload</PrimaryButton>
+                    <div v-if="canUpload" class="block mt-2 pointer-events-auto">
+                        <PrimaryButton @click="confirmUploading">Upload</PrimaryButton>
                     </div>
                 </div>
             </span>
         </label>
     </div>
+
+    <ConfirmationModal :show="confirmingAppending" @close="confirmingAppending = false">
+        <template #title>
+            Confirm upload
+        </template>
+
+        <template #content>
+            Do you want to replace or append data?
+        </template>
+
+        <template #footer>
+            <PrimaryButton
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="upload(true)"
+            >
+                Append
+            </PrimaryButton>
+
+            <DangerButton
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="upload()"
+            >
+                Replace
+            </DangerButton>
+        </template>
+    </ConfirmationModal>
 </template>

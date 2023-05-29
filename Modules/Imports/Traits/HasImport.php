@@ -66,6 +66,24 @@ trait HasImport
     }
 
     /**
+     * @return bool
+     */
+    public function removeImportedFile(): bool
+    {
+        return Storage::disk($this->importFileDisk())->delete($this->last_uploaded_file_path);
+    }
+
+    /**
+     * @return void
+     */
+    public function purgeItems(): void
+    {
+        $this->items()->delete();
+
+        $this->update(['headers' => null]);
+    }
+
+    /**
      * @param string $coordinates
      * @return CollectionItem|null
      */

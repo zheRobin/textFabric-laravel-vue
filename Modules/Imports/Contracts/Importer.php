@@ -8,5 +8,5 @@ interface Importer
 {
     public function import(Collection $collection): void;
 
-//    public function getHeaders(Collection $collection): array;
+    public function getHeaders(Collection $collection): array;
 }

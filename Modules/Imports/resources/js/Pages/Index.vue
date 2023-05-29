@@ -37,7 +37,7 @@ const props = defineProps({
                 </EmptyState>
 
                 <template v-else>
-                    <UploadFileForm class="px-2 sm:px-0" />
+                    <UploadFileForm :hasItems="props.items.data.length" class="px-2 sm:px-0" />
 
                     <CollectionDataTable v-if="props.items.data.length"
                                          :items="props.items"

@@ -32,8 +32,14 @@ class ImportController extends Controller
             $request->user()->currentCollection->importFileExtension()
         );
 
+        if (!boolval($request->offsetGet('append'))) {
+            $request->user()->currentCollection->purgeItems();
+        }
+
         // import
         $importer->import($request->user()->currentCollection);
+
+        return back(303);
     }
 
     public function importImages(Request $request)
@@ -46,5 +52,7 @@ class ImportController extends Controller
         // ImageImporter (collection, array)
         $importer = app(ImportsImage::class);
         $importer->import($request->user()->currentCollection, $images);
+
+        return back(303);
     }
 }

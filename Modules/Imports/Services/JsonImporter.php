@@ -55,6 +55,17 @@ class JsonImporter implements Importer
         }
     }
 
+    public function getHeaders(Collection $collection): array
+    {
+        $data = $this->validateJsonStructure($collection->importFileContent());
+
+        if (empty($data)) {
+            return [];
+        }
+
+        return array_keys(current($data));
+    }
+
     protected function validateJsonStructure($data): array|false
     {
         $array = json_decode(

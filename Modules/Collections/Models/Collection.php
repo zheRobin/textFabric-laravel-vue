@@ -6,10 +6,14 @@ use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Imports\Models\CollectionItem;
+use Modules\Imports\Traits\HasHeaders;
+use Modules\Imports\Traits\HasImport;
 
 class Collection extends Model
 {
-    use HasFactory;
+    use HasFactory, HasImport, HasHeaders;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +23,17 @@ class Collection extends Model
     protected $fillable = [
         'name',
         'team_id',
+        'headers',
+        'last_uploaded_file_path',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'headers' => 'json',
     ];
 
     /**
@@ -37,5 +52,13 @@ class Collection extends Model
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(CollectionItem::class);
     }
 }

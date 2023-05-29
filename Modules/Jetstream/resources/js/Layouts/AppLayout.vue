@@ -8,6 +8,7 @@ import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
 import SubscriptionBanner from "Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue";
+import NotificationBanner from "Jetstream/Components/NotificationBanner.vue";
 
 defineProps({
     title: String,
@@ -43,9 +44,11 @@ const logout = () => {
 
         <Banner />
 
-        <SubscriptionBanner v-if="$page.props.planSubscription" :planSubscription="$page.props.planSubscription" />
+        <NotificationBanner />
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+            <SubscriptionBanner v-if="$page.props.planSubscription" :planSubscription="$page.props.planSubscription" />
+
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,6 +65,12 @@ const logout = () => {
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('import.index')" :active="route().current('import.index')">
+                                    Import
                                 </NavLink>
                             </div>
 
@@ -239,6 +248,18 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
+                            Import
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                            Teams
                         </ResponsiveNavLink>
                     </div>
 

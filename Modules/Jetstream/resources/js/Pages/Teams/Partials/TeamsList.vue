@@ -114,5 +114,7 @@ fillFilters();
         </ul>
     </div>
 
-    <Pagination :links="teams.links" class="shadow sm:rounded-b"/>
+    <div class="border-t border-gray-200 bg-white">
+        <Pagination :links="teams.links" class="shadow sm:rounded-b"/>
+    </div>
 </template>

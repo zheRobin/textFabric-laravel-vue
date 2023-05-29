@@ -11,6 +11,12 @@ module.exports = {
         'Modules/*/resources/js/**/*.vue',
     ],
 
+    safelist: [
+        {
+            pattern: /grid-cols-+/,
+        }
+    ],
+
     theme: {
         extend: {
             fontFamily: {

@@ -32,8 +32,14 @@ class ImportController extends Controller
             $request->user()->currentCollection->importFileExtension()
         );
 
+        // TODO: refactor, move into separate service
         if (!boolval($request->offsetGet('append'))) {
             $request->user()->currentCollection->purgeItems();
+        }
+
+        if ($request->user()->currentCollection->items->isNotEmpty())
+        {
+            $request->user()->currentCollection->update(['headers' => []]);
         }
 
         // import

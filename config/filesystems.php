@@ -58,7 +58,7 @@ return [
 
         'teams' => [
             'driver' => 'local',
-            'root' => storage_path('app/teams'),
+            'root' => storage_path('app/public/teams'),
             'throw' => false,
         ]
 
@@ -77,8 +77,6 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        // TODO: remove temporary link
-        public_path('teams') => storage_path('app/teams'),
     ],
 
 ];

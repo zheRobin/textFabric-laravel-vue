@@ -15,7 +15,7 @@ const form = useForm({
 
 const imageInput = ref(null);
 
-const imageSource = ref(`storage/teams/${props.cell.path}`);
+const imageSource = ref(`storage/${props.cell.path}`);
 
 const selectImage = () => {
     imageInput.value.click();

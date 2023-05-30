@@ -55,13 +55,6 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
-
-        'teams' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/teams'),
-            'throw' => false,
-        ]
-
     ],
 
     /*

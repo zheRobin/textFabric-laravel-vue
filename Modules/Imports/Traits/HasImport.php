@@ -46,7 +46,7 @@ trait HasImport
      */
     public function importFileDisk(): string
     {
-        return 'teams';
+        return 'public';
     }
 
     /**

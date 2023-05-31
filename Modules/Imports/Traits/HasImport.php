@@ -73,6 +73,20 @@ trait HasImport
         return Storage::disk($this->importFileDisk())->delete($this->last_uploaded_file_path);
     }
 
+    public function newRow(): array
+    {
+        $cells = [];
+
+        foreach ($this->headers as $header) {
+            $cells[] = [
+                'header' => $header['name'],
+                'value' => null,
+            ];
+        }
+
+        return $cells;
+    }
+
     /**
      * @return void
      */

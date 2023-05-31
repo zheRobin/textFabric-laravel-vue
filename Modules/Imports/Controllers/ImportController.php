@@ -37,8 +37,7 @@ class ImportController extends Controller
             $request->user()->currentCollection->purgeItems();
         }
 
-        if ($request->user()->currentCollection->items->isNotEmpty())
-        {
+        if ($request->user()->currentCollection->items->isNotEmpty()) {
             $request->user()->currentCollection->update(['headers' => []]);
         }
 
@@ -50,14 +49,8 @@ class ImportController extends Controller
 
     public function importImages(Request $request)
     {
-        // TODO: validation
-
-        // dummy images array
-        $images = [$request->upload ?? null];
-
-        // ImageImporter (collection, array)
         $importer = app(ImportsImage::class);
-        $importer->import($request->user()->currentCollection, $images);
+        $importer->import($request->user()->currentCollection, $request->all());
 
         return back(303);
     }

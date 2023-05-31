@@ -13,11 +13,9 @@ trait HasHeaders
      */
     public function addHeader(string $name, HeaderTypeEnum $headerType): void
     {
-        $headers = $this->headers ?? [];
-
         $this->forceFill([
             'headers' => [
-                ...$headers,
+                ...$this->headers ?? [],
                 [
                     'name' => $name,
                     'type' => $headerType->slug()

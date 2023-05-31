@@ -18,7 +18,7 @@ const colNumber = (index) => {
 
 <template>
     <div>
-        <div class="overflow-hidden bg-white shadow">
+        <div class="bg-white shadow">
             <div class="grid text-sm border-gray-400" :class="colsCount">
                 <div class="divide-y divide-gray-400 ">
                     <div class="p-4 bg-gray-200 h-14" />

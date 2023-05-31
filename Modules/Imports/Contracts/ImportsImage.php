@@ -9,8 +9,8 @@ interface ImportsImage
 {
     /**
      * @param Collection $collection
-     * @param UploadedFile[] $images
+     * @param array $input
      * @return void
      */
-    public function import(Collection $collection, array $images): void;
+    public function import(Collection $collection, array $input): void;
 }

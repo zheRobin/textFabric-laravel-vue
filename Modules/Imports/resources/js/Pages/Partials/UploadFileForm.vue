@@ -82,6 +82,7 @@ const upload = (append = false) => {
         form.post(route('import.images'), {
             errorBag: 'importImages',
             preserveScroll: true,
+            preserveState: false,
         });
     } else {
         form.post(route('import.file'), {

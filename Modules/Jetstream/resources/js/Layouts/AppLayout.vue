@@ -1,14 +1,14 @@
 <script setup>
 import {computed, ref} from 'vue';
 import {Head, Link, router, usePage} from '@inertiajs/vue3';
-import ApplicationMark from 'Jetstream/Components/ApplicationMark.vue';
 import Banner from 'Jetstream/Components/Banner.vue';
 import Dropdown from 'Jetstream/Components/Dropdown.vue';
 import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
-import SubscriptionBanner from "Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue";
-import NotificationBanner from "Jetstream/Components/NotificationBanner.vue";
+import SubscriptionBanner from 'Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue';
+import NotificationBanner from 'Jetstream/Components/NotificationBanner.vue';
+import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
 
 defineProps({
     title: String,
@@ -57,7 +57,7 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationMark class="block h-9 w-auto" />
+                                    <ApplicationLogo class="block h-9 w-auto" />
                                 </Link>
                             </div>
 

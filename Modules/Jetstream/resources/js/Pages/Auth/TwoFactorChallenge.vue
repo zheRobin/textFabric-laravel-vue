@@ -2,11 +2,11 @@
 import { nextTick, ref } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from 'Jetstream/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from 'Jetstream/Components/AuthenticationCardLogo.vue';
 import InputError from 'Jetstream/Components/InputError.vue';
 import InputLabel from 'Jetstream/Components/InputLabel.vue';
 import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
+import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
 
 const recovery = ref(false);
 
@@ -42,7 +42,7 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <ApplicationLogo class="block h-12 w-auto" />
         </template>
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">

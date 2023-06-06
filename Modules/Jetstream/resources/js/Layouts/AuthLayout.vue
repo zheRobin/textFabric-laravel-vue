@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import AuthenticationCardLogo from "Jetstream/Components/AuthenticationCardLogo.vue";
+import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
 
 defineProps({
     title: String,
@@ -15,7 +15,7 @@ defineProps({
         <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
                 <div>
-                    <AuthenticationCardLogo></AuthenticationCardLogo>
+                    <ApplicationLogo class="block h-12 w-auto" />
                     <slot name="header" />
                 </div>
 

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Imports\Models\CollectionItem;
 use Modules\Imports\Traits\HasHeaders;
 use Modules\Imports\Traits\HasImport;
+use Modules\Presets\Models\Preset;
 
 class Collection extends Model
 {
@@ -60,5 +61,10 @@ class Collection extends Model
     public function items(): HasMany
     {
         return $this->hasMany(CollectionItem::class);
+    }
+
+    public function presets(): HasMany
+    {
+        return $this->hasMany(Preset::class);
     }
 }

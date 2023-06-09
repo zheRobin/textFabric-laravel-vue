@@ -22,6 +22,9 @@ enum HeaderTypeEnum
         };
     }
 
+    /**
+     * @return String[]
+     */
     public static function values(): array
     {
         return array_map(fn ($el) => $el->slug(), self::cases());

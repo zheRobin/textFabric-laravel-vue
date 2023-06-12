@@ -205,6 +205,7 @@ return [
         Modules\Imports\Providers\ImportServiceProvider::class,
         Modules\OpenAI\Providers\OpenAIServiceProvider::class,
         Modules\Presets\Providers\PresetServiceProvider::class,
+        Modules\Translations\Providers\TranslationServiceProvider::class,
 
     ],
 

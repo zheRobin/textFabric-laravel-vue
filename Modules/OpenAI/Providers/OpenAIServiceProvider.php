@@ -4,9 +4,23 @@ namespace Modules\OpenAI\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\OpenAI\Actions\BuildPrompt;
+use Modules\OpenAI\Actions\CompleteCollectionItem;
+use Modules\OpenAI\Contracts\BuildsPrompt;
+use Modules\OpenAI\Contracts\CompletesCollectionItem;
 
 class OpenAIServiceProvider extends ServiceProvider
 {
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public array $bindings = [
+        CompletesCollectionItem::class => CompleteCollectionItem::class,
+        BuildsPrompt::class => BuildPrompt::class,
+    ];
+
     /**
      * Register services.
      */

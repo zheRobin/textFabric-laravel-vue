@@ -6,7 +6,11 @@ use DeepL\Translator;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\Translations\Actions\TranslateCollectionItemData;
+use Modules\Translations\Actions\TranslateData;
 use Modules\Translations\Actions\UpdateLanguages;
+use Modules\Translations\Contracts\TranslatesCollectionItemData;
+use Modules\Translations\Contracts\TranslatesData;
 use Modules\Translations\Contracts\UpdatesLanguages;
 
 class TranslationServiceProvider extends ServiceProvider
@@ -18,6 +22,8 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         UpdatesLanguages::class => UpdateLanguages::class,
+        TranslatesCollectionItemData::class => TranslateCollectionItemData::class,
+        TranslatesData::class => TranslateData::class,
     ];
 
     /**

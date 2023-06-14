@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\OpenAI\Controllers\CollectionItemCompletionController;
 use Modules\OpenAI\Controllers\OpenAIController;
 
 $authMiddleware = array_filter([
@@ -11,5 +12,7 @@ $authMiddleware = array_filter([
 
 Route::middleware($authMiddleware)->group(function () {
     // dummy route
-   Route::get('openai', [OpenAIController::class, 'index']);
+    Route::get('openai', [OpenAIController::class, 'index']);
+
+    Route::get('openai/presets/{preset}/complete-item/{item}', [CollectionItemCompletionController::class, 'complete'])->name('openai.item-completion');
 });

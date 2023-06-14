@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Presets;
+namespace Modules\Presets\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Translations\Models\Language;

@@ -15,7 +15,7 @@ class TranslateData implements TranslatesData
         return array_combine(
             array_keys($data),
             array_column(
-                $translator->translateText( array_values($data), null, $language->code),
+                $translator->translateText(array_values($data), null, $language->code),
                 'text'
             )
         );

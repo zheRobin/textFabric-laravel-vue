@@ -203,6 +203,9 @@ return [
         Modules\Subscriptions\Providers\SubscriptionsServiceProvider::class,
         Modules\Collections\Providers\CollectionsServiceProvider::class,
         Modules\Imports\Providers\ImportServiceProvider::class,
+        Modules\OpenAI\Providers\OpenAIServiceProvider::class,
+        Modules\Presets\Providers\PresetServiceProvider::class,
+        Modules\Translations\Providers\TranslationServiceProvider::class,
 
     ],
 

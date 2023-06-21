@@ -1,5 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
+import '../css/vueform-slider.css';
+import 'floating-vue/dist/style.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';

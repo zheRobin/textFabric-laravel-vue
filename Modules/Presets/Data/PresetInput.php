@@ -26,7 +26,9 @@ class PresetInput extends Data
         #[Required, StringType, Max(255)]
         public string $name,
         #[Required, StringType]
-        public string $prompt_pattern,
+        public string $system_prompt,
+        #[Required, StringType]
+        public string $user_prompt,
         #[Enum(ChatModelEnum::class), WithCast(ChatModelCast::class)]
         public ChatModelEnum $model,
         #[StringType]

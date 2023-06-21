@@ -12,7 +12,7 @@ $authMiddleware = array_filter([
 
 Route::middleware($authMiddleware)->group(function () {
     // dummy route
-    Route::get('openai', [OpenAIController::class, 'index']);
+    Route::get('openai', [OpenAIController::class, 'index'])->name('openai.index');
 
     Route::get('openai/presets/{preset}/complete-item/{item}', [CollectionItemCompletionController::class, 'complete'])->name('openai.item-completion');
 });

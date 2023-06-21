@@ -6,14 +6,18 @@ use Modules\OpenAI\Enums\ChatRoleEnum;
 
 trait HasOpenAIParams
 {
-    public function getChatParams(string $message, ChatRoleEnum $role)
+    public function getChatParams(string $systemMessage, string $userMessage)
     {
         return array_filter([
             'model' => $this->model,
             'messages' => [
                 [
-                    'role' => $role->roleName(),
-                    'content' => $message,
+                    'role' => ChatRoleEnum::SYSTEM->roleName(),
+                    'content' => $systemMessage,
+                ],
+                [
+                    'role' => ChatRoleEnum::USER->roleName(),
+                    'content' => $userMessage,
                 ]
             ],
             'temperature' => $this->temperature,

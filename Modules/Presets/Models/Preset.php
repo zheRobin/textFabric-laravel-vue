@@ -21,7 +21,8 @@ class Preset extends Model
     protected $fillable = [
         'name',
         'model',
-        'prompt_pattern',
+        'system_prompt',
+        'user_prompt',
         'collection_id',
         'temperature',
         'top_p',

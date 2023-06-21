@@ -7,7 +7,6 @@ use DeepL\Translator;
 use Modules\Imports\Models\CollectionItem;
 use Modules\OpenAI\Contracts\BuildsPrompt;
 use Modules\OpenAI\Contracts\CompletesCollectionItem;
-use Modules\OpenAI\Enums\ChatRoleEnum;
 use Modules\OpenAI\Services\PromptService;
 use Modules\Presets\Models\Preset;
 use Modules\Translations\Contracts\TranslatesData;
@@ -32,9 +31,10 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
         // build prompt
         $builder = app(BuildsPrompt::class);
-        $message = $builder->build($promptData, $preset->prompt_pattern);
+        $systemMessage = $builder->build($promptData, $preset->system_prompt);
+        $userMessage = $builder->build($promptData, $preset->user_prompt);
 
-        $params = $preset->getChatParams($message, ChatRoleEnum::USER);
+        $params = $preset->getChatParams($systemMessage, $userMessage);
         $completion = OpenAI::chat()->create($params);
 
         $formattedResponse = $this->formatResponse($completion);

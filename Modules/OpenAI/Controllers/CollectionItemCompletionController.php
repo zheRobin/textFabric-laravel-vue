@@ -5,14 +5,14 @@ namespace Modules\OpenAI\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Imports\Models\CollectionItem;
-use Modules\OpenAI\Actions\CompleteCollectionItem;
+use Modules\OpenAI\Contracts\CompletesCollectionItem;
 use Modules\Presets\Models\Preset;
 
 class CollectionItemCompletionController extends Controller
 {
     public function complete(Request $request, Preset $preset, CollectionItem $item)
     {
-        $completer = app(CompleteCollectionItem::class);
+        $completer = app(CompletesCollectionItem::class);
 
         $response = $completer->complete(
             $request->user(),
@@ -20,6 +20,8 @@ class CollectionItemCompletionController extends Controller
             $item
         );
 
-        return $response;
+        return response()->json(
+            $response
+        );
     }
 }

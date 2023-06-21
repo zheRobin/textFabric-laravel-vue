@@ -68,15 +68,21 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
+                            <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                                    Teams
+                                </NavLink>
+                            </div>
+
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('import.index')" :active="route().current('import.index')">
                                     Import
                                 </NavLink>
                             </div>
 
-                            <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
-                                    Teams
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('openai.index')" :active="route().current('openai.index')">
+                                    Editor
                                 </NavLink>
                             </div>
                         </div>

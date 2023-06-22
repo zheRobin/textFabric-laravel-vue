@@ -43,7 +43,7 @@ class PresetInput extends Data
         public float|Optional $presence_penalty = 0,
         #[Numeric, Between(-2,2)]
         public float|Optional $frequency_penalty = 0,
-        #[Nullable, ArrayType, Min(1)]
+        #[Nullable, ArrayType]
         public null|array|Optional $stop = null,
         #[Numeric, Between(1,2048)]
         public int|Optional $max_tokens = 1,

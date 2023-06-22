@@ -10,6 +10,7 @@ import TagInput from "Jetstream/Components/TagInput.vue";
 import PromptEditor from "Modules/OpenAI/resources/js/Components/PromptEditor.vue";
 import CollectionItemPreview from "Modules/OpenAI/resources/js/Components/CollectionItemPreview.vue";
 import CollectionItemCompletion from "Modules/OpenAI/resources/js/Components/CollectionItemCompletion.vue";
+import {notify} from "notiwind";
 
 const props = defineProps({
     presets: Array,
@@ -33,6 +34,21 @@ const form = useForm({
     frequency_penalty: 0,
     stop: [],
 });
+
+const emptyState = {
+    collection_id: collectionId,
+    model: null,
+    system_prompt: '',
+    user_prompt: '',
+    name: null,
+    temperature: 1,
+    top_p: 1,
+    n: 1,
+    max_tokens: 2048,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+    stop: [],
+};
 
 const modelOptions = () => {
     const models = [];
@@ -90,6 +106,8 @@ const fillPresetForm = (preset) => {
 const addPreset = () => {
     selectedPreset.value = null;
     addingPreset.value = true;
+    form.defaults(emptyState);
+    form.reset();
 }
 
 const savePreset = () => {
@@ -97,7 +115,13 @@ const savePreset = () => {
         form.patch(route('presets.update', selectedPreset.value), {
             errorBag: 'errors',
             preserveScroll: true,
-            onError: (er) => console.log(er)
+            onError: (error) => {
+                notify({
+                    group: "error",
+                    title: "Error",
+                    text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                }, 4000) // 4s
+            }
         })
     }
 
@@ -105,7 +129,13 @@ const savePreset = () => {
         form.post(route('presets.store'), {
             errorBag: 'errors',
             preserveScroll: true,
-            onError: (er) => console.log(er)
+            onError: (error) => {
+                notify({
+                    group: "error",
+                    title: "Error",
+                    text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                }, 4000) // 4s
+            }
         })
     }
 

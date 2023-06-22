@@ -18,7 +18,7 @@ const updateItem = debounce( () => {
         preserveScroll: true,
         onSuccess: () => {
             notify({
-                group: "notification",
+                group: "success",
                 title: "Success",
                 text: "The item was updated!"
             }, 4000) // 4s

@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import { onClickOutside } from '@vueuse/core';
 import TextInput from "Jetstream/Components/TextInput.vue";
 
@@ -15,6 +15,10 @@ const emit = defineEmits(["update:modelValue"]);
 const open = ref(false);
 const textInput = ref(null);
 const tags = ref(props.modelValue);
+
+watch(() => props.modelValue, (value) => {
+    tags.value = value;
+});
 
 const outsideTarget = ref(null);
 onClickOutside(outsideTarget, () => clearSearch());

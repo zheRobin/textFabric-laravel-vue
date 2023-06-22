@@ -34,7 +34,7 @@ const updateImage = () => {
         preserveState: false,
         onSuccess: () => {
             notify({
-                group: "notification",
+                group: "success",
                 title: "Success",
                 text: "The image was updated!"
             }, 4000) // 4s

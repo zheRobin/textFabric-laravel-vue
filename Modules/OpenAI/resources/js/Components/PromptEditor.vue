@@ -12,6 +12,8 @@ const props = defineProps({
     title: String,
 });
 
+const emit = defineEmits(['update:modelValue']);
+
 const promptText = ref(props.modelValue);
 
 watch(() => props.modelValue, (value) => {

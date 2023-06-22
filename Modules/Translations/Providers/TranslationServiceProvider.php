@@ -43,20 +43,8 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->configureRoutes();
         $this->registerMigrations();
         $this->mergeConfigFrom(__DIR__ . '/../Config/deepl.php', 'deepl');
-    }
-
-    /**
-     * Configure routes.
-     */
-    protected function configureRoutes(): void
-    {
-        Route::middleware('web')
-            ->group(function () {
-                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-            });
     }
 
     /**

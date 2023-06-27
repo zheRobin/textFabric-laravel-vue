@@ -189,7 +189,7 @@ const clearPhotoFileInput = () => {
             <!-- Employees -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="employees" value="Employees" />
-                <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" />
+                <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" class="mt-1" />
                 <InputError :message="form.errors.employees" class="mt-2" />
             </div>
 

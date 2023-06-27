@@ -4,6 +4,7 @@ namespace Modules\Presets\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Laravel\Jetstream\RedirectsActions;
 use Modules\Presets\Contracts\CreatesPreset;
 use Modules\Presets\Contracts\UpdatesPreset;
 use Modules\Presets\Data\PresetInput;
@@ -11,6 +12,8 @@ use Modules\Presets\Models\Preset;
 
 class PresetController extends Controller
 {
+    use RedirectsActions;
+
     /**
      * Show the form for creating a new resource.
      */
@@ -26,7 +29,9 @@ class PresetController extends Controller
     {
         $creator = app(CreatesPreset::class);
 
-        $creator->create($request->user(), $data);
+        $preset = $creator->create($request->user(), $data);
+
+        return $this->redirectPath($creator)->with(['preset' => $preset]);
     }
 
     /**

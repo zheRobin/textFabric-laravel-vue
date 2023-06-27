@@ -36,7 +36,7 @@ const label = computed(() => {
              :multiple="props.multiple"
              @update:modelValue="value => emit('update:modelValue', value)">
         <ListboxLabel v-show="props.label" class="block text-sm font-medium leading-6 text-gray-900">Plan type</ListboxLabel>
-        <div class="relative mt-1">
+        <div class="relative">
             <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-tf-blue-500 sm:text-sm sm:leading-6">
                 <span v-if="label" class="block truncate">{{ label }}</span>
                 <span v-else class="text-gray-500"> {{ placeholder }} </span>

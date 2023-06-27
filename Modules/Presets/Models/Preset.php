@@ -28,10 +28,6 @@ class Preset extends Model
         'top_p',
         'frequency_penalty',
         'presence_penalty',
-        'n',
-        'max_tokens',
-        'stop',
-        'logit_bias',
     ];
 
     /**

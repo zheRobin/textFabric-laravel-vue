@@ -22,7 +22,7 @@ const generate = () => {
 <template>
     <div class="overflow-hidden bg-gray-50 rounded mt-10 justify-center">
         <div class="px-4 py-4 sm:px-6">
-            <h3 class="text-base font-semibold leading-7 text-gray-900">Preview</h3>
+            <h3 class="text-base font-semibold leading-7 text-gray-900">{{$t('Preview')}}</h3>
         </div>
 
         <div class="h-44 px-4  text-base text-center leading-7 text-gray-900 overflow-scroll">
@@ -30,7 +30,7 @@ const generate = () => {
         </div>
 
         <div class="mt-6 border-t px-6 py-2 text-right">
-            <PrimaryButton @click="generate"> Generate </PrimaryButton>
+            <PrimaryButton @click="generate"> {{$t('Generate')}} </PrimaryButton>
         </div>
     </div>
 </template>

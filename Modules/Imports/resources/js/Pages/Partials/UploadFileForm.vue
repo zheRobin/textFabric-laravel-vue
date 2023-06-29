@@ -46,13 +46,13 @@ const handleUpload = () => {
     });
 
     if (imageFiles.length && dataFiles.length) {
-        uploadingError.value = "You can select only images or one data file.";
+        uploadingError.value = t('import_form_1');
         clearFileInput();
         return;
     }
 
     if (dataFiles.length > 1) {
-        uploadingError.value = "You can select only one data file.";
+        uploadingError.value = t('import_form_2');
         clearFileInput();
         return;
     }
@@ -113,13 +113,13 @@ const clearFileInput = () => {
 
             <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
                 <div class="text-center">
-                    <strong>Browse file to upload</strong>
+                    <strong>{{ $t("Browse file to upload") }}</strong>
                     <small v-if="canUpload" :class="`text-gray-600 block`">
                         {{ uploadInfo }}
                     </small>
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
                     <div v-if="canUpload" class="block mt-2 pointer-events-auto">
-                        <PrimaryButton @click="confirmUploading">Upload</PrimaryButton>
+                        <PrimaryButton @click="confirmUploading">{{ $t('Upload') }}</PrimaryButton>
                     </div>
                 </div>
             </span>
@@ -128,11 +128,11 @@ const clearFileInput = () => {
 
     <ConfirmationModal :show="confirmingAppending" @close="confirmingAppending = false">
         <template #title>
-            Confirm upload
+            {{ $t('Confirm upload') }}
         </template>
 
         <template #content>
-            Do you want to replace or append data?
+            {{ $t('Do you want to replace or append data?') }}
         </template>
 
         <template #footer>
@@ -142,7 +142,7 @@ const clearFileInput = () => {
                 :disabled="form.processing"
                 @click="upload(true)"
             >
-                Append
+                {{ $t('Append') }}
             </PrimaryButton>
 
             <DangerButton
@@ -151,7 +151,7 @@ const clearFileInput = () => {
                 :disabled="form.processing"
                 @click="upload()"
             >
-                Replace
+                {{ $t('Replace') }}
             </DangerButton>
         </template>
     </ConfirmationModal>

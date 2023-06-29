@@ -9,11 +9,13 @@ import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
 import SubscriptionBanner from 'Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue';
 import NotificationBanner from 'Jetstream/Components/NotificationBanner.vue';
 import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
-
+import LanguageSelector from "../Components/LanguageSelector.vue";
 defineProps({
     title: String,
+    locale: String
 });
 
+const locale = localStorage.getItem('locale') || 'en';
 const showingNavigationDropdown = ref(false);
 
 const currentTeam = computed(() => usePage().props.auth.user.current_team);
@@ -60,29 +62,40 @@ const logout = () => {
                                     <ApplicationLogo class="block h-9 w-auto" />
                                 </Link>
                             </div>
-
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    {{$t('Dashboard')}}
                                 </NavLink>
                             </div>
 
                             <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
-                                    Teams
+                                    {{$t('Teams')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('import.index')" :active="route().current('import.index')">
-                                    Import
+                                    {{$t('Import')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('openai.index')" :active="route().current('openai.index')">
-                                    Editor
+                                    {{$t('Editor')}}
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('compilations.index')" :active="route().current('compilations.index')">
+                                    {{$t('Compilations')}}
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('api.index')" :active="route().current('api.index')">
+                                    API
                                 </NavLink>
                             </div>
                         </div>
@@ -94,7 +107,7 @@ const logout = () => {
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                                {{ currentCollection ? currentCollection.name : 'Collections' }}
+                                                {{ currentCollection ? currentCollection.name : $t('Compilations') }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
@@ -107,16 +120,16 @@ const logout = () => {
                                             <!-- Collection Management -->
                                             <template v-if="$page.props.jetstream.hasTeamFeatures">
                                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Manage Collections
+                                                    {{ $t('Manage Collections') }}
                                                 </div>
 
                                                 <!-- Team Settings -->
                                                 <DropdownLink v-if="currentCollection" :href="route('collections.show', currentCollection)">
-                                                    Collection Settings
+                                                    {{ $t('Collection Settings') }}
                                                 </DropdownLink>
 
                                                 <DropdownLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')">
-                                                    Create New Collection
+                                                    {{$t('Create New Collection')}}
                                                 </DropdownLink>
 
                                                 <template v-if="$page.props.auth.user.current_team.collections.length">
@@ -124,7 +137,7 @@ const logout = () => {
 
                                                     <!-- Collection Switcher -->
                                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                                        Switch Collections
+                                                        {{$t('Switch Collections')}}
                                                     </div>
 
                                                     <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
@@ -169,28 +182,28 @@ const logout = () => {
                                     <template #content>
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                            {{$t('Manage Account')}}
                                         </div>
 
                                         <DropdownLink :href="route('profile.show')">
-                                            Profile
+                                            {{$t('Profile')}}
                                         </DropdownLink>
 
                                         <DropdownLink :href="route('teams.show', currentTeam)">
-                                            Team Settings
+                                            {{$t('Team Settings')}}
                                         </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                            Create New Team
+                                            {{$t('Create New Team')}}
                                         </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                            API Tokens
+                                            {{$t('API Tokens')}}
                                         </DropdownLink>
 
                                         <!-- Team Switch -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Switch Team
+                                            {{$t('Switch Team')}}
                                         </div>
 
                                         <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
@@ -212,12 +225,14 @@ const logout = () => {
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
                                             <DropdownLink as="button">
-                                                Log Out
+                                                {{$t('Log Out')}}
                                             </DropdownLink>
                                         </form>
                                     </template>
                                 </Dropdown>
                             </div>
+                            <LanguageSelector />
+
                         </div>
 
                         <!-- Hamburger -->
@@ -253,19 +268,19 @@ const logout = () => {
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                            {{ $t('Dashboard') }}
                         </ResponsiveNavLink>
                     </div>
 
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
-                            Import
+                            {{ $t('Import') }}
                         </ResponsiveNavLink>
                     </div>
 
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('teams.index')" :active="route().current('teams.index')">
-                            Teams
+                            {{ $t('Teams') }}
                         </ResponsiveNavLink>
                     </div>
 
@@ -288,17 +303,17 @@ const logout = () => {
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
-                                Profile
+                                {{ $t('Profile') }}
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                API Tokens
+                                {{ $t('API Tokens') }}
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->
                             <form method="POST" @submit.prevent="logout">
                                 <ResponsiveNavLink as="button">
-                                    Log Out
+                                    {{ $t('Log Out') }}
                                 </ResponsiveNavLink>
                             </form>
 
@@ -307,16 +322,16 @@ const logout = () => {
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Manage Collection
+                                    {{ $t('Manage Collection') }}
                                 </div>
 
                                 <!-- Collection Settings -->
                                 <ResponsiveNavLink v-if="currentCollection" :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
-                                    Collection Settings
+                                    {{ $t('Collection Settings') }}
                                 </ResponsiveNavLink>
 
                                 <ResponsiveNavLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')" :active="route().current('collections.create')">
-                                    Create New Collection
+                                    {{ $t('Create New Collection') }}
                                 </ResponsiveNavLink>
 
                                 <template v-if="$page.props.auth.user.current_team.collections.length">
@@ -324,7 +339,7 @@ const logout = () => {
 
                                     <!-- Collection Switcher -->
                                     <div  class="block px-4 py-2 text-xs text-gray-400">
-                                        Switch Collections
+                                        {{ $t('Switch Collections') }}
                                     </div>
 
                                     <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
@@ -347,23 +362,23 @@ const logout = () => {
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Manage Team
+                                    {{$t('Manage Team')}}
                                 </div>
 
                                 <!-- Team Settings -->
                                 <ResponsiveNavLink :href="route('teams.show', currentTeam)" :active="route().current('teams.show')">
-                                    Team Settings
+                                    {{$t('Team Settings')}}
                                 </ResponsiveNavLink>
 
                                 <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create')">
-                                    Create New Team
+                                    {{$t('Create New Team')}}
                                 </ResponsiveNavLink>
 
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                 <!-- Team Switcher -->
                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Switch Teams
+                                    {{$t('Switch Teams')}}
                                 </div>
 
                                 <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">

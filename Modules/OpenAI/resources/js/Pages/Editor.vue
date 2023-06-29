@@ -167,19 +167,19 @@ const changePreviewItem = (value) => {
                     <div class="mx-auto px-6 py-6">
                         <div class="flex border-b border-gray-200 pb-10 items-center">
                             <div class="items-center flex-1">
-                                <label class="mr-2 font-medium">Preset:</label>
+                                <label class="mr-2 font-medium">{{ $t('Preset') }}:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" placeholder="Select" class="inline-flex" />
                                 <button type="button" @click="addPreset" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-tf-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-tf-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tf-blue-500">
-                                    Add
+                                    {{ $t('Add') }}
                                     <PlusCircleIcon class="-mr-0.5 h-5 w-5" aria-hidden="true"></PlusCircleIcon>
                                 </button>
                             </div>
 
                             <div v-if="selectedPreset || addingPreset" class="items-center">
-                                <label class="mr-2 font-medium">Name:</label>
+                                <label class="mr-2 font-medium">{{$t('Name')}}:</label>
                                 <TextInput v-model="form.name" type="text" class="w-36" />
                                 <button @click="savePreset" type="button" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-tf-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-tf-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tf-blue-500">
-                                    Save
+                                    {{$t('Save')}}
                                     <ArrowDownTrayIcon class="-mr-0.5 h-5 w-5" aria-hidden="true"></ArrowDownTrayIcon>
                                 </button>
                                 <!--                                <button @click="deletePreset" type="button" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-red-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500">-->
@@ -206,10 +206,10 @@ const changePreviewItem = (value) => {
                             </div>
 
                             <aside>
-                                <h2 class="sr-only">Filters</h2>
+                                <h2 class="sr-only">{{$t('Filters')}}</h2>
 
                                 <button type="button" class="inline-flex items-center lg:hidden">
-                                    <span class="text-sm font-medium text-gray-700">Filters</span>
+                                    <span class="text-sm font-medium text-gray-700">{{$t('Filters')}}</span>
                                     <PlusIcon class="ml-1 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                 </button>
 
@@ -218,13 +218,13 @@ const changePreviewItem = (value) => {
 
                                     <RangeSlider v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Temperature </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                         </template>
                                     </RangeSlider>
 
                                     <RangeSlider v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Top p </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                         </template>
                                     </RangeSlider>
 
@@ -236,24 +236,24 @@ const changePreviewItem = (value) => {
 
                                     <RangeSlider v-model="form.max_tokens" :min="1" :max="2048" :step="1">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Max Tokens </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t("Max Tokens") }} </label>
                                         </template>
                                     </RangeSlider>
 
                                     <RangeSlider v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Presence Penalty </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                         </template>
                                     </RangeSlider>
 
                                     <RangeSlider v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Frequency Penalty </label>
+                                            <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                         </template>
                                     </RangeSlider>
 
                                     <div>
-                                        <label class="inline-flex text-sm font-medium mb-4"> Stop Sequences </label>
+                                        <label class="inline-flex text-sm font-medium mb-4"> {{$t('Stop Sequences')}} </label>
                                         <TagInput v-model="form.stop" />
                                     </div>
 

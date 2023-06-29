@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
 use Modules\Collections\Models\Collection;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -50,6 +51,18 @@ class HandleInertiaRequests extends Middleware
                 }
 
                 return null;
+            },
+            'locale' => function () {
+                return  LaravelLocalization::getCurrentLocale();
+            },
+            'localeAll' => function () {
+                return LaravelLocalization::getSupportedLocales();
+            },
+            'language' => function () {
+                if(!file_exists(resource_path('lang/'. app()->getLocale().'/'.app()->getLocale() .'.json'))) {
+                    return [];
+                }
+                return json_decode(file_get_contents(resource_path('lang/'.app()->getLocale() .'/'.app()->getLocale() .'.json')) , true);
             },
             'collections' => function () use ($request) {
                 $user = $request->user();

@@ -42,7 +42,6 @@
 import Dropdown from 'Jetstream/Components/Dropdown.vue';
 import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import axios from "axios";
-console.log(window.location)
 export default {
     data() {
         return {

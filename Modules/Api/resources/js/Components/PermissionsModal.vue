@@ -44,11 +44,6 @@ const props = defineProps({
 const open = ref(props.open)
 
 watch(open, (newValue, oldValue) => {
-    // This function will be triggered when the value of the 'open' prop changes
-    console.log('New value:', newValue)
-    console.log('Old value:', oldValue)
     open.value = newValue;
-    // Perform any desired actions based on the new value
-    // For example, you could update the component's state, make API calls, etc.
 })
 </script>

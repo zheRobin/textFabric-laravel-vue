@@ -5,6 +5,7 @@ namespace Modules\Compilations\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\OpenAI\Controllers\CollectionItemCompletionController;
 
 class CompilationsController extends Controller
 {
@@ -12,7 +13,8 @@ class CompilationsController extends Controller
     {
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
-            'items' => [1,2,3,45,5]
+            'presets' => $request->user()->currentCollection->presets,
+            'previewItem' => $request->user()->currentCollection->items()->get(),
         ]);
     }
 }

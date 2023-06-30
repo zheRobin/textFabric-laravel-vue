@@ -67,10 +67,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
             Route::group(['middleware' => 'verified'], function () {
                 // API...
                 if (Jetstream::hasApiFeatures()) {
-                    Route::get('/user/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
-                    Route::post('/user/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
-                    Route::put('/user/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');
-                    Route::delete('/user/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+                    Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+                    Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+                    Route::put('/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');
+                    Route::delete('/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
                 }
 
                 // Teams...

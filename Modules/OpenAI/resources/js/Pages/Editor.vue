@@ -194,7 +194,6 @@ const changePreviewItem = (value) => {
                             <!-- Prompt fields -->
                             <div>
                                 <PromptEditor title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
-
                                 <CollectionItemPreview @itemChanged="changePreviewItem" :item="previewItem" class="mt-10" />
                             </div>
 

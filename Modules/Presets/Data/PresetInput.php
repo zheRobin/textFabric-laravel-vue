@@ -23,30 +23,26 @@ class PresetInput extends Data
     public function __construct(
         #[Exists('collections', 'id')]
         public int $collection_id,
-        #[Required, StringType, Max(255)]
+        #[Required, StringType, Max(60)]
         public string $name,
-        #[Required, StringType]
-        public string $system_prompt,
-        #[Required, StringType]
-        public string $user_prompt,
         #[Enum(ChatModelEnum::class), WithCast(ChatModelCast::class)]
         public ChatModelEnum $model,
-        #[StringType]
-        public string|Optional $user,
+        #[Nullable, Numeric]
+        public null|int|Optional $input_language_id,
+        #[Nullable, Numeric]
+        public null|int|Optional $output_language_id,
+        #[Nullable, StringType]
+        public null|string|Optional $system_prompt = '',
+        #[Nullable, StringType]
+        public null|string|Optional $user_prompt = '',
         #[Numeric, Between(0,2)]
         public float|Optional $temperature = 1,
         #[Numeric, Between(0,1)] // TODO: check min and max
         public float|Optional $top_p = 1,
-        #[Numeric, Min(1)]
-        public int|Optional $n = 1,
         #[Numeric, Between(-2,2)]
         public float|Optional $presence_penalty = 0,
         #[Numeric, Between(-2,2)]
         public float|Optional $frequency_penalty = 0,
-        #[Nullable, ArrayType]
-        public null|array|Optional $stop = null,
-        #[Numeric, Between(1,2048)]
-        public int|Optional $max_tokens = 1,
     ) {
     }
 }

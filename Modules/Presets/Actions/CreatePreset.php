@@ -11,12 +11,17 @@ use Modules\Presets\Models\Preset;
 
 class CreatePreset implements CreatesPreset
 {
-    public function create(User $user, PresetInput $presetInput): void
+    public function create(User $user, PresetInput $presetInput): Preset
     {
         $collection = Collection::find($presetInput->collection_id);
 
         Gate::forUser($user)->authorize('create', [Preset::class, $collection]);
 
-        Preset::create($presetInput->all());
+        return Preset::create($presetInput->all());
+    }
+
+    public function redirectTo(): string
+    {
+        return route('openai.index');
     }
 }

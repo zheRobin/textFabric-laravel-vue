@@ -50,21 +50,11 @@ const updateSlider = (value) => {
 
 <template>
     <div>
-        <slot name="label" />
+        <div class="flex flex-row items-center justify-between mb-3">
+            <slot name="label" />
 
-        <div class="flex flex-row items-center">
-            <Slider
-                    :classes="classes"
-                    :tooltips="false"
-                    class="flex-grow"
-                    :value="modelValue"
-                    :min="min"
-                    :max="max"
-                    :step="step"
-                    @slide="updateSlider"
-            />
             <TextInput type="number"
-                       class="w-20 ml-4"
+                       class="w-20 h-8 ml-4 text-sx"
                        :value="modelValue"
                        :min="min"
                        :max="max"
@@ -72,5 +62,16 @@ const updateSlider = (value) => {
                        @update="$emit('update:modelValue', $event.target.value)"
             />
         </div>
+
+        <Slider
+                :classes="classes"
+                :tooltips="false"
+                class="flex flex-grow"
+                :value="modelValue"
+                :min="min"
+                :max="max"
+                :step="step"
+                @slide="updateSlider"
+        />
     </div>
 </template>

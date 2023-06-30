@@ -5,9 +5,11 @@ namespace Modules\Presets\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Modules\Presets\Actions\CreatePreset;
+use Modules\Presets\Actions\DeletePreset;
 use Modules\Presets\Actions\UpdatePreset;
 use Modules\Presets\Actions\ValidatePreset;
 use Modules\Presets\Contracts\CreatesPreset;
+use Modules\Presets\Contracts\DeletesPreset;
 use Modules\Presets\Contracts\UpdatesPreset;
 use Modules\Presets\Contracts\ValidatesPreset;
 use Modules\Presets\Models\Preset;
@@ -24,6 +26,7 @@ class PresetServiceProvider extends ServiceProvider
         ValidatesPreset::class => ValidatePreset::class,
         CreatesPreset::class => CreatePreset::class,
         UpdatesPreset::class => UpdatePreset::class,
+        DeletesPreset::class => DeletePreset::class,
     ];
 
     /**

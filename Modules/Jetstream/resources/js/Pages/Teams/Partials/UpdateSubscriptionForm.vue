@@ -70,7 +70,7 @@ const updatePlanSubscription = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <SelectMenu v-model="form.plan_id" :options="planOptions()" label="Plan type"/>
+                <SelectMenu v-model="form.plan_id" :options="planOptions()" class="mt-1" label="Plan type"/>
                 <InputError :message="form.errors.plan_id" class="mt-2" />
             </div>
 

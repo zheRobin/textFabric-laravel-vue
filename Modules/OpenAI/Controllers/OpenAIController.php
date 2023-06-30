@@ -4,9 +4,9 @@ namespace Modules\OpenAI\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Modules\OpenAI\Enums\ChatModelEnum;
+use Modules\Translations\Models\Language;
 
 class OpenAIController extends Controller
 {
@@ -17,6 +17,7 @@ class OpenAIController extends Controller
             'selectedPreset' => session('preset'),
             'previewItem' => $request->user()->currentCollection->items()->first(),
             'models' => ChatModelEnum::values(),
+            'languages' => Language::all(),
         ]);
     }
 }

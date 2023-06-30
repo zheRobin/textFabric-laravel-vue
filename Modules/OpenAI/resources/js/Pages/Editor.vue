@@ -1,54 +1,44 @@
 <script setup>
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
-import {PlusCircleIcon, ArrowDownTrayIcon, PlusIcon} from "@heroicons/vue/20/solid";
+import {XCircleIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, ArrowDownTrayIcon, PlusIcon} from "@heroicons/vue/20/solid";
 import {ref} from "vue";
 import TextInput from "Jetstream/Components/TextInput.vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import RangeSlider from "Jetstream/Components/RangeSlider.vue";
-import TagInput from "Jetstream/Components/TagInput.vue";
 import PromptEditor from "Modules/OpenAI/resources/js/Components/PromptEditor.vue";
 import CollectionItemPreview from "Modules/OpenAI/resources/js/Components/CollectionItemPreview.vue";
 import CollectionItemCompletion from "Modules/OpenAI/resources/js/Components/CollectionItemCompletion.vue";
 import {notify} from "notiwind";
+import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
+import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
+import DangerButton from "Jetstream/Components/DangerButton.vue";
+import RenamePreset from "Modules/OpenAI/resources/js/Components/RenamePreset.vue";
+import DeletePreset from "Modules/OpenAI/resources/js/Components/DeletePreset.vue";
 
 const props = defineProps({
+    selectedPreset: Object,
     presets: Array,
     previewItem: Object,
     models: Array,
+    languages: Array,
 });
 
-const collectionId = usePage().props.auth.user.current_collection.id;
+const selectedPreset = ref(null);
 
 const form = useForm({
-    collection_id: collectionId,
-    model: null,
+    collection_id: usePage().props.auth.user.current_collection.id,
+    model: 'gpt-3.5-turbo',
     system_prompt: '',
     user_prompt: '',
     name: null,
     temperature: 1,
     top_p: 1,
-    n: 1,
-    max_tokens: 2048,
     presence_penalty: 0,
     frequency_penalty: 0,
-    stop: [],
+    input_language_id: null,
+    output_language_id: null,
 });
-
-const emptyState = {
-    collection_id: collectionId,
-    model: null,
-    system_prompt: '',
-    user_prompt: '',
-    name: null,
-    temperature: 1,
-    top_p: 1,
-    n: 1,
-    max_tokens: 2048,
-    presence_penalty: 0,
-    frequency_penalty: 0,
-    stop: [],
-};
 
 const modelOptions = () => {
     const models = [];
@@ -62,8 +52,7 @@ const modelOptions = () => {
 
 const availableAttributes = usePage().props.auth.user.current_collection.headers;
 
-const selectedPreset = ref(null);
-const addingPreset = ref(false);
+const addingPreset = ref(!props.presets.length);
 
 const previewItem = ref(null);
 
@@ -75,6 +64,16 @@ const presetOptions = () => {
     })
 
     return presets;
+}
+
+const languageOptions = () => {
+    const languages = [];
+
+    props.languages.forEach((el) => {
+        languages.push({value: el.id,label: el.name});
+    })
+
+    return languages;
 }
 
 const changePreset = (value) => {
@@ -104,48 +103,84 @@ const fillPresetForm = (preset) => {
 }
 
 const addPreset = () => {
-    selectedPreset.value = null;
     addingPreset.value = true;
-    form.defaults(emptyState);
+    form.defaults({model: 'gpt-3.5-turbo', system_prompt: '', user_prompt: '', name: null, temperature: 1, top_p: 1, presence_penalty: 0, frequency_penalty: 0, input_language_id: null, output_language_id: null});
     form.reset();
 }
 
+const cancelPreset = () => {
+    addingPreset.value = false;
+    changePreset(selectedPreset.value);
+}
+
 const savePreset = () => {
-    if (selectedPreset.value) {
-        form.patch(route('presets.update', selectedPreset.value), {
-            errorBag: 'errors',
-            preserveScroll: true,
-            onError: (error) => {
-                notify({
-                    group: "error",
-                    title: "Error",
-                    text: error[Object.keys(error)[0]] ?? "Something wrong happens."
-                }, 4000) // 4s
-            }
-        })
-    }
-
     if (addingPreset.value) {
-        form.post(route('presets.store'), {
-            errorBag: 'errors',
-            preserveScroll: true,
-            onError: (error) => {
-                notify({
-                    group: "error",
-                    title: "Error",
-                    text: error[Object.keys(error)[0]] ?? "Something wrong happens."
-                }, 4000) // 4s
-            }
-        })
+        createPreset();
+    } else if (selectedPreset.value) {
+        updatePreset();
     }
+}
 
+const createPreset = () => {
+    form.post(route('presets.store'), {
+        errorBag: 'errors',
+        preserveScroll: true,
+        onSuccess: () => {
+            changePreset(props.selectedPreset.id);
+            notify({
+                group: "success",
+                title: "Success",
+                text: "Preset created!"
+            }, 4000)
+        },
+        onError: (error) => {
+            notify({
+                group: "error",
+                title: "Error",
+                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+            }, 4000)
+        }
+    })
+}
+
+const updatePreset = () => {
+    form.patch(route('presets.update', selectedPreset.value), {
+        errorBag: 'errors',
+        preserveScroll: true,
+        onSuccess: () => {
+            notify({
+                group: "success",
+                title: "Success",
+                text: "Preset updated!"
+            }, 4000)
+        },
+        onError: (error) => {
+            notify({
+                group: "error",
+                title: "Error",
+                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+            }, 4000) // 4s
+        }
+    })
+}
+
+const renamePreset = (value) => {
+    form.name = value;
+    updatePreset();
 }
 
 const deletePreset = () => {
-    if (addingPreset.value) {
-        addingPreset.value = false;
-        // form.reset();
-    }
+    form.delete(route('presets.destroy', selectedPreset.value), {
+        errorBag: 'errors',
+        preserveScroll: true,
+        onSuccess: () => {
+            notify({
+                group: "success",
+                title: "Success",
+                text: "Preset deleted!"
+            }, 4000)
+        },
+    })
 }
 
 const changePreviewItem = (value) => {
@@ -165,108 +200,108 @@ const changePreviewItem = (value) => {
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="mx-auto px-6 py-6">
-                        <div class="flex border-b border-gray-200 pb-10 items-center">
-                            <div class="items-center flex-1">
-                                <label class="mr-2 font-medium">Preset:</label>
-                                <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" placeholder="Select" class="inline-flex" />
-                                <button type="button" @click="addPreset" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-tf-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-tf-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tf-blue-500">
-                                    Add
-                                    <PlusCircleIcon class="-mr-0.5 h-5 w-5" aria-hidden="true"></PlusCircleIcon>
-                                </button>
-                            </div>
+                        <div class="flex border-b border-gray-200 pb-8 items-center">
+                            <div class="items-center flex flex-1">
+                                <template v-if="!presets.length || addingPreset">
+                                    <label class="mr-2 font-medium">Name:</label>
+                                    <TextInput v-model="form.name" type="text" class="w-36"/>
+                                    <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
+                                        Save
+                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
+                                    <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                                        Cancel
+                                        <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </SecondaryButton>
+                                </template>
 
-                            <div v-if="selectedPreset || addingPreset" class="items-center">
-                                <label class="mr-2 font-medium">Name:</label>
-                                <TextInput v-model="form.name" type="text" class="w-36" />
-                                <button @click="savePreset" type="button" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-tf-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-tf-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tf-blue-500">
-                                    Save
-                                    <ArrowDownTrayIcon class="-mr-0.5 h-5 w-5" aria-hidden="true"></ArrowDownTrayIcon>
-                                </button>
-                                <!--                                <button @click="deletePreset" type="button" class="ml-2 inline-flex items-center gap-x-1.5 rounded-md bg-red-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500">-->
-                                <!--                                    Delete-->
-                                <!--                                    <MinusCircleIcon class="-mr-0.5 h-5 w-5" aria-hidden="true"></MinusCircleIcon>-->
-                                <!--                                </button>-->
+                                <template v-else>
+                                    <label class="mr-2 font-medium">Preset:</label>
+                                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-36" placeholder="Select" />
+                                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                                        Add
+                                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
+                                    <PrimaryButton v-if="selectedPreset" @click="savePreset" class="ml-2 gap-x-1.5">
+                                        Save
+                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
+                                    <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                                        <PrimaryButton class="ml-2 gap-x-1.5">
+                                            Rename
+                                            <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </RenamePreset>
+                                    <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                                        <DangerButton class="ml-2 gap-x-1.5">
+                                            Delete
+                                            <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </DangerButton>
+                                    </DeletePreset>
+                                </template>
                             </div>
                         </div>
 
-                        <div class="pt-10 lg:grid lg:grid-cols-3 lg:gap-x-8">
+                        <!-- Filters -->
+                        <section aria-labelledby="filter-heading" class="py-8">
+                            <div class="flex items-center justify-between space-x-6">
+                                <SelectMenu placeholder="Select a model" v-model="form.model" :options="modelOptions()" />
 
-                            <!-- Prompt fields -->
-                            <div>
-                                <PromptEditor title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
-
-                                <CollectionItemPreview @itemChanged="changePreviewItem" :item="previewItem" class="mt-10" />
-                            </div>
-
-                            <div>
-                                <PromptEditor title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
-
-                                <CollectionItemCompletion :preset="selectedPreset" :item="previewItem" />
-
-                            </div>
-
-                            <aside>
-                                <h2 class="sr-only">Filters</h2>
-
-                                <button type="button" class="inline-flex items-center lg:hidden">
-                                    <span class="text-sm font-medium text-gray-700">Filters</span>
-                                    <PlusIcon class="ml-1 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                </button>
-
-                                <div class="hidden lg:block space-y-6">
-                                    <SelectMenu placeholder="Select a model" v-model="form.model" :options="modelOptions()" />
-
+                                <div class="w-56">
                                     <RangeSlider v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                         <template #label>
                                             <label class="inline-flex text-sm font-medium"> Temperature </label>
                                         </template>
                                     </RangeSlider>
+                                </div>
 
+                                <div class="w-56">
                                     <RangeSlider v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                         <template #label>
                                             <label class="inline-flex text-sm font-medium"> Top p </label>
                                         </template>
                                     </RangeSlider>
+                                </div>
 
-                                    <RangeSlider v-model="form.n" :min="1" :max="20" :step="1">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> N </label>
-                                        </template>
-                                    </RangeSlider>
-
-                                    <RangeSlider v-model="form.max_tokens" :min="1" :max="2048" :step="1">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Max Tokens </label>
-                                        </template>
-                                    </RangeSlider>
-
+                                <div class="w-56">
                                     <RangeSlider v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
                                             <label class="inline-flex text-sm font-medium"> Presence Penalty </label>
                                         </template>
                                     </RangeSlider>
+                                </div>
 
+                                <div class="w-56">
                                     <RangeSlider v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
                                             <label class="inline-flex text-sm font-medium"> Frequency Penalty </label>
                                         </template>
                                     </RangeSlider>
-
-                                    <div>
-                                        <label class="inline-flex text-sm font-medium mb-4"> Stop Sequences </label>
-                                        <TagInput v-model="form.stop" />
-                                    </div>
-
                                 </div>
-                            </aside>
+                            </div>
+                        </section>
 
-                            <!--                            <div class="col-span-2">Preview</div>-->
+                        <!-- Prompt fields -->
+                        <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
+                            <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                                <PromptEditor title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
 
+                                <SelectMenu v-model="form.input_language_id" :options="languageOptions()" class="mt-2" placeholder="Translate input into:" />
+                            </div>
+
+                            <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                                <PromptEditor title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
+
+                                <SelectMenu v-model="form.output_language_id" :options="languageOptions()" class="mt-2" placeholder="Translate input into:" />
+                            </div>
+
+                            <CollectionItemPreview @itemChanged="changePreviewItem" :item="previewItem" class="mt-10" />
+
+                            <CollectionItemCompletion :preset="selectedPreset" :item="previewItem" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </AppLayout>
 </template>

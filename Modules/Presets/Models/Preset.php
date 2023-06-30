@@ -28,6 +28,8 @@ class Preset extends Model
         'top_p',
         'frequency_penalty',
         'presence_penalty',
+        'input_language_id',
+        'output_language_id',
     ];
 
     /**

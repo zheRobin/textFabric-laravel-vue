@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Jetstream\RedirectsActions;
 use Modules\Presets\Contracts\CreatesPreset;
+use Modules\Presets\Contracts\DeletesPreset;
 use Modules\Presets\Contracts\UpdatesPreset;
 use Modules\Presets\Data\PresetInput;
 use Modules\Presets\Models\Preset;
@@ -47,8 +48,10 @@ class PresetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Preset $preset)
     {
-        //
+        $deleter = app(DeletesPreset::class);
+
+        $deleter->delete($request->user(), $preset);
     }
 }

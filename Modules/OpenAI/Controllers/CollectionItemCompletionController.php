@@ -5,23 +5,25 @@ namespace Modules\OpenAI\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Imports\Models\CollectionItem;
-use Modules\OpenAI\Contracts\CompletesCollectionItem;
+use Modules\OpenAI\Contracts\BuildsParams;
+use Modules\OpenAI\Contracts\CompletesItemStreamed;
 use Modules\Presets\Models\Preset;
 
 class CollectionItemCompletionController extends Controller
 {
     public function complete(Request $request, Preset $preset, CollectionItem $item)
     {
-        $completer = app(CompletesCollectionItem::class);
+        $builder = app(BuildsParams::class);
+        $completer = app(CompletesItemStreamed::class);
 
-        $response = $completer->complete(
-            $request->user(),
-            $preset,
-            $item
-        );
+        $params = $builder->build($request->user(), $preset, $item);
 
-        return response()->json(
-            $response
-        );
+        return response()->stream(function () use ($completer, $params) {
+            $completer->complete($params);
+        }, 200, [
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+            'Content-Type' => 'text/event-stream',
+        ]);
     }
 }

@@ -18,9 +18,7 @@ class ImportOnEachRow implements OnEachRow, WithHeadingRow, WithEvents
     public function __construct(
         protected array $columns,
         protected Collection $collection,
-    )
-    {
-        //
+    ) {
     }
 
     public function onRow(Row $row)

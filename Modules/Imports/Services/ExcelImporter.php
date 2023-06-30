@@ -4,6 +4,7 @@ namespace Modules\Imports\Services;
 
 use Illuminate\Support\Arr;
 use Maatwebsite\Excel\HeadingRowImport;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Modules\Collections\Models\Collection;
 use Modules\Imports\Actions\ImportOnEachRow;
 use Modules\Imports\Contracts\Importer;
@@ -12,6 +13,10 @@ use Modules\Imports\Enums\HeaderTypeEnum;
 
 class ExcelImporter implements Importer
 {
+    public function __construct()
+    {
+        HeadingRowFormatter::default('none');
+    }
     public function import(Collection $collection): void
     {
         $headers = $this->getHeaders($collection);

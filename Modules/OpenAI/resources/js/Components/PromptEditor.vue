@@ -38,7 +38,7 @@ const addAttribute = (attribute) => {
 </script>
 
 <template>
-    <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+    <div>
         <div class="flex items-center mb-2">
             <label class="text-sm font-medium flex-1"> {{ title }} </label>
 

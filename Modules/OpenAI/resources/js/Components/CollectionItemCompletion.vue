@@ -1,6 +1,5 @@
 <script setup>
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
-import {itemCompletion} from "Modules/OpenAI/resources/js/axios";
 import {ref} from "vue";
 
 const props = defineProps({
@@ -8,13 +7,29 @@ const props = defineProps({
     preset: Number,
 })
 
-const generatedText = ref(null);
+const generatedText = ref('');
+
+const setupStream = () => {
+    const eventSource = new EventSource(route('openai.item-completion', {
+        preset: props.preset,
+        item: props.item.id
+    }));
+
+    eventSource.addEventListener('update', event => {
+        if (event.data === "<END_STREAMING_SSE>") {
+            eventSource.close();
+            return;
+        }
+
+        if (event.data) {
+            generatedText.value = generatedText.value + event.data;
+        }
+    })
+}
 
 const generate = () => {
-    itemCompletion(props.preset, props.item.id)
-        .then((response) => {
-            generatedText.value = response.data;
-        });
+    generatedText.value = '';
+    setupStream();
 }
 
 </script>
@@ -25,7 +40,7 @@ const generate = () => {
             <h3 class="text-base font-semibold leading-7 text-gray-900">Preview</h3>
         </div>
 
-        <div class="h-44 px-4  text-base text-center leading-7 text-gray-900 overflow-scroll">
+        <div class="h-44 px-10 text-base leading-7 text-gray-900 overflow-scroll">
             {{ generatedText }}
         </div>
 

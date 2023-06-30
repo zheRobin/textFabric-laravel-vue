@@ -46,16 +46,16 @@ const previousItem = () => {
     <div class="overflow-hidden bg-gray-50 rounded">
         <div class="px-4 py-4 sm:px-6">
             <h3 class="text-base font-semibold leading-7 text-gray-900">
-                Item #{{currentItem.id}}
+                Item #{{currentPage}}
             </h3>
         </div>
 
         <div class="h-44 overflow-scroll">
             <div v-for="item in currentItem.data" class="border-t border-gray-200">
-                <dl class="divide-y divide-gray-100">
-                    <div class="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-900 truncate">{{ item.header }}</dt>
-                        <dd class="mt-1 text-right text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ item.value ?? '-' }}</dd>
+                <dl class="divide-y divide-gray-100 cursor-default">
+                    <div class="px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-900 truncate" :title="item.header">{{ item.header }}</dt>
+                        <dd class="mt-1 text-right text-sm leading-6 text-gray-700 sm:mt-0">{{ item.value ?? '-' }}</dd>
                     </div>
                 </dl>
             </div>
@@ -63,13 +63,17 @@ const previousItem = () => {
 
         <div class="mt-6 border-t px-6 py-2">
             <div class="flex justify-between">
-                <PrimaryButton @click="previousItem">
-                    <ArrowLeftIcon class="w-4" /> Previous
-                </PrimaryButton>
+                <div>
+                    <PrimaryButton v-if="currentPage > 1" @click="previousItem">
+                        <ArrowLeftIcon class="w-4" /> Previous
+                    </PrimaryButton>
+                </div>
 
-                <PrimaryButton @click="nextPage">
-                    Next <ArrowRightIcon class="w-4" />
-                </PrimaryButton>
+                <div>
+                    <PrimaryButton v-if="currentPage < lastPage" @click="nextPage">
+                        Next <ArrowRightIcon class="w-4" />
+                    </PrimaryButton>
+                </div>
             </div>
         </div>
 

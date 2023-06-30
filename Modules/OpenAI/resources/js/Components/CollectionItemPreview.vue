@@ -46,7 +46,7 @@ const previousItem = () => {
     <div class="overflow-hidden bg-gray-50 rounded">
         <div class="px-4 py-4 sm:px-6">
             <h3 class="text-base font-semibold leading-7 text-gray-900">
-                Item #{{currentPage}}
+                {{ $t("Item") }} #{{currentItem.id}}
             </h3>
         </div>
 
@@ -65,13 +65,13 @@ const previousItem = () => {
             <div class="flex justify-between">
                 <div>
                     <PrimaryButton v-if="currentPage > 1" @click="previousItem">
-                        <ArrowLeftIcon class="w-4" /> Previous
+                        <ArrowLeftIcon class="w-4" /> {{ $t("Previous") }}
                     </PrimaryButton>
                 </div>
 
                 <div>
                     <PrimaryButton v-if="currentPage < lastPage" @click="nextPage">
-                        Next <ArrowRightIcon class="w-4" />
+                        {{$t('Next')}} <ArrowRightIcon class="w-4" />
                     </PrimaryButton>
                 </div>
             </div>

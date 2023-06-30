@@ -250,7 +250,7 @@ const changePreviewItem = (value) => {
                                 <div class="w-56">
                                     <RangeSlider v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Temperature </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                         </template>
                                     </RangeSlider>
                                 </div>
@@ -258,7 +258,7 @@ const changePreviewItem = (value) => {
                                 <div class="w-56">
                                     <RangeSlider v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Top p </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                         </template>
                                     </RangeSlider>
                                 </div>
@@ -266,7 +266,7 @@ const changePreviewItem = (value) => {
                                 <div class="w-56">
                                     <RangeSlider v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Presence Penalty </label>
+                                            <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                         </template>
                                     </RangeSlider>
                                 </div>
@@ -274,7 +274,7 @@ const changePreviewItem = (value) => {
                                 <div class="w-56">
                                     <RangeSlider v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                         <template #label>
-                                            <label class="inline-flex text-sm font-medium"> Frequency Penalty </label>
+                                            <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                         </template>
                                     </RangeSlider>
                                 </div>

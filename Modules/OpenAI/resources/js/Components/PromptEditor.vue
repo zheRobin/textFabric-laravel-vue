@@ -47,7 +47,7 @@ const addAttribute = (attribute) => {
                 <span class="inline-flex rounded-md">
                     <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                         <span>
-                            attributes
+                            {{ $t('attributes') }}
                         </span>
                         <ChevronUpDownIcon class="-mr-0.5 h-4 w-4" />
                     </button>
@@ -74,7 +74,7 @@ const addAttribute = (attribute) => {
 
             <template #no-result>
                 <div class="font-medium text-sm p-2">
-                    No result
+                    {{$("No result")}}
                 </div>
             </template>
 

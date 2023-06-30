@@ -207,7 +207,6 @@ return [
         Modules\Presets\Providers\PresetServiceProvider::class,
         Modules\Translations\Providers\TranslationServiceProvider::class,
         Modules\Compilations\Providers\CompilationsServiceProvider::class,
-        Modules\Api\Providers\ApiServiceProvider::class,
     ],
 
     /*

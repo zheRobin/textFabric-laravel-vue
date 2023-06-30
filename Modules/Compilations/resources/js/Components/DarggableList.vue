@@ -25,7 +25,7 @@
                          @dragover.prevent
                          @dragenter.preven>
                         <div class="flex justify-between">
-                            <div class="m-2">{{$t('complication')}}</div>
+                            <div class="m-2">{{$t('compilations')}}</div>
                             <div class="flex m-4">
                                 <button  @click="nextPrevElements('prev')">
                                     <div class="rounded-full p-2" :style="idItems === 0 ? 'border: 2px solid #F3F4F6' : 'border: 2px solid #6674F5'">

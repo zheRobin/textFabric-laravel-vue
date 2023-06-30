@@ -43,7 +43,7 @@ const changeName = (itemName) => {
 <template>
     <div class="flex items-center ml-auto">
         <div>
-            <span>{{ $t('complication') }}:</span>
+            <span>{{ $t('compilations') }}:</span>
         </div>
             <div class="flex ml-2">
                 <div v-if="inputActive">

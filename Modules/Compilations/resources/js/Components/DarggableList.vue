@@ -35,8 +35,8 @@
                                     </div>
                                 </button>
                                 <button @click="nextPrevElements('next')">
-                                    <div class="rounded-full p-2 ml-2" :style="idItems === lastElementNumber ? 'border: 2px solid #F3F4F6' : 'border: 2px solid #6674F5'">
-                                        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-6"  :fill="idItems === lastElementNumber ? '#F3F4F6' : '#6674F5'" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowForwardIcon">
+                                    <div class="rounded-full p-2 ml-2" :style="idItems === lastElementNumber - 1 ? 'border: 2px solid #F3F4F6' : 'border: 2px solid #6674F5'">
+                                        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-6"  :fill="idItems === lastElementNumber - 1 ? '#F3F4F6' : '#6674F5'" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowForwardIcon">
                                             <path d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
                                         </svg>
                                     </div>
@@ -112,11 +112,12 @@ export default {
 
         const itemsRight = ref([]);
         const nextPrevElements = (item) => {
-            if(itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length){
+            if(itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1){
                 idItems.value += 1;
                 itemsRight.value.map(async (item) => {
                     item.value = '';
-                    item.value = await generateAPI(item.id, activeItem.value.id);
+                    console.log('activeItem', previewItem[idItems.value].id)
+                    item.value = await generateAPI(item.id, previewItem[idItems.value].id);
                 })
             }else if(itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0){
                 idItems.value -= 1;
@@ -128,7 +129,7 @@ export default {
         }
         const refreshApi = async (data) => {
             data.value = '';
-            data.value = await generateAPI(data.id, activeItem.value.id);
+            data.value = await generateAPI(data.id, previewItem[idItems.value].id);
         }
         function onDragStart(e, item, start) {
             e.dataTransfer.dropEffect = 'move'

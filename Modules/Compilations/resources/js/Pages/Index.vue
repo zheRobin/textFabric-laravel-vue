@@ -15,7 +15,7 @@ const props = defineProps({
         <template #header>
             <div class="flex">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    {{ $t('complication') }}
+                    {{ $t('compilations') }}
                 </h2>
                 <ManageItems :presets="presets"/>
             </div>

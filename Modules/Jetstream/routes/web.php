@@ -18,6 +18,8 @@ use Laravel\Jetstream\Jetstream;
 use Modules\Jetstream\Controllers\TeamController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
+Route::post('/change-language', [LocalizationController::class, 'changeLanguage']);
+
 Route::group(['prefix' => LaravelLocalization::setLocale()],
     function (){
     Route::middleware([
@@ -44,6 +46,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
             ? config('jetstream.auth_session')
             : null;
 
+
         Route::group(
             ['middleware' => array_values(array_filter([$authMiddleware, $authSessionMiddleware]))]
             , function () {
@@ -53,8 +56,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
 
             Route::delete('/user/other-browser-sessions', [OtherBrowserSessionsController::class, 'destroy'])
                 ->name('other-browser-sessions.destroy');
-
-            Route::post('/change-language', [LocalizationController::class, 'changeLanguage']);
 
             Route::delete('/user/profile-photo', [ProfilePhotoController::class, 'destroy'])
                 ->name('current-user-photo.destroy');

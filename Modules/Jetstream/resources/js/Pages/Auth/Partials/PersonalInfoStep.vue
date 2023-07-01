@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
     <div class="space-y-4">
         <div class="space-y-1">
-            <InputLabel for="first_name" value="First Name" />
+            <InputLabel for="first_name" :value="$t('First Name')" />
             <TextInput
                 id="first_name"
                 v-model="props.form.first_name"
@@ -25,7 +25,7 @@ const props = defineProps({
         </div>
 
         <div class="space-y-1">
-            <InputLabel for="last_name" value="Last Name" />
+            <InputLabel for="last_name" :value="$t('Last Name')" />
             <TextInput
                 id="last_name"
                 v-model="props.form.last_name"
@@ -38,7 +38,7 @@ const props = defineProps({
         </div>
 
         <div class="space-y-1">
-            <InputLabel for="position" value="Position" />
+            <InputLabel for="position" :value="$t('Position')" />
             <TextInput
                 id="position"
                 v-model="form.position"

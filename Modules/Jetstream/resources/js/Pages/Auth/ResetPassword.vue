@@ -32,12 +32,12 @@ const submit = () => {
         </template>
 
         <template #header>
-            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Reset your password</h2>
+            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">{{ $t('Reset your password') }}</h2>
         </template>
 
         <form @submit.prevent="submit" class="space-y-6">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('Email')" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -51,7 +51,7 @@ const submit = () => {
             </div>
 
             <div class="space-y-1">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" :value="$t('Password')" />
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -64,7 +64,7 @@ const submit = () => {
             </div>
 
             <div class="space-y-1">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+                <InputLabel for="password_confirmation" :value="$t('Confirm Password')" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -78,7 +78,7 @@ const submit = () => {
 
             <div>
                 <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing" class="w-full">
-                    Reset password
+                    {{ $t('Reset password') }}
                 </PrimaryButton>
             </div>
         </form>

@@ -54,6 +54,38 @@
     "Previous": "Previous",
     "Next": "Next",
     "attributes": "attributes",
-    "No result": "No result"
+    "No result": "No result",
 
+    "Cancel": "Cancel",
+    "Rename": "Rename",
+    "Delete": "Delete",
+
+    "Sign in to your account": "Sign in to your account",
+    "Or": "Or",
+    "create one": "create one",
+    "Forgot your password?": "Forgot your password?",
+    "Sign in": "Sign in",
+    "Email address": "Email address",
+    "Password": "Password",
+    "Remember me": "Remember me",
+
+    "Back": "Back",
+    "Next": "Next",
+    "sign in": "sign in",
+    "Sign up": "Sign up",
+    "Company": "Company",
+    "Employees": "Employees",
+    "First Name": "First Name",
+    "Last Name": "Last Name",
+    "Position": "Position",
+    "Phone Number": "Phone Number",
+
+    "This is a secure area of the application. Please confirm your password before continuing.": "This is a secure area of the application. Please confirm your password before continuing.",
+    "Confirm": "Confirm",
+    "Email Password Reset Link": "Email Password Reset Link",
+    "No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+
+    "Reset password": "Reset password",
+    "Create your account": "Create your account",
+    "Select option": "Select option"
 }

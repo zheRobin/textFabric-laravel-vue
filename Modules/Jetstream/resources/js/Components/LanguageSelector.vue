@@ -65,9 +65,13 @@ export default {
             axios.post('/change-language', { locale: localeCode }).then((res) => {
                 localStorage.setItem('locale', res.data.locale);
                 if(res.data.locale === 'en'){
-                    window.location.href = '/';
+                    const path = window.location.pathname.split('/');
+                    const item = path.filter((item) => item !== 'de')
+                    window.location.href = item.join('/');
                 }else{
-                    window.location.href = `/${res.data.locale}`;
+                    const path = window.location.pathname.split('/');
+                    const item = path.filter((item) => item !== 'de')
+                    window.location.href = 'de' + item.join('/');
                 }
 
             });

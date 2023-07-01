@@ -112,12 +112,12 @@ const firstErrorStep = () => {
         </template>
 
         <template #header>
-            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Create your account</h2>
+            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">{{ $t('Create your account') }}</h2>
             <p class="mt-2 text-gray-600">
-                Or
+                {{ $t('Or') }}
                 {{ ' ' }}
                 <Link :href="route('login')" class="font-medium text-tf-blue-500 hover:text-tf-blue-400">
-                    sign in
+                    {{$t('sign in')}}
                 </Link>
             </p>
         </template>
@@ -128,12 +128,12 @@ const firstErrorStep = () => {
             <div class="mt-8 flex items-center justify-between flex-wrap-reverse gap-4">
                 <div class="flex justify-start">
                     <div class="flex mr-3" v-if="currentIndex > 0">
-                        <SecondaryButton type="button" class="uppercase pr-4 pl-4" @click="prevStep">Back</SecondaryButton>
+                        <SecondaryButton type="button" class="uppercase pr-4 pl-4" @click="prevStep">{{$t('Back')}}</SecondaryButton>
                     </div>
 
                     <div class="flex">
-                        <PrimaryButton v-if="currentIndex + 1 < totalSteps" class="uppercase pr-4 pl-4">Next</PrimaryButton>
-                        <PrimaryButton v-else class="uppercase pr-4 pl-4">Sign up</PrimaryButton>
+                        <PrimaryButton v-if="currentIndex + 1 < totalSteps" class="uppercase pr-4 pl-4">{{ $t("Next") }}</PrimaryButton>
+                        <PrimaryButton v-else class="uppercase pr-4 pl-4">{{ $t('Sign up') }}</PrimaryButton>
                     </div>
                 </div>
                 <StepBullets :currentStep="currentIndex + 1" :totalSteps="totalSteps"  class="flex pr-2"/>

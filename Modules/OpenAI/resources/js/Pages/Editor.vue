@@ -192,7 +192,7 @@ const changePreviewItem = (value) => {
     <AppLayout title="Editor">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Editor
+                {{ $t('Editor') }}
             </h2>
         </template>
 
@@ -206,11 +206,11 @@ const changePreviewItem = (value) => {
                                     <label class="mr-2 font-medium">Name:</label>
                                     <TextInput v-model="form.name" type="text" class="w-36"/>
                                     <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
-                                        Save
+                                        {{$t('Save')}}
                                         <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </PrimaryButton>
                                     <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                                        Cancel
+                                        {{$t('Cancel')}}
                                         <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </SecondaryButton>
                                 </template>
@@ -219,22 +219,22 @@ const changePreviewItem = (value) => {
                                     <label class="mr-2 font-medium">Preset:</label>
                                     <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-36" placeholder="Select" />
                                     <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                        Add
+                                        {{$t('Add')}}
                                         <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </PrimaryButton>
                                     <PrimaryButton v-if="selectedPreset" @click="savePreset" class="ml-2 gap-x-1.5">
-                                        Save
+                                        {{$t('save')}}
                                         <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </PrimaryButton>
                                     <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
                                         <PrimaryButton class="ml-2 gap-x-1.5">
-                                            Rename
+                                            {{$t('Rename')}}
                                             <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
                                         </PrimaryButton>
                                     </RenamePreset>
                                     <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
                                         <DangerButton class="ml-2 gap-x-1.5">
-                                            Delete
+                                            {{$t('Delete')}}
                                             <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                         </DangerButton>
                                     </DeletePreset>

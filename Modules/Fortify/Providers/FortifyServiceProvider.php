@@ -5,6 +5,7 @@ namespace Modules\Fortify\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
@@ -20,6 +21,7 @@ use Modules\Fortify\Actions\UpdateUserPassword;
 use Modules\Fortify\Actions\UpdateUserProfileInformation;
 use Modules\Fortify\Contracts\AuthenticatesUserTeams;
 use Modules\Fortify\Contracts\CreatesSuperAdminUser;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -51,6 +53,8 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
+        $this->configureRoutes();
+
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 
@@ -70,5 +74,16 @@ class FortifyServiceProvider extends ServiceProvider
                 PrepareAuthenticatedSession::class,
             ]);
         });
+    }
+
+    /**
+     * Configure routes.
+     */
+    protected function configureRoutes(): void
+    {
+        Route::middleware('web')
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            });
     }
 }

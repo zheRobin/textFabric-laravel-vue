@@ -26,9 +26,9 @@ const submit = () => {
         </template>
 
         <template #header>
-            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Forgot your password?</h2>
+            <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">{{ $t('Forgot your password?') }}</h2>
             <p class="mt-2 text-gray-600">
-                No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+                {{$t('No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.')}}
             </p>
         </template>
 
@@ -38,7 +38,7 @@ const submit = () => {
 
         <form @submit.prevent="submit" class="space-y-6">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('Email')" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -53,7 +53,7 @@ const submit = () => {
 
             <div>
                 <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing" class="w-full">
-                    Email Password Reset Link
+                    {{ $t('Email Password Reset Link') }}
                 </PrimaryButton>
             </div>
         </form>

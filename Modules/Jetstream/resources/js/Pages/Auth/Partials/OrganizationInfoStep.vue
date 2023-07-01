@@ -13,7 +13,7 @@ const props = defineProps({
 <template>
     <div class="space-y-4">
         <div class="space-y-1">
-            <InputLabel for="company" value="Company" />
+            <InputLabel for="company" :value="$t('Company')" />
             <TextInput
                 id="company"
                 autofocus
@@ -27,13 +27,13 @@ const props = defineProps({
         </div>
 
         <div class="space-y-1">
-            <InputLabel for="employees" value="Employees" />
+            <InputLabel for="employees" :value="$t('Employees')" />
             <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" class="mt-2" />
             <InputError class="mt-2" :message="form.errors.employees" />
         </div>
 
         <div class="space-y-1">
-            <InputLabel for="phone_number" value="Phone Number" />
+            <InputLabel for="phone_number" :value="$t('Phone Number')" />
             <TextInput
                 id="phone_number"
                 v-model="form.phone_number"

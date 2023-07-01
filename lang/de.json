@@ -35,5 +35,38 @@
     "Confirm upload": "Hochladen bestätigen",
     "Do you want to replace or append data?": "Möchten Sie Daten ersetzen oder anfügen?",
     "Append": "Anfügen",
-    "Replace": "Ersetzen"
+    "Replace": "Ersetzen",
+
+    "Cancel": "Abbrechen",
+    "Rename": "Umbenennen",
+    "Delete": "Löschen",
+
+    "Sign in to your account": "Melden Sie sich in Ihrem Konto an",
+    "Or": "Oder",
+    "create one": "eines erstellen",
+    "Forgot your password?": "Passwort vergessen?",
+    "Sign in": "Anmelden",
+    "Email address": "E-Mail-Addresse",
+    "Password": "Passwort",
+    "Remember me": "Mich erinnern",
+
+    "Back": "Zurück",
+    "Next": "Weiter",
+    "sign in": "anmelden",
+    "Sign up": "Anmeldung",
+    "Company": "Firma",
+    "Employees": "Mitarbeiter",
+    "First Name": "Vorname",
+    "Last Name": "Nachname",
+    "Position": "Position",
+    "Phone Number": "Telefonnummer",
+
+    "This is a secure area of the application. Please confirm your password before continuing.": "Dies ist ein sicherer Bereich der Anwendung. Bitte bestätigen Sie Ihr Passwort, um fortzufahren.",
+    "Confirm": "Bestätigen",
+    "Email Password Reset Link": "E-Mail zum Zurücksetzen des Passworts senden",
+    "No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "Kein Problem. Geben Sie einfach Ihre E-Mail-Adresse an und wir senden Ihnen einen Link zum Zurücksetzen des Passworts, über den Sie ein neues auswählen können.",
+
+    "Reset password": "Passwort zurücksetzen",
+    "Create your account": "Konto erstellen",
+    "Select option": "Option auswählen"
 }

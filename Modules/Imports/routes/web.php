@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Modules\Imports\Controllers\CollectionHeaderController;
 use Modules\Imports\Controllers\CollectionItemController;
 use Modules\Imports\Controllers\ImportController;
-use App\Services\GetLocaleService;
 
 Route::group(['prefix' => LaravelLocalization::setLocale()], function (){
     $authMiddleware = array_filter([

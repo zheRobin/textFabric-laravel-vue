@@ -207,6 +207,7 @@ return [
         Modules\Presets\Providers\PresetServiceProvider::class,
         Modules\Translations\Providers\TranslationServiceProvider::class,
         Modules\Compilations\Providers\CompilationsServiceProvider::class,
+        Modules\Fortify\Providers\FortifyServiceProvider::class,
     ],
 
     /*
@@ -221,7 +222,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        // ...
+        'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
     ])->toArray(),
 
 ];

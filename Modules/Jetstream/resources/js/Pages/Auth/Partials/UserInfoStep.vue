@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
     <div class="space-y-4">
         <div class="space-y-1">
-            <InputLabel for="email" value="Email" />
+            <InputLabel for="email" :value="$t('Email')" />
             <TextInput
                 id="email"
                 autofocus
@@ -25,7 +25,7 @@ const props = defineProps({
         </div>
 
         <div class="space-y-1">
-            <InputLabel for="password" value="Password" />
+            <InputLabel for="password" :value="$t('Password')" />
             <TextInput
                 id="password"
                 v-model="form.password"

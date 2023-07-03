@@ -65,13 +65,17 @@ export default {
             axios.post('/change-language', { locale: localeCode }).then((res) => {
                 localStorage.setItem('locale', res.data.locale);
                 if(res.data.locale === 'en'){
-                    const path = window.location.pathname.split('/');
-                    const item = path.filter((item) => item !== 'de')
-                    window.location.href = item.join('/');
+                    const url = window.location.pathname;
+
+                    let newUrl = url.replace("de", "");
+                    if(url.includes('de/')){
+                        newUrl = url.replace("de/", "");
+                    }
+
+                    // console.log(window.location);
+                    window.location.pathname = newUrl;
                 }else{
-                    const path = window.location.pathname.split('/');
-                    const item = path.filter((item) => item !== 'de')
-                    window.location.href = 'de' + item.join('/');
+                    window.location.pathname = 'de' + window.location.pathname
                 }
 
             });

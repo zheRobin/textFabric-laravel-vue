@@ -1,12 +1,8 @@
 <script setup>
 import {ArrowLeftIcon, ArrowRightIcon} from '@heroicons/vue/20/solid';
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
-import {showCollectionItem} from "Modules/OpenAI/resources/js/axios";
+import {iterateCollectionItems} from "Modules/OpenAI/resources/js/axios";
 import {ref} from "vue";
-
-const props = defineProps({
-    item: Object,
-});
 
 const emit = defineEmits(['itemChanged']);
 
@@ -15,18 +11,18 @@ const currentItem = ref([]);
 const currentPage = ref(1);
 const lastPage = ref(null);
 
-const collectionItem = (page = 1) => {
-    showCollectionItem(page)
+const collectionItem = (page) => {
+    iterateCollectionItems(page)
         .then((response) => {
             currentItem.value = response.data.data[0] ?? null;
             currentPage.value = response.data.current_page;
             lastPage.value = response.data.last_page;
 
             emit('itemChanged', currentItem.value);
-        });
+    });
 }
 
-collectionItem();
+collectionItem(currentPage);
 
 const nextPage = () => {
     if ((currentPage.value + 1) <= lastPage.value ) {
@@ -39,14 +35,13 @@ const previousItem = () => {
         collectionItem(currentPage.value -1);
     }
 }
-
 </script>
 
 <template>
     <div class="overflow-hidden bg-gray-50 rounded">
         <div class="px-4 py-4 sm:px-6">
             <h3 class="text-base font-semibold leading-7 text-gray-900">
-                {{ $t("Item") }} #{{currentItem.id}}
+                {{ `${$t("Item")} ${currentPage}` }}
             </h3>
         </div>
 
@@ -76,6 +71,5 @@ const previousItem = () => {
                 </div>
             </div>
         </div>
-
     </div>
 </template>

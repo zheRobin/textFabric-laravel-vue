@@ -16,8 +16,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function (){
         Route::post('import/file', [ImportController::class, 'store'])->name('import.file');
         Route::post('import/images', [ImportController::class, 'importImages'])->name('import.images');
 
-        Route::get('collection-items', [CollectionItemController::class, 'index'])->name('collection-items.index');
-
         Route::put('collection-items/{collectionItem}', [CollectionItemController::class, 'update'])->name('collection-items.update');
         Route::post('collection-items/{collectionItem}/image', [CollectionItemController::class, 'updateImage'])->name('collection-items.update-image');
 

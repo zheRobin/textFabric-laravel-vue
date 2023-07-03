@@ -16,4 +16,11 @@ class CurrentCollectionController extends Controller
 
         return redirect(config('fortify.home'), 303);
     }
+
+    public function itemsIteration(Request $request)
+    {
+        return response()->json(
+            $request->user()->currentCollection->items()->paginate(1)
+        );
+    }
 }

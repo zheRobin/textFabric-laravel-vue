@@ -13,6 +13,8 @@ class CompleteItemStreamed implements CompletesItemStreamed
         $stream = OpenAI::chat()->createStreamed($config);
 
         foreach ($stream as $response) {
+            ob_start();
+
             $text = $this->formatResponse($response);
 
             if (connection_aborted()) {

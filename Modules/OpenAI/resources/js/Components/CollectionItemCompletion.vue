@@ -16,8 +16,6 @@ const setupStream = () => {
     }));
 
     eventSource.addEventListener('update', event => {
-        console.log('demo-streamed-completion:', event.data);
-
         if (event.data === "<END_STREAMING_SSE>") {
             eventSource.close();
             return;

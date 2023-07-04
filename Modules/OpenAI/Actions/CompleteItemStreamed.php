@@ -22,8 +22,8 @@ class CompleteItemStreamed implements CompletesItemStreamed
             echo "event: update\n";
             echo 'data: ' . $text;
             // TODO: temporary workaround
-            echo str_pad('',4096)."\n";
             echo "\n\n";
+            echo str_pad('',4096)."\n";
 
             ob_flush();
             flush();
@@ -32,6 +32,7 @@ class CompleteItemStreamed implements CompletesItemStreamed
         echo "event: update\n";
         echo 'data: <END_STREAMING_SSE>';
         echo "\n\n";
+        echo str_pad('-',4096)."\n";
         ob_flush();
         flush();
     }

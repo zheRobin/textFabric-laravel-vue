@@ -23,14 +23,14 @@ class CompleteItemStreamed implements CompletesItemStreamed
             echo 'data: ' . $text;
             echo "\n\n";
 
-            ob_end_flush();
+            ob_flush();
             flush();
         }
 
         echo "event: update\n";
         echo 'data: <END_STREAMING_SSE>';
         echo "\n\n";
-        ob_end_flush();
+        ob_flush();
         flush();
     }
 

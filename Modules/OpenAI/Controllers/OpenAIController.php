@@ -21,18 +21,4 @@ class OpenAIController extends Controller
             'languages' => Language::all(),
         ]);
     }
-
-    public function update(Request $request, Preset $preset): void
-    {
-        $change = $preset->find($request['id']);
-        $change['name'] = $request['presets'];
-
-        $change->save();
-    }
-
-    public function delete(Request $request, Preset $preset): void
-    {
-        $change = $preset->find($request->input('id'));
-        $change->delete();
-    }
 }

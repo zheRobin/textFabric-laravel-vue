@@ -23,6 +23,8 @@ class CompleteItemStreamed implements CompletesItemStreamed
 
             echo "event: update\n";
             echo 'data: ' . $text;
+            // TODO: temporary workaround
+            echo str_pad('',4096)."\n";
             echo "\n\n";
 
             ob_flush();

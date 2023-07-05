@@ -5,7 +5,7 @@
          @dragover.prevent
          @dragenter.prevent>
         <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Available presets')}}</div>
-        <div class="w-3/4 mx-auto mt-5 mb-10">
+        <div class="mx-auto mt-5  mb-10">
             <div class="text-center py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900 truncate"
                  v-for="item in items" :key="item.id"
                  @dragstart="onDragStart($event, item, 1)"
@@ -21,26 +21,22 @@
          @dragover.prevent
          @dragenter.preven>
         <div class="flex justify-between">
-            <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilations')}}</div>
-            <div class="flex m-4">
-                <button  @click="nextPrevElements('prev')">
-                    <div class="rounded-full p-2" :style="idItems === 0 ? 'border: 2px solid #F3F4F6' : 'border: 2px solid #6674F5'">
-                        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-6" :fill="idItems === 0 ? '#F3F4F6' : '#6674F5'" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowBackIcon">
-                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
-                        </svg>
-                    </div>
-                </button>
-                <button @click="nextPrevElements('next')">
-                    <div class="rounded-full p-2 ml-2" :style="idItems === lastElementNumber - 1 ? 'border: 2px solid #F3F4F6' : 'border: 2px solid #6674F5'">
-                        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-6"  :fill="idItems === lastElementNumber - 1 ? '#F3F4F6' : '#6674F5'" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowForwardIcon">
-                            <path d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
-                        </svg>
-                    </div>
-                </button>
+            <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
+            <div class="flex">
+                  <span class="isolate inline-flex rounded-md shadow-sm">
+                    <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                      <span class="sr-only">Previous</span>
+                      <ChevronLeftIcon class="h-5 w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
+                    </button>
+                    <button type="button" @click="nextPrevElements('next')" :class="idItems === lastElementNumber - 1 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                      <span class="sr-only">Next</span>
+                      <ChevronRightIcon class="h-5 w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
+                    </button>
+                  </span>
             </div>
         </div>
         <div>
-            <div class="w-3/4 mx-auto mt-5 mb-10">
+            <div class=" mx-auto mt-5 mb-10">
                 <div v-if="loading === true">Loading</div>
                 <div v-else class="py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900"
                      v-for="item in itemsRight" :key="item.id"
@@ -56,6 +52,7 @@
 </template>
 
 <script setup>
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 import {ref} from 'vue';
 import TextGenerate from "./TextGenerate.vue";
 const emit = defineEmits(['idItemsPage']);
@@ -87,20 +84,22 @@ const items = ref(nonExistingPresets);
 const generatedText = ref();
 
 const nextPrevElements = (item) => {
-    loading.value = true;
-    setTimeout(() => {
-        if(itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1){
-            idItems.value += 1;
-            activeItem.value = previewItem[idItems.value];
-            loading.value = false;
-        }else if(itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0){
-            idItems.value -= 1;
-            activeItem.value = previewItem[idItems.value];
-            loading.value = false;
-        }
-        loading.value = false;
-    }, 100)
+    if(itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
+        loading.value = true;
 
+        setTimeout(() => {
+            if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1) {
+                idItems.value += 1;
+                activeItem.value = previewItem[idItems.value];
+                loading.value = false;
+            } else if (itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
+                idItems.value -= 1;
+                activeItem.value = previewItem[idItems.value];
+                loading.value = false;
+            }
+            loading.value = false;
+        }, 100)
+    }
 }
 function onDragStart(e, item, start) {
     e.dataTransfer.dropEffect = 'move'
@@ -123,8 +122,8 @@ function onDrop(e, id) {
         itemsRight.value.map(item => {
             if(item.id === itemId){
                 items.value.push(item);
-
                 deleteItemById(itemsRight.value, itemId);
+                emit('itemRight', itemsRight.value)
             }
         })
     }else{
@@ -132,6 +131,7 @@ function onDrop(e, id) {
             if(item.id === itemId){
                 itemsRight.value.push(item);
                 deleteItemById(items.value, itemId);
+                emit('itemRight', itemsRight.value)
             }
         })
     }
@@ -156,6 +156,8 @@ function onDropOurColumn (e, arr, column) {
             const temp = itemsRight.value[prev];
             itemsRight.value[prev] = itemsRight.value[next];
             itemsRight.value[next] = temp;
+
+            emit('itemRight', itemsRight.value)
         }
     }
 }

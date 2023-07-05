@@ -15,7 +15,7 @@ class CompilationsController extends Controller
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection->presets,
             'previewItem' => $request->user()->currentCollection->items()->get(),
-            'complications' => Compilations::get(),
+            'complications' => Compilations::where('owner', $request->user()->current_team_id)->get()
         ]);
     }
 

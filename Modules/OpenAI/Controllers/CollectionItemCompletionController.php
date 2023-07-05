@@ -24,6 +24,7 @@ class CollectionItemCompletionController extends Controller
             'Cache-Control' => 'no-cache',
             'X-Accel-Buffering' => 'no',
             'Content-Type' => 'text/event-stream',
+            'Content-Encoding' => 'none',
         ]);
     }
 }

@@ -10,6 +10,10 @@ const props = defineProps({
         type: String,
         default: '48',
     },
+    height: {
+        type: String,
+        default: 'full',
+    },
     contentClasses: {
         type: Array,
         default: () => ['py-1', 'bg-white dark:bg-gray-700'],
@@ -31,6 +35,13 @@ const widthClass = computed(() => {
     return {
         '48': 'w-48',
     }[props.width.toString()];
+});
+
+const heightClass = computed(() => {
+    return {
+        '48': 'h-48 overflow-scroll',
+        'full': 'h-full',
+    }[props.height.toString()];
 });
 
 const alignmentClasses = computed(() => {
@@ -66,7 +77,7 @@ const alignmentClasses = computed(() => {
             <div
                 v-show="open"
                 class="absolute z-50 mt-2 rounded-md shadow-lg"
-                :class="[widthClass, alignmentClasses]"
+                :class="[widthClass, alignmentClasses, heightClass]"
                 style="display: none;"
                 @click="open = false"
             >

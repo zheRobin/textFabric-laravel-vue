@@ -13,17 +13,15 @@ class CompleteItemStreamed implements CompletesItemStreamed
         $stream = OpenAI::chat()->createStreamed($config);
 
         foreach ($stream as $response) {
-            $text = $this->formatResponse($response);
-
             if (connection_aborted()) {
                 break;
             }
 
             echo "event: update\n";
-            echo 'data: ' . $text;
+            echo 'data: ' . json_encode($this->formatResponse($response));
             // TODO: temporary workaround
             echo "\n\n";
-            echo str_pad('',4096)."\n";
+            echo str_pad('', 4096)."\n";
 
             ob_flush();
             flush();
@@ -32,15 +30,17 @@ class CompleteItemStreamed implements CompletesItemStreamed
         echo "event: update\n";
         echo 'data: <END_STREAMING_SSE>';
         echo "\n\n";
-        echo str_pad('-',4096)."\n";
+        echo str_pad('-', 4096)."\n";
         ob_flush();
         flush();
     }
 
-    protected function formatResponse(CreateStreamedResponse $response): ?string
+    protected function formatResponse(CreateStreamedResponse $response): array
     {
         $firstChoice = $response->choices[0]->toArray();
 
-        return $firstChoice['delta']['content'] ?? null;
+        return [
+            'content' => $firstChoice['delta']['content'] ?? '',
+        ];
     }
 }

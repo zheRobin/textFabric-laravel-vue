@@ -194,7 +194,7 @@ const updatePreset = () => {
             </template>
 
             <template v-else>
-                <label class="mr-2 font-medium">{{$t('Compilation')}}:</label>
+                <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-36" placeholder="Select" />
                 <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
                     {{$t('Add')}}

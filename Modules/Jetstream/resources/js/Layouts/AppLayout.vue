@@ -63,36 +63,36 @@ const logout = () => {
                             </div>
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <NavLink :href="route('dashboard')" :class="route().current('dashboard') ? 'dark:text-white' : ''" :active="route().current('dashboard')">
                                     {{$t('Dashboard')}}
                                 </NavLink>
                             </div>
                             <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                                <NavLink :href="route('teams.index')" :class="route().current('teams.index') ? 'dark:text-white' : ''" :active="route().current('teams.index')">
                                     {{$t('Teams')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('import.index')" :active="route().current('import.index')">
+                                <NavLink :href="route('import.index')" :class="route().current('import.index') ? 'dark:text-white' : ''" :active="route().current('import.index')">
                                     {{$t('Import')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('openai.index')" :active="route().current('openai.index')">
+                                <NavLink :href="route('openai.index')" :class="route().current('openai.index') ? 'dark:text-white' : ''" :active="route().current('openai.index')">
                                     {{$t('Editor')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('compilations.index')" :active="route().current('compilations.index')">
+                                <NavLink :href="route('compilations.index')" :class="route().current('compilations.index') ? 'dark:text-white' : ''" :active="route().current('compilations.index')">
                                     {{$t('Compilations')}}
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                                <NavLink :href="route('api-tokens.index')" :class="route().current('api-tokens.index') ? 'dark:text-white' : ''" :active="route().current('api-tokens.index')">
                                     API
                                 </NavLink>
                             </div>

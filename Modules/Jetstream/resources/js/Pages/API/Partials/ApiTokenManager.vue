@@ -14,6 +14,7 @@ import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
+import ActionPanel from "../../../Components/ActionPanel.vue";
 
 const props = defineProps({
     tokens: Array,
@@ -168,7 +169,25 @@ const deleteApiToken = () => {
                     </template>
                 </ActionSection>
             </div>
+            <SectionBorder />
+
+            <div class="mt-10 sm:mt-0">
+                <div class="bg-white shadow sm:rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="text-base font-semibold leading-6 text-gray-900">
+                            API Documentation
+                        </div>
+                        <div class="mt-5 max-w-xl text-sm text-gray-500">
+                            Api URL:
+                        </div>
+                        <div class="mt-2">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
 
         <!-- Token Value Modal -->
         <DialogModal :show="displayingToken" @close="displayingToken = false">

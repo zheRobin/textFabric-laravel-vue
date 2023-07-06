@@ -100,6 +100,10 @@ const fillPresetForm = (preset) => {
 
 const addPreset = () => {
     addingPreset.value = true;
+    resetForm();
+}
+
+const resetForm = () => {
     form.defaults({model: 'gpt-3.5-turbo', system_prompt: '', user_prompt: '', name: null, temperature: 1, top_p: 1, presence_penalty: 0, frequency_penalty: 0, input_language_id: null, output_language_id: null});
     form.reset();
 }
@@ -174,8 +178,10 @@ const deletePreset = () => {
     form.delete(route('presets.destroy', selectedPreset.value), {
         errorBag: 'errors',
         preserveScroll: true,
+        preserveState: false,
         onSuccess: () => {
             changePreset(null);
+            resetForm();
 
             notify({
                 group: "success",

@@ -11,24 +11,34 @@ const props = defineProps({
     preset: Object,
     languageId: Number,
     languages: Array,
+    updatePreset: Function,
 });
 
 const emit = defineEmits(['update:outputLanguage']);
 
-watch(() => props.item, () => {
-    if (props.preset) {
+watch(() => props.item, (value, oldValue) => {
+    if (oldValue) {
         generate();
     }
 });
 
-const currentLanguage = ref(null);
+watch(() => props.preset.id, () => {
+    purgeStream();
+});
 
-watch(() => props.languageId, (langId) => {
-    if (langId) {
-        currentLanguage.value = props.languages.find((language) => language.id === langId)
+const findLanguage = (languageId) => {
+    if (languageId) {
+        currentLanguage.value = props.languages.find((language) => language.id === languageId)
     } else {
         currentLanguage.value = null;
     }
+}
+
+const currentLanguage = ref(null);
+findLanguage(props.languageId);
+
+watch(() => props.languageId, (langId) => {
+    findLanguage(langId);
 });
 
 const generatedContent = ref('');
@@ -36,6 +46,8 @@ const generatedContent = ref('');
 const currentEventSource = ref(null);
 
 const generatingContent = ref(false);
+
+const translatingContent = ref(false);
 
 const loading = ref(false);
 
@@ -81,13 +93,29 @@ const changeLanguage = (language) => {
     currentLanguage.value = language;
     emit('update:outputLanguage', language);
 }
+
+const translateContent = () => {
+    translatingContent.value = true;
+    triggerLoading(true);
+    axios.post(route('deepl.translate-text'), {
+        content: generatedContent.value,
+        languageCode: currentLanguage.value.code,
+    }).then((response) => {
+        triggerLoading(false);
+        generatedContent.value = response.data.content;
+        translatingContent.value = false;
+    }).catch(error => {
+        triggerLoading(false);
+        translatingContent.value = false;
+    });
+}
 </script>
 
 <template>
     <div class="overflow-hidden bg-gray-50 rounded mt-10 flex">
         <div class="px-6 py-3 flex justify-between items-center border-b">
             <div class="flex items-center">
-                <Dropdown align="left" width="30" height="48">
+                <Dropdown width="30" height="48">
                     <template #trigger>
                         <span class="inline-flex rounded-md">
                             <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -107,7 +135,7 @@ const changeLanguage = (language) => {
                     </template>
                 </Dropdown>
 
-                <PrimaryButton v-if="currentLanguage && generatedContent" class="inline-flex ml-3"> Translate </PrimaryButton>
+                <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent" class="inline-flex ml-3"> Translate </PrimaryButton>
             </div>
 
             <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">

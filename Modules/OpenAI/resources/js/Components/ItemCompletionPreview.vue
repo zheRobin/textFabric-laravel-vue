@@ -6,10 +6,11 @@ import CollectionItemCompletion from "Modules/OpenAI/resources/js/Components/Col
 const props = defineProps({
     preset: Object,
     languages: Array,
+    updatePreset: Function,
 });
 
-const currentInputLanguage = ref(null);
-const currentOutputLanguage = ref(null);
+const currentInputLanguage = ref(props.preset.input_language_id ?? null);
+const currentOutputLanguage = ref(props.preset.output_language_id ?? null);
 
 watch(() => props.preset, (preset) => {
     currentInputLanguage.value = preset
@@ -30,10 +31,12 @@ const changePreviewItem = (value) => {
 
 const changeInputLanguage = (language) => {
     emit('update:inputLanguage', language);
+    props.updatePreset();
 }
 
 const changeOutputLanguage = (language) => {
     emit('update:outputLanguage', language);
+    props.updatePreset();
 }
 
 </script>

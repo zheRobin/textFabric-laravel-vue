@@ -1,19 +1,22 @@
 <script setup>
+import {computed, ref} from "vue";
+import {useForm, usePage} from "@inertiajs/vue3";
+import {notify} from "notiwind";
+import {XCircleIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, ArrowDownTrayIcon} from "@heroicons/vue/20/solid";
+import {isObject} from "Jetstream/utilities";
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
-import {XCircleIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, ArrowDownTrayIcon, PlusIcon} from "@heroicons/vue/20/solid";
-import {ref} from "vue";
 import TextInput from "Jetstream/Components/TextInput.vue";
-import {useForm, usePage} from "@inertiajs/vue3";
 import RangeSlider from "Jetstream/Components/RangeSlider.vue";
 import PromptEditor from "Modules/OpenAI/resources/js/Components/PromptEditor.vue";
-import {notify} from "notiwind";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import RenamePreset from "Modules/OpenAI/resources/js/Components/RenamePreset.vue";
 import DeletePreset from "Modules/OpenAI/resources/js/Components/DeletePreset.vue";
 import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/ItemCompletionPreview.vue";
+import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
+import {debounce} from "lodash";
 
 const props = defineProps({
     selectedPreset: Object,
@@ -23,8 +26,8 @@ const props = defineProps({
     languages: Array,
 });
 
-const presetObj = ref(null);
 const selectedPreset = ref(null);
+const selectedPresetId = ref(selectedPreset.id);
 
 const form = useForm({
     collection_id: usePage().props.auth.user.current_collection.id,
@@ -53,6 +56,7 @@ const modelOptions = () => {
 const availableAttributes = usePage().props.auth.user.current_collection.headers;
 
 const addingPreset = ref(!props.presets.length);
+const showMainPanel = computed(() => !!selectedPreset.value && !addingPreset.value)
 
 const presetOptions = () => {
     const presets = [];
@@ -64,21 +68,14 @@ const presetOptions = () => {
     return presets;
 }
 
-const languageOptions = () => {
-    const languages = [];
-
-    props.languages.forEach((el) => {
-        languages.push({value: el.id,label: el.name});
-    })
-
-    return languages;
-}
-
 const changePreset = (value) => {
-    selectedPreset.value = value;
-    presetObj.value = getPreset(value);
+    const preset = isObject(value)
+        ? value
+        : getPreset(value)
+
+    selectedPreset.value = preset;
+    selectedPresetId.value = preset ? preset.id : null;
     addingPreset.value = false;
-    const preset = getPreset(value);
 
     if (preset) {
         fillPresetForm(preset);
@@ -103,7 +100,6 @@ const fillPresetForm = (preset) => {
 
 const addPreset = () => {
     addingPreset.value = true;
-    presetObj.value = null;
     form.defaults({model: 'gpt-3.5-turbo', system_prompt: '', user_prompt: '', name: null, temperature: 1, top_p: 1, presence_penalty: 0, frequency_penalty: 0, input_language_id: null, output_language_id: null});
     form.reset();
 }
@@ -121,12 +117,16 @@ const savePreset = () => {
     }
 }
 
+const notifyValidationError = (error) => {
+    return error[Object.keys(error)[0]] ?? "Something wrong happens.";
+}
+
 const createPreset = () => {
     form.post(route('presets.store'), {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
-            changePreset(props.selectedPreset.id);
+            changePreset(props.selectedPreset)
             notify({
                 group: "success",
                 title: "Success",
@@ -137,17 +137,18 @@ const createPreset = () => {
             notify({
                 group: "error",
                 title: "Error",
-                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                text: notifyValidationError(error)
             }, 4000)
         }
     })
 }
 
-const updatePreset = () => {
+const updatePreset = debounce(() => {
     form.patch(route('presets.update', selectedPreset.value), {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
+            changePreset(selectedPreset.value.id);
             notify({
                 group: "success",
                 title: "Success",
@@ -158,11 +159,11 @@ const updatePreset = () => {
             notify({
                 group: "error",
                 title: "Error",
-                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
-            }, 4000) // 4s
+                text: notifyValidationError(error)
+            }, 4000)
         }
     })
-}
+}, 1000);
 
 const renamePreset = (value) => {
     form.name = value;
@@ -174,6 +175,8 @@ const deletePreset = () => {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
+            changePreset(null);
+
             notify({
                 group: "success",
                 title: "Success",
@@ -200,111 +203,110 @@ const changeOutputLanguage = (language) => {
             </h2>
         </template>
 
-        <div>
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div class="bg-white shadow sm:rounded-lg">
-                    <div class="mx-auto px-6 py-6">
-                        <div class="flex border-b border-gray-200 pb-8 items-center">
-                            <div class="items-center flex flex-1">
-                                <template v-if="!presets.length || addingPreset">
-                                    <label class="mr-2 font-medium">Name:</label>
-                                    <TextInput v-model="form.name" type="text" class="w-36"/>
-                                    <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
-                                        {{$t('Save')}}
-                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
-                                    <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                                        {{$t('Cancel')}}
-                                        <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </SecondaryButton>
-                                </template>
+        <DashboardPanel>
+            <template #header>
+                <div class="flex border-b border-gray-200 pb-8 items-center">
+                    <div class="items-center flex flex-1">
+                        <template v-if="!presets.length || addingPreset">
+                            <label class="mr-2 font-medium">Name:</label>
+                            <TextInput v-model="form.name" type="text" class="w-60"/>
+                            <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
+                                {{$t('Save')}}
+                                <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                            </PrimaryButton>
+                            <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                                {{$t('Cancel')}}
+                                <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                            </SecondaryButton>
+                        </template>
 
-                                <template v-else>
-                                    <label class="mr-2 font-medium">Preset:</label>
-                                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-72" placeholder="Select" />
-                                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                        {{$t('Add')}}
-                                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
-                                    <PrimaryButton v-if="selectedPreset" @click="savePreset" class="ml-2 gap-x-1.5">
-                                        {{$t('save')}}
-                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
-                                    <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                                        <PrimaryButton class="ml-2 gap-x-1.5">
-                                            {{$t('Rename')}}
-                                            <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
-                                        </PrimaryButton>
-                                    </RenamePreset>
-                                    <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                                        <DangerButton class="ml-2 gap-x-1.5">
-                                            {{$t('Delete')}}
-                                            <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                        </DangerButton>
-                                    </DeletePreset>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Filters -->
-                        <section aria-labelledby="filter-heading" class="py-8">
-                            <div class="flex items-center justify-between space-x-6">
-                                <SelectMenu placeholder="Select a model" v-model="form.model" :options="modelOptions()" />
-
-                                <div class="w-56">
-                                    <RangeSlider v-model="form.temperature" :min="0" :max="2" :step="0.01">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
-                                        </template>
-                                    </RangeSlider>
-                                </div>
-
-                                <div class="w-56">
-                                    <RangeSlider v-model="form.top_p" :min="0" :max="1" :step="0.01">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
-                                        </template>
-                                    </RangeSlider>
-                                </div>
-
-                                <div class="w-56">
-                                    <RangeSlider v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
-                                        </template>
-                                    </RangeSlider>
-                                </div>
-
-                                <div class="w-56">
-                                    <RangeSlider v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
-                                        <template #label>
-                                            <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
-                                        </template>
-                                    </RangeSlider>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Prompt fields -->
-                        <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
-                            <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                                <PromptEditor title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
-                            </div>
-
-                            <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                                <PromptEditor title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
-                            </div>
-                        </div>
-
-                        <ItemCompletionPreview @update:inputLanguage="changeInputLanguage"
-                                               @update:outputLanguage="changeOutputLanguage"
-                                               :preset="presetObj"
-                                               :currentInputLanguage="form.input_language_id"
-                                               :currentOutputLanguage="form.output_language_id"
-                                               :languages="languages" />
+                        <template v-else>
+                            <label class="mr-2 font-medium">Preset:</label>
+                            <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+                            <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                                {{$t('Add')}}
+                                <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                            </PrimaryButton>
+                            <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                                <PrimaryButton class="ml-2 gap-x-1.5">
+                                    {{$t('Rename')}}
+                                    <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                                </PrimaryButton>
+                            </RenamePreset>
+                            <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                                <DangerButton class="ml-2 gap-x-1.5">
+                                    {{$t('Delete')}}
+                                    <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                </DangerButton>
+                            </DeletePreset>
+                        </template>
                     </div>
                 </div>
+            </template>
+
+            <div v-if="!showMainPanel" class="text-center mt-5 text-gray-700">
+                <span>
+                    Select or create a new preset...
+                </span>
             </div>
-        </div>
+
+            <template v-if="showMainPanel">
+                <section aria-labelledby="filter-heading" class="py-8">
+                    <div class="flex items-center justify-between space-x-6">
+                        <SelectMenu @update:modelValue="updatePreset" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+
+                        <div class="w-56">
+                            <RangeSlider @update:modelValue="updatePreset" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                                <template #label>
+                                    <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
+                                </template>
+                            </RangeSlider>
+                        </div>
+
+                        <div class="w-56">
+                            <RangeSlider @update:modelValue="updatePreset" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                                <template #label>
+                                    <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
+                                </template>
+                            </RangeSlider>
+                        </div>
+
+                        <div class="w-56">
+                            <RangeSlider @update:modelValue="updatePreset" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                                <template #label>
+                                    <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
+                                </template>
+                            </RangeSlider>
+                        </div>
+
+                        <div class="w-56">
+                            <RangeSlider @update:modelValue="updatePreset" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                                <template #label>
+                                    <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
+                                </template>
+                            </RangeSlider>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Prompt fields -->
+                <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
+                    <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                        <PromptEditor @update:modelValue="updatePreset" title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
+                    </div>
+
+                    <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                        <PromptEditor @update:modelValue="updatePreset" title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
+                    </div>
+                </div>
+
+                <ItemCompletionPreview @update:inputLanguage="changeInputLanguage"
+                                       @update:outputLanguage="changeOutputLanguage"
+                                       :preset="selectedPreset"
+                                       :languages="languages"
+                                       :updatePreset="updatePreset"/>
+            </template>
+
+        </DashboardPanel>
     </AppLayout>
 </template>

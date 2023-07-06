@@ -10,7 +10,7 @@ import TextInput from "Jetstream/Components/TextInput.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import RenamePreset from "Modules/OpenAI/resources/js/Components/RenamePreset.vue";
-import DeletePreset from "Modules/OpenAI/resources/js/Components/DeletePreset.vue";
+import DeletePreset from "./DeletePreset.vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
@@ -61,7 +61,11 @@ const fillPresetForm = (preset) => {
 
 const addPreset = () => {
     addingPreset.value = true;
-    form.defaults();
+    form.defaults({
+        name: null,
+        owner: null,
+        preset_ids: [],
+    });
     form.reset();
 }
 
@@ -101,16 +105,18 @@ const savePreset = () => {
 }
 
 const createPreset = () => {
-    const newPresetIds = [];
+    // const newPresetIds = [];
+    // from.preset_ids = newPresetIds;
     form.patch(route('compilations.store'), {
         errorBag: 'errors',
         preserveScroll: true,
-        onSuccess: () => {
-            changePreset(form.id);
+        onSuccess: (res) => {
+            console.log(res.props.complications[res.props.complications.length - 1].id);
+            changePreset(res.props.complications[res.props.complications.length - 1].id);
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset created!"
+                text: "Compilation created!"
             }, 4000)
         },
         onError: (error) => {
@@ -132,17 +138,18 @@ const deletePreset = () => {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
+            emit('onDelete', true)
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset deleted!"
+                text: "Compilation deleted!"
             }, 4000)
         },
     })
 }
 
 const updatePreset = () => {
-    // console.log(props.positions)
+    console.log(props.positions)
     const newPresetIds = [];
     if(props.positions){
         props.positions.map(item => newPresetIds.push(item.id))
@@ -156,7 +163,7 @@ const updatePreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset updated!"
+                text: "Compilation updated!"
             }, 4000)
         },
         onError: (error) => {
@@ -187,7 +194,7 @@ const updatePreset = () => {
             </template>
 
             <template v-else>
-                <label class="mr-2 font-medium">{{$t('Compilations')}}:</label>
+                <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-36" placeholder="Select" />
                 <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
                     {{$t('Add')}}

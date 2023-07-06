@@ -1,9 +1,11 @@
 <template>
     <div class="text-sm flex  justify-between">
         <div style="color: #525151" class="ml-2 text-right text-sm leading-6 text-gray-700 sm:mt-0">{{ item.name }}</div>
-        <button @click="refreshApi(item)">
-            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-7 mr-2" fill="#6674F5" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CachedIcon">
-                <path d="m19 8-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"></path>
+        <button type="button" @click="refreshApi" class="mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" :class="loading ? 'animate-spin w-5 h-5' : 'w-5 h-5'" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                      clip-rule="evenodd" />
             </svg>
         </button>
     </div>
@@ -13,20 +15,21 @@
                 <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"></path>
             </svg>
         </div>
-        <span class="ml-5 col-start-2 col-end-9">{{generatedText}}</span>
+        <span class="mr-6 col-start-2 col-end-9">{{generatedText}}</span>
     </div>
 </template>
 
 <script setup>
 
 import {ref, watch} from "vue";
-
+const loading = ref(true);
 const props = defineProps({
     id: Number,
     activeItem: Object,
     item: Object,
 });
 const refreshApi = () => {
+    loading.value = true;
     generatedText.value = '';
     setupStream(props.id, props.activeItem);
 }
@@ -41,6 +44,7 @@ const setupStream = (dataID, activeItemID) => {
     eventSource.addEventListener('update', event => {
         if (event.data === "<END_STREAMING_SSE>") {
             eventSource.close();
+            loading.value = false;
             return;
         }
 

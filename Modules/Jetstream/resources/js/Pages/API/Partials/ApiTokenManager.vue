@@ -22,6 +22,10 @@ const props = defineProps({
     defaultPermissions: Array,
 });
 
+const apiUrl = [];
+console.log(location.origin)
+props.tokens.map(item => apiUrl.push(location.origin + '/rest/api/' + item.name))
+
 const createApiTokenForm = useForm({
     name: '',
     permissions: props.defaultPermissions,
@@ -37,6 +41,8 @@ const displayingToken = ref(false);
 const managingPermissionsFor = ref(null);
 const apiTokenBeingDeleted = ref(null);
 
+const showDocumentation = ref(false);
+
 const createApiToken = () => {
     createApiTokenForm.post(route('api-tokens.store'), {
         preserveScroll: true,
@@ -46,6 +52,10 @@ const createApiToken = () => {
         },
     });
 };
+
+const documentation = () => {
+    showDocumentation.value = true;
+}
 
 const manageApiTokenPermissions = (token) => {
     updateApiTokenForm.permissions = token.abilities;
@@ -180,8 +190,11 @@ const deleteApiToken = () => {
                         <div class="mt-5 max-w-xl text-sm text-gray-500">
                             Api URL:
                         </div>
-                        <div class="mt-2">
-
+                        <div class="mt-2 flex" v-for="item in apiUrl">
+                            <div>{{item}}</div>
+                            <button @click="documentation" class="w-5 inline-flex items-center justify-center">
+                                <svg class="MuiSvgIcon-root jss187" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -207,6 +220,25 @@ const deleteApiToken = () => {
 
             <template #footer>
                 <SecondaryButton @click="displayingToken = false">
+                    Close
+                </SecondaryButton>
+            </template>
+        </DialogModal>
+
+        <!-- Token Value Modal -->
+        <DialogModal :show="showDocumentation" @close="showDocumentation = false">
+            <template #title>
+                API Token
+            </template>
+
+            <template #content>
+                <div>
+                    Please copy your new API token. For your security, it won't be shown again.
+                </div>
+            </template>
+
+            <template #footer>
+                <SecondaryButton @click="showDocumentation = false">
                     Close
                 </SecondaryButton>
             </template>

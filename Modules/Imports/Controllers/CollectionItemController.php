@@ -27,12 +27,4 @@ class CollectionItemController extends Controller
 
         return back(303);
     }
-
-    // TODO: refactor (move into separate api's controller)
-    public function index(Request $request)
-    {
-        return response()->json(
-            $request->user()->currentCollection->items()->paginate(1)
-        );
-    }
 }

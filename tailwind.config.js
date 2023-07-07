@@ -36,7 +36,13 @@ module.exports = {
                     900: '#00528c',
                     950: '#00497c',
                 }
-            }
+            },
+            minHeight: (theme) => ({
+                ...theme('spacing'),
+            }),
+            minWidth: (theme) => ({
+                ...theme('spacing'),
+            }),
         },
     },
 

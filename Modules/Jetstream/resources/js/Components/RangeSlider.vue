@@ -46,6 +46,9 @@ const updateSlider = (value) => {
     emit('update:modelValue', value);
 }
 
+const updateInput = (value) => {
+    emit('update:modelValue', value);
+}
 </script>
 
 <template>
@@ -59,7 +62,7 @@ const updateSlider = (value) => {
                        :min="min"
                        :max="max"
                        :step="step"
-                       @update="$emit('update:modelValue', $event.target.value)"
+                       @change="updateInput($event.target.value)"
             />
         </div>
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const showCollectionItem = (pageNumber) => {
-    return axios.get(route('collection-items.index'), {
+export const iterateCollectionItems = (pageNumber) => {
+    return axios.get(route('current-collection.items.iterate'), {
         params: {
             page: pageNumber
         }

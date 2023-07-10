@@ -30,11 +30,15 @@ const props = defineProps({
                 <span v-else>
                     {{ $t('You\'re currently on a free trial with') }}
                     <span class="font-semibold">
-                        {{ `${daysLeft(planSubscription.ends_at)} ${$t('days left')}` }}
+                        {{ daysLeft(planSubscription.ends_at) }}
+                    </span>
+                    {{ ' ' }}
+                    <span>
+                        {{ $t('days left') }}
                     </span>
                     <span class="hidden md:inline">
                         {{ '. ' }}
-                        {{$t("Please")}}
+                        {{ $t('Please') }}
                         <span class="font-semibold">
                             {{ $t('contact us') }}
                         </span>
@@ -58,7 +62,10 @@ const props = defineProps({
                             {{ $t('Please') }}
                             <span class="font-semibold">
                                 {{ $t('contact us') }}
-                            </span> {{ $t('to renew') }}
+                            </span>
+                            <span>
+                                {{ $t('to renew') }}
+                            </span>
                         </span>
                         {{ ' ' }}
                         <span aria-hidden="true">&rarr;</span>
@@ -66,7 +73,11 @@ const props = defineProps({
                     <span v-else>
                         {{ $t('Your current subscription plan ends') }} {{$t('in')}}
                         <span class="font-semibold">
-                            {{ `${daysLeft(planSubscription.ends_at)} ${$t('days')}` }}
+                            {{ daysLeft(planSubscription.ends_at) }}
+                        </span>
+                        {{ ' ' }}
+                        <span>
+                            {{ $t('days') }}
                         </span>
                         <span class="hidden md:inline">
                             {{ '. ' }}
@@ -74,7 +85,9 @@ const props = defineProps({
                             <span class="font-semibold">
                                 {{ $t('contact us') }}
                             </span>
-                            {{ $t('to renew') }}
+                            <span>
+                                {{ $t('to renew') }}
+                            </span>
                         </span>
                         {{ ' ' }}
                         <span aria-hidden="true">&rarr;</span>

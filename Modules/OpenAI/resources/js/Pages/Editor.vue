@@ -1,8 +1,9 @@
 <script setup>
 import {computed, ref} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
-import {notify} from "notiwind";
 import {XCircleIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, ArrowDownTrayIcon} from "@heroicons/vue/20/solid";
+import {notify} from "notiwind";
+import {debounce} from "lodash";
 import {isObject} from "Jetstream/utilities";
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
@@ -16,7 +17,6 @@ import RenamePreset from "Modules/OpenAI/resources/js/Components/RenamePreset.vu
 import DeletePreset from "Modules/OpenAI/resources/js/Components/DeletePreset.vue";
 import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/ItemCompletionPreview.vue";
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
-import {debounce} from "lodash";
 
 const props = defineProps({
     selectedPreset: Object,
@@ -28,6 +28,14 @@ const props = defineProps({
 
 const selectedPreset = ref(null);
 const selectedPresetId = ref(selectedPreset.id);
+
+const initSelectedPreset = () => {
+    const preset = localStorage.getItem('selected-preset');
+
+    if (preset) {
+        changePreset(Number.parseInt(preset));
+    }
+}
 
 const form = useForm({
     collection_id: usePage().props.auth.user.current_collection.id,
@@ -78,6 +86,7 @@ const changePreset = (value) => {
     addingPreset.value = false;
 
     if (preset) {
+        localStorage.setItem('selected-preset', preset.id);
         fillPresetForm(preset);
     }
 }
@@ -147,17 +156,20 @@ const createPreset = () => {
     })
 }
 
-const updatePreset = debounce(() => {
+const updatePreset = debounce((showNotification = true) => {
     form.patch(route('presets.update', selectedPreset.value), {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
             changePreset(selectedPreset.value.id);
-            notify({
-                group: "success",
-                title: "Success",
-                text: "Preset updated!"
-            }, 4000)
+
+            if (showNotification) {
+                notify({
+                    group: "success",
+                    title: "Success",
+                    text: "Preset updated!"
+                }, 4000)
+            }
         },
         onError: (error) => {
             notify({
@@ -193,12 +205,14 @@ const deletePreset = () => {
 }
 
 const changeInputLanguage = (language) => {
-    form.input_language_id = language.id;
+    form.input_language_id = language ? language.id : null;
 }
 
 const changeOutputLanguage = (language) => {
-    form.output_language_id = language.id;
+    form.output_language_id = language ? language.id : null;
 }
+
+initSelectedPreset();
 </script>
 
 <template>
@@ -259,10 +273,10 @@ const changeOutputLanguage = (language) => {
             <template v-if="showMainPanel">
                 <section aria-labelledby="filter-heading" class="py-8">
                     <div class="flex items-center justify-between space-x-6">
-                        <SelectMenu @update:modelValue="updatePreset" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+                        <SelectMenu @update:modelValue="updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                 </template>
@@ -270,7 +284,7 @@ const changeOutputLanguage = (language) => {
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                 </template>
@@ -278,7 +292,7 @@ const changeOutputLanguage = (language) => {
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                 </template>
@@ -286,7 +300,7 @@ const changeOutputLanguage = (language) => {
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                 </template>
@@ -298,11 +312,11 @@ const changeOutputLanguage = (language) => {
                 <!-- Prompt fields -->
                 <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="updatePreset" title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
                     </div>
 
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="updatePreset" title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
                     </div>
                 </div>
 
@@ -310,7 +324,7 @@ const changeOutputLanguage = (language) => {
                                        @update:outputLanguage="changeOutputLanguage"
                                        :preset="selectedPreset"
                                        :languages="languages"
-                                       :updatePreset="updatePreset"/>
+                                       :updatePreset="updatePreset(false)"/>
             </template>
 
         </DashboardPanel>

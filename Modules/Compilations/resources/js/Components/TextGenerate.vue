@@ -9,51 +9,86 @@
             </svg>
         </button>
     </div>
-    <div class="mt-4 grid grid-cols-8">
-        <div class="col-start-1 col-end-1 my-auto ml-4">
-            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc w-7 " focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ReorderIcon">
-                <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"></path>
-            </svg>
-        </div>
-        <span class="mr-6 col-start-2 col-end-9">{{generatedText}}</span>
+    <div class="m-4">
+
+        <span>{{generatedContent}}</span>
     </div>
 </template>
 
 <script setup>
+import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 
 import {ref, watch} from "vue";
 const loading = ref(true);
+const currentLanguage = ref(null);
+
 const props = defineProps({
     id: Number,
     activeItem: Object,
     item: Object,
+    languages: Array,
 });
+
+console.log(props.activeItem)
+console.log(props.item.output_language_id)
 const refreshApi = () => {
     loading.value = true;
-    generatedText.value = '';
+    generatedContent.value = '';
     setupStream(props.id, props.activeItem);
 }
 
-const generatedText = ref('');
-const setupStream = (dataID, activeItemID) => {
-    const eventSource = new EventSource(route('openai.item-completion', {
-        preset: dataID,
-        item: activeItemID
-    }));
+const generatingContent = ref(false);
+const generatedContent = ref('');
+const currentEventSource = ref(null);
 
-    eventSource.addEventListener('update', event => {
-        if (event.data === "<END_STREAMING_SSE>") {
-            eventSource.close();
-            loading.value = false;
-            return;
+const triggerLoading = (value) => {
+    loading.value = value;
+}
+
+const setupStream = () => {
+    generatingContent.value = true;
+
+    currentEventSource.value = streamItemCompletion(props.id, props.activeItem, (data) => {
+        // TODO: move away from callable
+        if (loading.value) {
+            triggerLoading(false);
         }
 
-        if (event.data) {
-            generatedText.value = generatedText.value + event.data;
+        generatedContent.value += data.content;
+    }, () => {
+        if(props.item.output_language_id){
+            translateContent(generatedContent.value, props.item.output_language_id)
         }
-    })
+        generatingContent.value = false;
+        triggerLoading(false);
+    });
 }
 
 setupStream(props.id, props.activeItem);
+
+const translateContent = async (content, lang) => {
+    // translatingContent.value = true;
+    triggerLoading(true);
+    await findLanguage(lang)
+    if(currentLanguage.value){
+        axios.post(route('deepl.translate-text'), {
+            content: content,
+            languageCode: currentLanguage.value.code,
+        }).then((response) => {
+            triggerLoading(false);
+            generatedContent.value = response.data.content;
+        }).catch(error => {
+            triggerLoading(false);
+        });
+    }
+}
+
+const findLanguage = (languageId) => {
+    if (languageId) {
+        currentLanguage.value = props.languages.find((language) => language.id === languageId)
+    } else {
+        currentLanguage.value = null;
+    }
+}
 
 </script>

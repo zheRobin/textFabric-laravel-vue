@@ -14,7 +14,7 @@ import DeletePreset from "./DeletePreset.vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {notify} from "notiwind";
 import {useForm, usePage} from "@inertiajs/vue3";
 
@@ -96,6 +96,7 @@ const renamePreset = (value) => {
     updatePreset();
 }
 
+
 const savePreset = () => {
     if (addingPreset.value) {
         createPreset();
@@ -139,6 +140,7 @@ const deletePreset = () => {
         preserveScroll: true,
         onSuccess: () => {
             emit('onDelete', true)
+            selectedPreset.value = null;
             notify({
                 group: "success",
                 title: "Success",
@@ -195,7 +197,7 @@ const updatePreset = () => {
 
             <template v-else>
                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                <SelectMenu @update:modelValue="changePreset" v-model="selectedPreset" :options="presetOptions()" class="w-36" placeholder="Select" />
+                <SelectMenu @update:modelValue="changePreset" class="w-60" v-model="selectedPreset" :options="presetOptions()" placeholder="Select" />
                 <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
                     {{$t('Add')}}
                     <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />

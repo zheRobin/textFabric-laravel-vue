@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Compilations;
+use Modules\Translations\Models\Language;
 
 class CompilationsController extends Controller
 {
@@ -15,14 +16,15 @@ class CompilationsController extends Controller
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection->presets,
             'previewItem' => $request->user()->currentCollection->items()->get(),
-            'complications' => Compilations::where('owner', $request->user()->current_team_id)->get()
+            'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
+            'languages' => Language::all(),
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            "name" => ["required", "string"],
+            "name" => ["required", "string", "min:3", "max:60"],
             "preset_ids" => ["array"],
         ]);
 
@@ -41,8 +43,8 @@ class CompilationsController extends Controller
     {
         $data = $request->validate([
             "id" => ["required", "numeric"],
-            "name" => ["required", "string"],
-            "owner" => ["required", "numeric"],
+            "name" => ["string"],
+            "owner" => ["numeric"],
             "preset_ids" => ["array"],
         ]);
 

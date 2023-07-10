@@ -3,8 +3,7 @@ import {ref, watch} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import Spinner from "Jetstream/Components/Spinner.vue";
-import Dropdown from "Jetstream/Components/Dropdown.vue";
-import DropdownLink from "Jetstream/Components/DropdownLink.vue";
+import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
 
 const props = defineProps({
     item: Object,
@@ -101,8 +100,8 @@ const translateContent = () => {
         content: generatedContent.value,
         languageCode: currentLanguage.value.code,
     }).then((response) => {
-        triggerLoading(false);
         generatedContent.value = response.data.content;
+        triggerLoading(false);
         translatingContent.value = false;
     }).catch(error => {
         triggerLoading(false);
@@ -112,28 +111,10 @@ const translateContent = () => {
 </script>
 
 <template>
-    <div class="overflow-hidden bg-gray-50 rounded mt-10 flex">
+    <div class="overflow-hidden bg-gray-50 rounded mt-10">
         <div class="px-6 py-3 flex justify-between items-center border-b">
             <div class="flex items-center">
-                <Dropdown align="left" width="30" height="48">
-                    <template #trigger>
-                        <span class="inline-flex rounded-md">
-                            <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                {{ currentLanguage ? currentLanguage.name : 'Language' }}
-                                <svg class="ml-1 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                                </svg>
-                            </button>
-                        </span>
-                    </template>
-                    <template #content>
-                        <div class="w-36">
-                            <DropdownLink @click="changeLanguage(language)" v-for="language in languages" as="button">
-                                {{ language.name }}
-                            </DropdownLink>
-                        </div>
-                    </template>
-                </Dropdown>
+                <LanguageInput @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
 
                 <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent" class="inline-flex ml-3"> Translate </PrimaryButton>
             </div>
@@ -143,15 +124,11 @@ const translateContent = () => {
             </PrimaryButton>
         </div>
 
-        <div class="sm:px-6 flex justify-between mb-2 mt-3">
-            <label class="text-sm font-medium flex-1">{{$t('Preview')}}</label>
-        </div>
-
-        <div v-if="loading" class="min-h-44 flex justify-center items-center mb-6">
+        <div v-if="loading" class="min-h-56 flex justify-center items-center">
             <Spinner class="" />
         </div>
 
-        <div v-else class="min-h-44 px-10 text-base leading-7 text-gray-900 mb-6 whitespace-pre-wrap">
+        <div v-else class="min-h-56 pt-3 px-10 text-base leading-7 text-gray-900 pb-6 whitespace-pre-wrap">
             {{ generatedContent }}
         </div>
     </div>

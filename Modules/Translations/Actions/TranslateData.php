@@ -3,6 +3,7 @@
 namespace Modules\Translations\Actions;
 
 use DeepL\Translator;
+use Illuminate\Support\Facades\Log;
 use Modules\Translations\Contracts\TranslatesData;
 use Modules\Translations\Models\Language;
 
@@ -12,10 +13,12 @@ class TranslateData implements TranslatesData
     {
         $translator = app(Translator::class);
 
+        $attributes = array_map(fn ($value) => strval($value), $data);
+
         return array_combine(
-            array_keys($data),
+            array_keys($attributes),
             array_column(
-                $translator->translateText(array_values($data), null, $language->code),
+                $translator->translateText(array_values($attributes), null, $language->code),
                 'text'
             )
         );

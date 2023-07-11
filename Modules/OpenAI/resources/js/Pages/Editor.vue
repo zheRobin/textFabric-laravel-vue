@@ -21,7 +21,7 @@ import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 const props = defineProps({
     selectedPreset: Object,
     presets: Array,
-    previewItem: Object,
+    attributes: Array,
     models: Array,
     languages: Array,
 });
@@ -60,8 +60,6 @@ const modelOptions = () => {
 
     return models;
 }
-
-const availableAttributes = usePage().props.auth.user.current_collection.headers;
 
 const addingPreset = ref(!props.presets.length);
 const showMainPanel = computed(() => !!selectedPreset.value && !addingPreset.value)
@@ -312,11 +310,11 @@ initSelectedPreset();
                 <!-- Prompt fields -->
                 <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="attributes" />
                     </div>
 
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="attributes" />
                     </div>
                 </div>
 
@@ -326,7 +324,6 @@ initSelectedPreset();
                                        :languages="languages"
                                        :updatePreset="() => updatePreset(false)"/>
             </template>
-
         </DashboardPanel>
     </AppLayout>
 </template>

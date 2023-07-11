@@ -29,7 +29,7 @@ class VerifySubscription
             ! $request->user()->currentTeam->planSubscription ||
             $request->user()->currentTeam->planSubscription->inActive()) {
             return $request->wantsJson()
-                ? abort(403, 'Team subscription has expired')
+                ? abort(403, 'Team subscription has expired.')
                 : Redirect::route('profile.show');
         }
 

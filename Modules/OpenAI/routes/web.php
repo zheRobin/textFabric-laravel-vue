@@ -8,7 +8,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
     $authMiddleware = array_filter([
         'auth:sanctum',
         config('jetstream.auth_session'),
-        'subscribed'
+        'subscribed',
+        'collection.selected',
     ]);
     Route::middleware($authMiddleware)->group(function () {
         // dummy route

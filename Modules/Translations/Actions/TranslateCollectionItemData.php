@@ -6,7 +6,6 @@ use DeepL\Translator;
 use Illuminate\Support\Facades\Validator;
 use Modules\Imports\Models\CollectionItem;
 use Modules\Translations\Contracts\TranslatesCollectionItemData;
-use Modules\Translations\Models\Language;
 
 class TranslateCollectionItemData implements TranslatesCollectionItemData
 {
@@ -21,7 +20,7 @@ class TranslateCollectionItemData implements TranslatesCollectionItemData
         $translator = app(Translator::class);
 
         $allCellsValues = array_map(
-            fn ($el) => array_key_exists('value', $el) ? $el['value'] : null,
+            fn ($el) => array_key_exists('value', $el) ? strval($el['value']) : null,
             $collectionItem->data
         );
 

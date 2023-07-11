@@ -15,6 +15,7 @@ console.log(props.previewItem, "ID")
 
 const loader = ref(true);
 
+
 const dataRight = ref();
 const activeCompilations = ref();
 const itemRightData = (data) => {

@@ -29,7 +29,7 @@ const props = defineProps({
     languages: Array,
 });
 
-console.log(props.activeItem)
+console.log(props.activeItem, 'active')
 console.log(props.item.output_language_id)
 const refreshApi = () => {
     loading.value = true;
@@ -40,6 +40,8 @@ const refreshApi = () => {
 const generatingContent = ref(false);
 const generatedContent = ref('');
 const currentEventSource = ref(null);
+
+const currentItem = ref([]);
 
 const triggerLoading = (value) => {
     loading.value = value;

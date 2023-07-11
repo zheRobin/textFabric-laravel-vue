@@ -51,7 +51,7 @@ const fillPresetForm = (preset) => {
     Object.getOwnPropertyNames(preset).forEach((property) => {
         if (form.hasOwnProperty(property)) {
             if(property === 'preset_ids'){
-                form[property] = JSON.parse(preset[property]);
+                form[property] = preset[property];
             }else{
                 form[property] = preset[property];
             }
@@ -184,7 +184,7 @@ const updatePreset = () => {
         <div class="items-center flex flex-1">
             <template v-if="!complications.length || addingPreset">
                 <label class="mr-2 font-medium">Name:</label>
-                <TextInput v-model="form.name" type="text" class="w-36"/>
+                <TextInput v-model="form.name" type="text" class="w-60"/>
                 <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
                     {{$t('Save')}}
                     <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
@@ -201,10 +201,6 @@ const updatePreset = () => {
                 <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
                     {{$t('Add')}}
                     <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                </PrimaryButton>
-                <PrimaryButton v-if="selectedPreset" @click="savePreset" class="ml-2 gap-x-1.5">
-                    {{$t('save')}}
-                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
                 </PrimaryButton>
                 <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
                     <PrimaryButton class="ml-2 gap-x-1.5">

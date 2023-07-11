@@ -89,7 +89,6 @@ const sortedPresets = existingPresets.sort((a, b) => {
     return aIndex - bIndex;
 });
 
-
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
 const generatedText = ref();
@@ -136,11 +135,6 @@ const updatePreset = (right) => {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
-            notify({
-                group: "success",
-                title: "Success",
-                text: "Compilation updated!"
-            }, 4000)
         },
         onError: (error) => {
             notify({

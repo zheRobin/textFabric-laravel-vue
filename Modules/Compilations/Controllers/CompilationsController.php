@@ -31,7 +31,7 @@ class CompilationsController extends Controller
         $compilation = new Compilations();
         $compilation->name = $data['name'];
         $compilation->owner = $request->user()->current_team_id;
-        $compilation->preset_ids = json_encode($data['preset_ids']);
+        $compilation->preset_ids = $data['preset_ids'];
 
         $compilation->save();
 
@@ -56,7 +56,7 @@ class CompilationsController extends Controller
 
         $compilation->name = $data['name'];
         $compilation->owner = $data['owner'];
-        $compilation->preset_ids = json_encode($data['preset_ids']);
+        $compilation->preset_ids = $data['preset_ids'];
 
         $compilation->save();
 

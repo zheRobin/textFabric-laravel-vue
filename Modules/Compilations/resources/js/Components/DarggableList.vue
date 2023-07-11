@@ -78,7 +78,7 @@ const form = useForm({
     preset_ids: []
 })
 
-const activePresets = JSON.parse(compilation.preset_ids);
+const activePresets = compilation.preset_ids;
 
 const existingPresets = presets.filter(preset => activePresets.includes(preset.id));
 const nonExistingPresets = presets.filter(preset => !activePresets.includes(preset.id));

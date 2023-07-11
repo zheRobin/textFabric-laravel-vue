@@ -1,10 +1,9 @@
 <script setup>
 import {ref, watch} from "vue";
-import {ArrowLeftIcon, ArrowRightIcon} from '@heroicons/vue/20/solid';
+import {ChevronRightIcon, ChevronLeftIcon} from '@heroicons/vue/20/solid';
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {iterateCollectionItems} from "Modules/OpenAI/resources/js/axios";
-import Dropdown from "Jetstream/Components/Dropdown.vue";
-import DropdownLink from "Jetstream/Components/DropdownLink.vue";
+import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
 
 const props = defineProps({
     languages: Array,
@@ -36,7 +35,9 @@ const lastPage = ref(null);
 const collectionItem = (page) => {
     iterateCollectionItems(page)
         .then((response) => {
-            currentItem.value = response.data.data[0] ?? null;
+            const item = response.data.data.find(() => true);
+
+            currentItem.value = item;
             currentPage.value = response.data.current_page;
             lastPage.value = response.data.last_page;
 
@@ -46,7 +47,7 @@ const collectionItem = (page) => {
 
 collectionItem(currentPage);
 
-const nextPage = () => {
+const nextItem = () => {
     if ((currentPage.value + 1) <= lastPage.value ) {
         collectionItem(currentPage.value + 1);
     }
@@ -62,45 +63,49 @@ const changeLanguage = (language) => {
     currentLanguage.value = language;
     emit('update:inputLanguage', language);
 }
+
+const translateItem = () => {
+    axios.post(route('deepl.translate-collection-item', currentItem.value), {
+        languageCode: currentLanguage.value.code,
+    }).then((response) => {
+        currentItem.value.data = response.data.data;
+    }).catch((error) => {
+        // TODO: notify about the error
+    });
+}
 </script>
 
 <template>
-    <div class="overflow-hidden bg-gray-50 rounded">
-        <div class="px-6 py-3 items-center">
+    <div class="bg-gray-50 rounded">
+        <div class="px-6 py-3 items-center border-b">
             <div class="flex justify-between items-center">
-                <!-- TODO: move into separate component -->
-                <Dropdown align="left" width="30" height="48">
-                    <template #trigger>
-                        <span class="inline-flex rounded-md">
-                            <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                {{ currentLanguage ? currentLanguage.name : 'Language' }}
-                                <svg class="ml-1 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                                </svg>
-                            </button>
-                        </span>
-                    </template>
-                    <template #content>
-                        <div class="w-30">
-                            <DropdownLink @click="changeLanguage(language)" v-for="language in props.languages" as="button">
-                                {{ language.name }}
-                            </DropdownLink>
-                        </div>
-                    </template>
-                </Dropdown>
+                <div class="flex items-center">
+                    <LanguageInput @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
 
-                <PrimaryButton v-if="currentPage > 1" @click="previousItem">
-                    <ArrowLeftIcon class="w-4" /> {{ $t("Previous") }}
-                </PrimaryButton>
+                    <PrimaryButton v-if="currentItem && currentLanguage" @click="translateItem" class="inline-flex ml-3"> {{ $t('Translate') }} </PrimaryButton>
+                </div>
 
-                <PrimaryButton v-if="currentPage < lastPage" @click="nextPage">
-                    {{$t('Next')}} <ArrowRightIcon class="w-4" />
-                </PrimaryButton>
+                <div class="flex">
+                    <span class="isolate inline-flex rounded-md shadow-sm">
+                        <button type="button" @click="previousItem" :disabled="currentPage === 1" :class="currentPage > 1 ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                            <span class="sr-only"> {{ $t('Previous') }} </span>
+                            <ChevronLeftIcon class="h-4 w-4" :class="currentPage > 1 ? 'text-black' : ''" aria-hidden="true" />
+                        </button>
+                        <button type="button" @click="nextItem" :disabled="currentPage === lastPage" :class="currentPage !== lastPage ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                            <span class="sr-only">Next</span>
+                            <ChevronRightIcon class="h-4 w-4" :class="currentPage !== lastPage ? 'text-black' : ''" aria-hidden="true"/>
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
 
-        <div class="min-h-44 overflow-scroll">
-            <div class="border-t border-gray-200">
+<!--        <div v-if="loading" class="min-h-56 flex justify-center items-center mb-6">-->
+<!--            <Spinner class="" />-->
+<!--        </div>-->
+
+        <div  class="min-h-56">
+            <div>
                 <dl class="divide-y divide-gray-100 cursor-default">
                     <div class="px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-900 truncate" :title="$t('ID')"> {{ `#${$t('ID')}` }} </dt>

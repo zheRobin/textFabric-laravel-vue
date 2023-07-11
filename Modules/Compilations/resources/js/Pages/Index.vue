@@ -7,12 +7,14 @@ import {ref, watch} from 'vue'
 const props = defineProps({
     presets: Array,
     previewItem: Object,
-    complications: Array
+    complications: Array,
+    languages: Array,
 });
 
 console.log(props.previewItem, "ID")
 
 const loader = ref(true);
+
 
 const dataRight = ref();
 const activeCompilations = ref();
@@ -47,12 +49,12 @@ const selectedPresetData = async (data) => {
         <div class="max-w-7xl mx-auto my-auto py-10 sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
                 <div class="mx-auto px-6 py-6">
-                    <SelectOrCreateCompolations :complications="complications" @selectedPreset="selectedPresetData" :positions="dataRight" @onDelete="onDelete"/>
+                    <SelectOrCreateCompolations :complications="complications" @selectedPreset="selectedPresetData"  :positions="dataRight" @onDelete="onDelete"/>
                     <div class="text-center mt-5" v-if="loader || !activeCompilations">
                         <div class="dark:text-gray-400">Select or create a new compilation</div>
                     </div>
-                    <div class="grid grid-cols-12" v-else>
-                        <DraggableList :presets="presets" :previewItem="previewItem" :compilation="activeCompilations" @itemRight="itemRightData" />
+                    <div class="flex gap-10" v-else>
+                        <DraggableList :presets="presets" :previewItem="previewItem" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
                     </div>
                 </div>
             </div>

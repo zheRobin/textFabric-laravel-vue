@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {ChevronRightIcon, ChevronLeftIcon} from '@heroicons/vue/20/solid';
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {iterateCollectionItems} from "Modules/OpenAI/resources/js/axios";
@@ -28,6 +28,12 @@ watch(() => props.languageId, (langId) => {
 });
 
 const currentItem = ref([]);
+
+const itemData = computed(() => {
+    return currentItem.value
+        ? currentItem.value.data
+        : [];
+});
 
 const currentPage = ref(1);
 const lastPage = ref(null);
@@ -113,7 +119,7 @@ const translateItem = () => {
                     </div>
                 </dl>
             </div>
-            <div v-for="item in currentItem.data" class="border-t border-gray-200">
+            <div v-for="item in itemData" class="border-t border-gray-200">
                 <dl class="divide-y divide-gray-100 cursor-default">
                     <div class="px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-900 truncate" :title="item.header">{{ item.header }}</dt>

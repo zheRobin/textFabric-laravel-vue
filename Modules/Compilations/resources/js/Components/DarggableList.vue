@@ -1,5 +1,5 @@
 <template>
-    <div class="col-start-1 col-end-6 mt-5 bg-gray-50 rounded p-4"
+    <div class="w-2/5 mt-5 bg-gray-50 rounded p-4"
          @drop="onDrop($event, 1)"
          @dragenter="onDragEnter($event)"
          @dragover.prevent
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="col-start-7 col-end-13 mt-6 bg-gray-50 rounded p-4"
+    <div class="w-3/5 mt-5 bg-gray-50 rounded pt-4 pl-4 pr-4"
          @drop="onDrop($event, 2)"
          @dragenter="onDragEnter($event)"
          @dragover.prevent
@@ -44,7 +44,7 @@
                      @dragstart="onDragStart($event, item, 2)"
                      @drop="onDropOurColumn($event, item, 2)"
                      draggable="true">
-                    <TextGenerate :key="item.id" :id="item.id" :activeItem="activeItem" :item="item"/>
+                    <TextGenerate :key="item.id" :languages="languages" :id="item.id" :activeItem="activeItem" :item="item"/>
                 </div>
             </div>
         </div>
@@ -53,13 +53,17 @@
 
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import {ref} from 'vue';
+import { ref } from 'vue';
+import { notify } from "notiwind";
+import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
+
 const emit = defineEmits(['idItemsPage']);
 const props = defineProps({
         presets: Array,
         previewItem: Object,
         compilation: Object,
+        languages: Array,
 });
 const {presets, previewItem, compilation} = props;
 const loading = ref(false);
@@ -67,7 +71,14 @@ const idItems = ref(0);
 const activeItem = ref(previewItem[idItems.value]);
 const lastElementNumber = previewItem.length;
 
-const activePresets = JSON.parse(compilation.preset_ids);
+const form = useForm({
+    id: props.compilation.id,
+    name: props.compilation.name,
+    owner: props.compilation.owner,
+    preset_ids: []
+})
+
+const activePresets = compilation.preset_ids;
 
 const existingPresets = presets.filter(preset => activePresets.includes(preset.id));
 const nonExistingPresets = presets.filter(preset => !activePresets.includes(preset.id));
@@ -77,7 +88,6 @@ const sortedPresets = existingPresets.sort((a, b) => {
     const bIndex = activePresets.indexOf(b.id);
     return aIndex - bIndex;
 });
-
 
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
@@ -114,7 +124,26 @@ function deleteItemById(array, id) {
         array.splice(index, 1);
     }
 }
-function onDragEnter(e) {
+const updatePreset = (right) => {
+    console.log(right)
+    const newPresetIds = [];
+    if(right){
+        right.map(item => newPresetIds.push(item.id))
+        form.preset_ids = newPresetIds;
+    }
+    form.patch(route('compilations.update'), {
+        errorBag: 'errors',
+        preserveScroll: true,
+        onSuccess: () => {
+        },
+        onError: (error) => {
+            notify({
+                group: "error",
+                title: "Error",
+                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+            }, 4000) // 4s
+        }
+    })
 }
 function onDrop(e, id) {
     const itemId = parseInt(e.dataTransfer.getData('itemId'))
@@ -124,6 +153,7 @@ function onDrop(e, id) {
                 items.value.push(item);
                 deleteItemById(itemsRight.value, itemId);
                 emit('itemRight', itemsRight.value)
+                updatePreset(itemsRight.value, itemId)
             }
         })
     }else{
@@ -132,6 +162,7 @@ function onDrop(e, id) {
                 itemsRight.value.push(item);
                 deleteItemById(items.value, itemId);
                 emit('itemRight', itemsRight.value)
+                updatePreset(itemsRight.value, itemId)
             }
         })
     }
@@ -156,7 +187,7 @@ function onDropOurColumn (e, arr, column) {
             const temp = itemsRight.value[prev];
             itemsRight.value[prev] = itemsRight.value[next];
             itemsRight.value[next] = temp;
-
+            updatePreset(itemsRight.value);
             emit('itemRight', itemsRight.value)
         }
     }

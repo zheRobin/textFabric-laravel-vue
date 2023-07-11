@@ -8,7 +8,10 @@ import {ChevronUpDownIcon} from "@heroicons/vue/20/solid";
 const props = defineProps({
     modelValue: String,
     text: String,
-    attributes: Array,
+    attributes: {
+        type: Array,
+        default: [],
+    },
     title: String,
 });
 
@@ -78,7 +81,7 @@ const update = () => {
 
             <template #no-result>
                 <div class="font-medium text-sm p-2">
-                    {{$("No result")}}
+                    {{$('No result')}}
                 </div>
             </template>
 

@@ -1,8 +1,8 @@
 <script setup>
-import AppLayout from 'Jetstream/Layouts/AppLayout.vue';
-import { DocumentPlusIcon } from '@heroicons/vue/20/solid';
-import EmptyState from "Jetstream/Components/EmptyState.vue";
 import { Link } from '@inertiajs/vue3';
+import { DocumentPlusIcon } from '@heroicons/vue/20/solid';
+import AppLayout from 'Jetstream/Layouts/AppLayout.vue';
+import EmptyState from "Jetstream/Components/EmptyState.vue";
 import CollectionDataTable from "Modules/Imports/resources/js/Components/CollectionDataTable.vue";
 import UploadFileForm from "Modules/Imports/resources/js/Pages/Partials/UploadFileForm.vue";
 

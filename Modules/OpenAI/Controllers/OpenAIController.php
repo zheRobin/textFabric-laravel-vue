@@ -14,9 +14,9 @@ class OpenAIController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         return Inertia::render('OpenAI::Editor',[
-            'presets' => $request->user()->currentCollection->presets,
+            'presets' => $request->user()->currentCollection->presets ?? [],
             'selectedPreset' => session('preset'),
-            'previewItem' => $request->user()->currentCollection->items()->first(),
+            'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
             'languages' => Language::all(),
         ]);

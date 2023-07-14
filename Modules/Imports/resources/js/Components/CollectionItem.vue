@@ -3,9 +3,12 @@ import {useForm} from "@inertiajs/vue3";
 import {debounce} from "lodash";
 import {notify} from "notiwind";
 import ImageCard from "Jetstream/Components/ImageCard.vue";
+import CellInput from "Modules/Imports/Resources/js/Components/CellInput.vue";
 
 const props = defineProps({
-    item: Object
+    item: Object,
+    colsCount: Number,
+    colNumber: Number,
 });
 
 const form = useForm({
@@ -28,12 +31,15 @@ const updateItem = debounce( () => {
 </script>
 
 <template>
-    <div v-for="(cell, index) in form.items" :key="`cell-${item.id}-${index}`" class="h-14 flex justify-center">
+    <div v-for="(cell, index) in form.items" :key="`cell-${item.id}-${index}`" class="h-14 border">
         <ImageCard v-if="cell.path" :cell="cell" :item="item" />
-        <input v-else
-               v-model="cell.value"
-               @input="updateItem"
-               class="truncate bg-inherit w-full border-0 py-1.5 px-2 text-gray-900 ring-0 ring-gray-400 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-tf-blue-600 focus-visible:outline-none sm:text-sm sm:leading-6"
-        />
+
+        <CellInput v-else
+                   v-model="cell.value"
+                   @update:modelValue="updateItem"
+                   :colsCount="colsCount"
+                   :colNumber="colNumber"
+                   :rowsCount="form.items.length"
+                   :rowNumber="index" />
     </div>
 </template>

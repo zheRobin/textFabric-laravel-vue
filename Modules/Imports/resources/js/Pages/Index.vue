@@ -44,7 +44,7 @@ const hasItems = ref(!!props.items.data.length);
 
                 <CollectionDataTable v-if="hasItems"
                                      :items="props.items"
-                                     :headers="$page.props.auth.user.current_collection.headers"  />
+                                     :headers="$page.props.auth.user.current_collection.headers" class="mt-2" />
             </template>
         </DashboardPanel>
     </AppLayout>

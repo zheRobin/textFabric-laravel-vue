@@ -3,7 +3,7 @@ import {useForm} from "@inertiajs/vue3";
 import {debounce} from "lodash";
 import {notify} from "notiwind";
 import ImageCard from "Jetstream/Components/ImageCard.vue";
-import CellInput from "Modules/Imports/Resources/js/Components/CellInput.vue";
+import CellInput from "Modules/Imports/resources/js/Components/CellInput.vue";
 
 const props = defineProps({
     item: Object,

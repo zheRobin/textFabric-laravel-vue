@@ -113,7 +113,8 @@ const clearFileInput = () => {
 
             <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
                 <div class="text-center">
-                    <strong>{{ $t("Browse file to upload") }}</strong>
+                    <!-- TODO: pass formats as parameters to translation method -->
+                    <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
                     <small v-if="canUpload" :class="`text-gray-600 block`">
                         {{ uploadInfo }}
                     </small>
@@ -124,35 +125,35 @@ const clearFileInput = () => {
                 </div>
             </span>
         </label>
+
+        <ConfirmationModal :show="confirmingAppending" @close="confirmingAppending.value = false">
+            <template #title>
+                {{ $t('Confirm upload') }}
+            </template>
+
+            <template #content>
+                {{ $t('Do you want to replace or append data?') }}
+            </template>
+
+            <template #footer>
+                <PrimaryButton
+                    class="ml-3"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click="upload(true)"
+                >
+                    {{ $t('Append') }}
+                </PrimaryButton>
+
+                <DangerButton
+                    class="ml-3"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click="upload()"
+                >
+                    {{ $t('Replace') }}
+                </DangerButton>
+            </template>
+        </ConfirmationModal>
     </div>
-
-    <ConfirmationModal :show="confirmingAppending" @close="confirmingAppending = false">
-        <template #title>
-            {{ $t('Confirm upload') }}
-        </template>
-
-        <template #content>
-            {{ $t('Do you want to replace or append data?') }}
-        </template>
-
-        <template #footer>
-            <PrimaryButton
-                class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                @click="upload(true)"
-            >
-                {{ $t('Append') }}
-            </PrimaryButton>
-
-            <DangerButton
-                class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                @click="upload()"
-            >
-                {{ $t('Replace') }}
-            </DangerButton>
-        </template>
-    </ConfirmationModal>
 </template>

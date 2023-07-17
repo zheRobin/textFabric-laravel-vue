@@ -11,7 +11,7 @@
     </div>
     <div class="m-4">
 
-        <span>{{generatedContent}}</span>
+        <div class="whitespace-pre-wrap">{{generatedContent}}</div>
     </div>
 </template>
 

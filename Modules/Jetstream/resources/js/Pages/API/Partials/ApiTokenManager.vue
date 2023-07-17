@@ -75,11 +75,11 @@ const exampleRequest = {
 const names = [
     {
         id: 1,
-        url: `${location.origin}/rest/api/generate`,
+        url: `${location.origin}/api/rest/generate`,
     },
     {
         id: 2,
-        url: `${location.origin}/rest/api/translate`
+        url: `${location.origin}/api/rest/translate`
     }
 ];
 

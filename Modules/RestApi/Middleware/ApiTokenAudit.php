@@ -22,7 +22,7 @@ class ApiTokenAudit
             throw new HttpException(403, "Forbidden, token is no longer available");
         }
 
-        if (Team::get()->where('user_id', 6)->first()->planSubscription->plan->id !== 2) {
+        if (Team::get()->where('user_id', 6)->first()->planSubscription->plan->id !== 3) {
             throw new HttpException(403, "Forbidden, token is no longer available");
         }
 

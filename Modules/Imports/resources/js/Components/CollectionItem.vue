@@ -1,6 +1,5 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
-import {debounce} from "lodash";
 import {notify} from "notiwind";
 import ImageCard from "Jetstream/Components/ImageCard.vue";
 import CellInput from "Modules/Imports/resources/js/Components/CellInput.vue";
@@ -15,7 +14,7 @@ const form = useForm({
     items: props.item.data
 });
 
-const updateItem = debounce( () => {
+const updateItem = () => {
     form.put(route('collection-items.update', props.item),{
         errorBag: 'updateCollectionItem',
         preserveScroll: true,
@@ -27,7 +26,7 @@ const updateItem = debounce( () => {
             }, 4000) // 4s
         }
     })
-}, 1000);
+}
 </script>
 
 <template>

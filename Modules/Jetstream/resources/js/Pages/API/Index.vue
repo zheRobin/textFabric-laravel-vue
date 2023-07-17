@@ -6,6 +6,7 @@ defineProps({
     tokens: Array,
     availablePermissions: Array,
     defaultPermissions: Array,
+    apiDocumentations: Object,
 });
 </script>
 
@@ -22,6 +23,7 @@ defineProps({
                     :tokens="tokens"
                     :available-permissions="availablePermissions"
                     :default-permissions="defaultPermissions"
+                    :apiDocumentations="apiDocumentations"
                 />
             </div>
         </div>

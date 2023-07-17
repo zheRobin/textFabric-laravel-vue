@@ -5,6 +5,8 @@ namespace Modules\Jetstream\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Jetstream\Jetstream;
+use Modules\RestApi\Requests\GenerateRequest;
+use Modules\RestApi\Requests\TranslateRequest;
 
 class ApiTokenController extends Controller
 {
@@ -24,6 +26,7 @@ class ApiTokenController extends Controller
             }),
             'availablePermissions' => Jetstream::$permissions,
             'defaultPermissions' => Jetstream::$defaultPermissions,
+            'apiDocumentations' => (new GenerateRequest)->rules()
         ]);
     }
 

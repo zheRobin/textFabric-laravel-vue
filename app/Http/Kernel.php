@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'subscribed' => \Modules\Subscriptions\Middleware\VerifySubscription::class,
         'team.enabled' => \Modules\Jetstream\Middleware\TeamEnabled::class,
+        'token.enabled' => \Modules\RestApi\Middleware\ApiTokenAudit::class,
         'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
         'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
         'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,

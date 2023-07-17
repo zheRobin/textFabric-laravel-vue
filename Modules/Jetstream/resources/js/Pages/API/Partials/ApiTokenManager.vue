@@ -6,7 +6,7 @@ import ActionSection from 'Jetstream/Components/ActionSection.vue';
 import Checkbox from 'Jetstream/Components/Checkbox.vue';
 import ConfirmationModal from 'Jetstream/Components/ConfirmationModal.vue';
 import DangerButton from 'Jetstream/Components/DangerButton.vue';
-import DialogModal from 'Jetstream/Components/DialogModal.vue';
+import DialogModal from 'Jetstream/Components/ApiModal.vue';
 import FormSection from 'Jetstream/Components/FormSection.vue';
 import InputError from 'Jetstream/Components/InputError.vue';
 import InputLabel from 'Jetstream/Components/InputLabel.vue';
@@ -14,18 +14,76 @@ import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
-import ActionPanel from "../../../Components/ActionPanel.vue";
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 
 const props = defineProps({
     tokens: Array,
     availablePermissions: Array,
     defaultPermissions: Array,
+    apiDocumentations: Object,
+    translateDocumentation: Object
 });
 
-const apiUrl = [];
-console.log(location.origin)
-props.tokens.map(item => apiUrl.push(location.origin + '/rest/api/' + item.name))
+const documentsationSelect = ref(null);
+const selectExampleRequest = ref(null);
+const responseExample = ref(null);
+const exampleRequest = {
+    translate: {
+        "text":"Text for translation",
+        "translate-target-list": [
+            "UK",
+            "en-US",
+            "FR"
+        ]
+    },
+    translateResponse:{
+        "UK": "Текст для перекладу",
+        "en-US": "Text for translation",
+        "FR": "Texte à traduire"
+    },
+    generate: {
+        "preset-id": 5,
+        "source-list":
+            {
+                "user_prompt":
+                    {
+                        "@name": "test",
+                        "@feature_1": "test"
+                    },
+                "system_prompt":
+                    {
+                        "@name": " test",
+                        "@feature_1": "test"
+                    }
+            },
+        "translate-target-list": [
+            "UK",
+            "EN-US",
+            "FR",
+            "ES"
+        ]
+    },
+    generateResponse: {
+        "UK": "Тест на значущість - це статистичний тест, який використовується для визначення значущості предиктора або незалежної змінної для пояснення мінливості залежної змінної в статистичній моделі. Основна мета проведення тесту на значущість - визначити змінні, які є найбільш важливими для прогнозування результативної змінної.\n\nІснує кілька методів проведення тесту на значущість, включаючи F-тест, t-тест і методи відбору змінних, такі як покрокова регресія. F-тест зазвичай використовується для порівняння відповідності між повною моделлю (з усіма предикторами) і скороченою моделлю (без предиктора, який нас цікавить). Якщо F-статистика є значущою, це означає, що предиктор є важливим для пояснення варіації результативної змінної.\n\nT-тест є простішою альтернативою F-тесту, який використовується, коли в моделі є лише одна змінна-предиктор. Значущість t-значення визначає, чи є змінна предиктор важливою чи ні.\n\nМетоди відбору змінних є більш складними і передбачають вибір підмножини змінних, які найкраще пояснюють варіацію результативної змінної. Ці методи включають прямий відбір, зворотне виключення та покрокову регресію.\n\nТест на значущість має важливе значення для визначення найбільш релевантних змінних у статистичній моделі, оскільки він дозволяє дослідникам зосередитися на змінних, які мають найбільш суттєвий вплив на результуючу змінну. Це забезпечує кращу точність моделі, значущі результати та ефективне прийняття рішень.",
+        "EN-US": "An importance test is a statistical test used to determine the significance of a predictor or independent variable in explaining the variability of a dependent variable in a statistical model. The main purpose of conducting an importance test is to identify variables that are most important in predicting the outcome variable.\n\nThere are several methods of conducting an importance test, including the F-test, t-test, and variable selection techniques like stepwise regression. The F-test is commonly used to compare the goodness of fit between a full model (with all predictors) to a reduced model (without the predictor of interest). If the F-statistic is significant, it indicates that the predictor is important in explaining the variation in the outcome variable.\n\nA t-test is a simpler alternative to the F-test, used when there is only one predictor variable in the model. The significance of the t-value determines whether the predictor variable is important or not.\n\nVariable selection techniques are more complex and involve selecting a subset of variables that best explain the variation in the outcome variable. These methods include forward selection, backward elimination, and stepwise regression.\n\nThe importance test is essential in identifying the most relevant variables in a statistical model, as it allows researchers to focus on the variables that have the most significant impact on the outcome variable. This allows for better model accuracy, significant results and effective decision making.",
+        "FR": "Un test d'importance est un test statistique utilisé pour déterminer l'importance d'un prédicteur ou d'une variable indépendante pour expliquer la variabilité d'une variable dépendante dans un modèle statistique. L'objectif principal d'un test d'importance est d'identifier les variables les plus importantes pour prédire la variable de résultat.\n\nIl existe plusieurs méthodes pour réaliser un test d'importance, notamment le test F, le test t et les techniques de sélection de variables telles que la régression par étapes. Le test F est généralement utilisé pour comparer la qualité de l'ajustement entre un modèle complet (avec tous les prédicteurs) et un modèle réduit (sans le prédicteur d'intérêt). Si la statistique F est significative, cela indique que le prédicteur est important pour expliquer la variation de la variable de résultat.\n\nLe test t est une alternative plus simple au test F. Il est utilisé lorsque le modèle ne comporte qu'une seule variable prédictive. La signification de la valeur t détermine si la variable prédictive est importante ou non.\n\nLes techniques de sélection des variables sont plus complexes et impliquent la sélection d'un sous-ensemble de variables qui expliquent le mieux la variation de la variable de résultat. Ces méthodes comprennent la sélection en amont, l'élimination en aval et la régression par étapes.\n\nLe test d'importance est essentiel pour identifier les variables les plus pertinentes dans un modèle statistique, car il permet aux chercheurs de se concentrer sur les variables qui ont l'impact le plus significatif sur la variable de résultat. Cela permet d'améliorer la précision du modèle, d'obtenir des résultats significatifs et de prendre des décisions efficaces.",
+        "ES": "Una prueba de importancia es una prueba estadística utilizada para determinar la importancia de un predictor o variable independiente a la hora de explicar la variabilidad de una variable dependiente en un modelo estadístico. El objetivo principal de realizar una prueba de importancia es identificar las variables más importantes para predecir la variable de resultado.\n\nExisten varios métodos para realizar una prueba de importancia, como la prueba F, la prueba t y técnicas de selección de variables como la regresión por pasos. La prueba F suele utilizarse para comparar la bondad del ajuste entre un modelo completo (con todos los predictores) y un modelo reducido (sin el predictor de interés). Si el estadístico F es significativo, indica que el predictor es importante para explicar la variación de la variable de resultado.\n\nLa prueba t es una alternativa más sencilla a la prueba F, que se utiliza cuando sólo hay una variable predictora en el modelo. La significación del valor t determina si la variable predictora es importante o no.\n\nLas técnicas de selección de variables son más complejas e implican la selección de un subconjunto de variables que expliquen mejor la variación de la variable de resultado. Estos métodos incluyen la selección hacia delante, la eliminación hacia atrás y la regresión por pasos.\n\nLa prueba de importancia es esencial para identificar las variables más relevantes en un modelo estadístico, ya que permite a los investigadores centrarse en las variables que tienen el impacto más significativo en la variable de resultado. Esto permite mejorar la precisión del modelo, obtener resultados significativos y tomar decisiones eficaces."
+    },
+}
 
+const names = [
+    {
+        id: 1,
+        url: `${location.origin}/rest/api/generate`,
+    },
+    {
+        id: 2,
+        url: `${location.origin}/rest/api/translate`
+    }
+];
+
+console.log(props, 'props');
 const createApiTokenForm = useForm({
     name: '',
     permissions: props.defaultPermissions,
@@ -53,7 +111,16 @@ const createApiToken = () => {
     });
 };
 
-const documentation = () => {
+const documentation = id => {
+    if(id === 1){
+        documentsationSelect.value = props.apiDocumentations.generate;
+        selectExampleRequest.value = exampleRequest.generate;
+        responseExample.value = exampleRequest.generateResponse;
+    }else{
+        documentsationSelect.value = props.apiDocumentations.translate;
+        selectExampleRequest.value = exampleRequest.translate;
+        responseExample.value = exampleRequest.translateResponse;
+    }
     showDocumentation.value = true;
 }
 
@@ -190,9 +257,9 @@ const deleteApiToken = () => {
                         <div class="mt-5 max-w-xl text-sm text-gray-500">
                             Api URL:
                         </div>
-                        <div class="mt-2 flex" v-for="item in apiUrl">
-                            <div>{{item}}</div>
-                            <button @click="documentation" class="w-5 inline-flex items-center justify-center">
+                        <div class="mt-2 flex" v-for="item in names">
+                            <div>{{item.url}}</div>
+                            <button @click="documentation(item.id)" class="w-5 inline-flex items-center justify-center">
                                 <svg class="MuiSvgIcon-root jss187" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
                             </button>
                         </div>
@@ -228,13 +295,14 @@ const deleteApiToken = () => {
         <!-- Token Value Modal -->
         <DialogModal :show="showDocumentation" @close="showDocumentation = false">
             <template #title>
-                API Token
             </template>
 
             <template #content>
-                <div>
-                    Please copy your new API token. For your security, it won't be shown again.
-                </div>
+                <vue-json-pretty class="mb-4" :data="{documentsationSelect}" />
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example JSON</h3>
+                <vue-json-pretty class="mt-4 mb-4" :data="{selectExampleRequest}" />
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example Response</h3>
+                <vue-json-pretty class="mt-4" :data="{responseExample}" />
             </template>
 
             <template #footer>

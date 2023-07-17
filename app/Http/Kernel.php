@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'subscribed' => \Modules\Subscriptions\Middleware\VerifySubscription::class,
         'team.enabled' => \Modules\Jetstream\Middleware\TeamEnabled::class,
         'collection.selected' => \Modules\Collections\Middleware\EnsureUserHasCollection::class,
+        'token.enabled' => \Modules\RestApi\Middleware\ApiTokenAudit::class,
         'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
         'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
         'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,

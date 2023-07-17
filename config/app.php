@@ -208,6 +208,7 @@ return [
         Modules\Translations\Providers\TranslationServiceProvider::class,
         Modules\Compilations\Providers\CompilationsServiceProvider::class,
         Modules\Fortify\Providers\FortifyServiceProvider::class,
+        Modules\RestApi\Providers\RestApiServiceProvider::class,
     ],
 
     /*

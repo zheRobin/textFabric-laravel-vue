@@ -44,7 +44,7 @@ const updateImage = () => {
 </script>
 
 <template>
-    <div class="h-full flex items-center">
+    <div class="h-full flex items-center justify-center">
         <input
             ref="imageInput"
             :id="`update-image`"
@@ -54,6 +54,6 @@ const updateImage = () => {
             @change="updateImage"
         >
 
-        <img :src="imageSource" class="h-12" @click="selectImage">
+        <img :src="imageSource" draggable="false" class="h-12" @click="selectImage">
     </div>
 </template>

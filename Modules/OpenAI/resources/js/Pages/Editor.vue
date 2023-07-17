@@ -21,7 +21,7 @@ import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 const props = defineProps({
     selectedPreset: Object,
     presets: Array,
-    previewItem: Object,
+    attributes: Array,
     models: Array,
     languages: Array,
 });
@@ -60,8 +60,6 @@ const modelOptions = () => {
 
     return models;
 }
-
-const availableAttributes = usePage().props.auth.user.current_collection.headers;
 
 const addingPreset = ref(!props.presets.length);
 const showMainPanel = computed(() => !!selectedPreset.value && !addingPreset.value)
@@ -273,10 +271,10 @@ initSelectedPreset();
             <template v-if="showMainPanel">
                 <section aria-labelledby="filter-heading" class="py-8">
                     <div class="flex items-center justify-between space-x-6">
-                        <SelectMenu @update:modelValue="updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+                        <SelectMenu @update:modelValue="() => updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                 </template>
@@ -284,7 +282,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                 </template>
@@ -292,7 +290,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                 </template>
@@ -300,7 +298,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                 </template>
@@ -312,11 +310,11 @@ initSelectedPreset();
                 <!-- Prompt fields -->
                 <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="attributes" />
                     </div>
 
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="availableAttributes" />
+                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="attributes" />
                     </div>
                 </div>
 
@@ -324,9 +322,8 @@ initSelectedPreset();
                                        @update:outputLanguage="changeOutputLanguage"
                                        :preset="selectedPreset"
                                        :languages="languages"
-                                       :updatePreset="updatePreset(false)"/>
+                                       :updatePreset="() => updatePreset(false)"/>
             </template>
-
         </DashboardPanel>
     </AppLayout>
 </template>

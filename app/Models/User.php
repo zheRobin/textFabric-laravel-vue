@@ -23,7 +23,6 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasSuperAdmin;
-
     /**
      * The relationships that should always be loaded.
      *

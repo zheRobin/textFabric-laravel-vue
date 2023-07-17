@@ -17,11 +17,9 @@ use Laravel\Jetstream\RedirectsActions;
 use Modules\Jetstream\Contracts\TogglesDisabledTeam;
 use Modules\Jetstream\Services\TeamsFilterService;
 use Modules\Subscriptions\Models\Plan;
-
 class TeamController extends Controller
 {
     use RedirectsActions;
-
     /**
      * @return Response
      */

@@ -1,9 +1,12 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useFocus} from '@vueuse/core';
 
 const props = defineProps({
-    modelValue: String,
+    modelValue: {
+        type: String,
+        default: '',
+    },
     colsCount: Number,
     colNumber: Number,
     rowsCount: Number,
@@ -11,12 +14,27 @@ const props = defineProps({
     minHeight: Number,
 });
 
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
 
 const container = ref(null);
 
 const cell = ref();
 const { focused } = useFocus(cell);
+
+watch(focused, (focused) => {
+    if (!focused) {
+        const content = props.modelValue === null
+            ? ''
+            : props.modelValue;
+
+        console.log(content)
+        console.log(cell.value.innerText)
+
+        if (content !== cell.value.innerText) {
+            emit('update:modelValue', cell.value.innerText);
+        }
+    }
+})
 
 const activeCellMinWidth = computed( () => {
     return container.value
@@ -50,11 +68,9 @@ const activeCellMaxHeight = computed( () => {
                  :class="focused ? '' : 'truncate'"
                  ref="cell"
                  contenteditable="true"
+                 v-text="modelValue"
                  :style="{'min-width': activeCellMinWidth, 'max-width': activeCellMaxWidth, 'min-height': activeCellMinHeight, 'max-height': activeCellMaxHeight}"
-                 @input="$emit('update:modelValue', $event.target.innerText)"
-            >
-                {{ modelValue }}
-            </div>
+            />
         </div>
     </div>
 </template>

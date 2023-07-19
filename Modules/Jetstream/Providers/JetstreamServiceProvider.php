@@ -5,7 +5,6 @@ namespace Modules\Jetstream\Providers;
 use App\Models\Team;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 use Modules\Jetstream\Actions\AddTeamMember;
 use Modules\Jetstream\Actions\CreateTeam;
@@ -17,6 +16,7 @@ use Modules\Jetstream\Actions\RemoveTeamMember;
 use Modules\Jetstream\Actions\UpdateTeamName;
 use Modules\Jetstream\Contracts\TogglesDisabledTeam;
 use Modules\Jetstream\Policies\TeamPolicy;
+
 class JetstreamServiceProvider extends ServiceProvider
 {
     /**
@@ -63,6 +63,8 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::removeTeamMembersUsing(RemoveTeamMember::class);
         Jetstream::deleteTeamsUsing(DeleteTeam::class);
         Jetstream::deleteUsersUsing(DeleteUser::class);
+
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**
@@ -85,6 +87,8 @@ class JetstreamServiceProvider extends ServiceProvider
 //            'create',
 //            'update',
         ])->description('Editor users have the ability to read, create, and update.');
+
+        Jetstream::role('viewer', 'Viewer', [])->description('Viewer users');
     }
 
     /**

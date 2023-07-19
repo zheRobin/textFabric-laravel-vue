@@ -9,13 +9,15 @@ import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
 import SubscriptionBanner from 'Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue';
 import NotificationBanner from 'Jetstream/Components/NotificationBanner.vue';
 import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
-import LanguageSelector from "../Components/LanguageSelector.vue";
+import LanguageSelector from "Jetstream/Components/LanguageSelector.vue";
+
 defineProps({
     title: String,
     locale: String
 });
 
 const locale = localStorage.getItem('locale') || 'en';
+
 const showingNavigationDropdown = ref(false);
 
 const currentTeam = computed(() => usePage().props.auth.user.current_team);
@@ -93,8 +95,8 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
-                            <div v-if="$page.props.planSubscription.plan.id === 3" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('api-tokens.index')" :class="route().current('api-tokens.index') ? 'dark:text-white' : ''" :active="route().current('api-tokens.index')">
+                            <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
                                     API
                                 </NavLink>
                             </div>
@@ -303,7 +305,7 @@ const logout = () => {
                                 {{ $t('Profile') }}
                             </ResponsiveNavLink>
 
-                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
                                 {{ $t('API Tokens') }}
                             </ResponsiveNavLink>
 

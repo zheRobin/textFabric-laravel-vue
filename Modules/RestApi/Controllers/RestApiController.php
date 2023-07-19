@@ -15,6 +15,7 @@ class RestApiController extends Controller
     public function generate(Request $request, Preset $preset, CollectionItem $item)
     {
         $completer = app(CompletesCollectionItem::class);
+
         $response = $completer->complete(
             $request->user(),
             $preset->get()->where('id', $request['preset-id'])->first(),

@@ -27,9 +27,6 @@ watch(focused, (focused) => {
             ? ''
             : props.modelValue;
 
-        console.log(content)
-        console.log(cell.value.innerText)
-
         if (content !== cell.value.innerText) {
             emit('update:modelValue', cell.value.innerText);
         }

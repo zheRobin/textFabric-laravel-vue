@@ -17,6 +17,7 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 use Laravel\Jetstream\Jetstream;
 use Modules\Jetstream\Controllers\TeamController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 
 Route::post('/change-language', [LocalizationController::class, 'changeLanguage']);
 
@@ -68,10 +69,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
             Route::group(['middleware' => 'verified'], function () {
                 // API...
                 if (Jetstream::hasApiFeatures()) {
-                    Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
-                    Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
-                    Route::put('/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');
-                    Route::delete('/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+                    $enterpriseMiddleware = implode(':', [
+                        'subscription',
+                        SubscriptionPlanEnum::ENTERPRISE->slug()
+                    ]);
+
+                    Route::group(['middleware' => $enterpriseMiddleware], function () {
+                        Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+                        Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+                        Route::put('/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');
+                        Route::delete('/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+                    });
                 }
 
                 // Teams...

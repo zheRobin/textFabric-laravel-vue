@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller;
 use Laravel\Jetstream\Jetstream;
 use Modules\RestApi\Requests\GenerateRequest;
 use Modules\RestApi\Requests\TranslateRequest;
-
+use App\Models\Dashboard;
 class ApiTokenController extends Controller
 {
     /**

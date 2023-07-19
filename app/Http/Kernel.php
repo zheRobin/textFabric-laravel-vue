@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'team.enabled' => \Modules\Jetstream\Middleware\TeamEnabled::class,
         'collection.selected' => \Modules\Collections\Middleware\EnsureUserHasCollection::class,
         'token.enabled' => \Modules\RestApi\Middleware\ApiTokenAudit::class,
+        'team.role' => \Modules\Jetstream\Middleware\EnsureUserHasTeamRole::class,
         'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
         'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
         'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,

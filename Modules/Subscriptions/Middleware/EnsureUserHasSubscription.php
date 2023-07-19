@@ -2,8 +2,8 @@
 
 namespace Modules\Subscriptions\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
-use \Closure;
 use Illuminate\Support\Facades\Redirect;
 
 class EnsureUserHasSubscription
@@ -13,6 +13,7 @@ class EnsureUserHasSubscription
      *
      * @param Request $request
      * @param Closure $next
+     * @param string $subscriptionPlan
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|null
      */
     public function handle(Request $request, Closure $next, string $subscriptionPlan)

@@ -69,12 +69,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
             Route::group(['middleware' => 'verified'], function () {
                 // API...
                 if (Jetstream::hasApiFeatures()) {
-                    $enterpriseMiddleware = implode(':', [
-                        'subscription',
-                        SubscriptionPlanEnum::ENTERPRISE->slug()
-                    ]);
+                    $apiFeaturesMiddleware = [
+                        implode(':', ['subscription', SubscriptionPlanEnum::ENTERPRISE->slug()]),
+                        'team.role:admin'
+                    ];
 
-                    Route::group(['middleware' => $enterpriseMiddleware], function () {
+                    Route::group(['middleware' => $apiFeaturesMiddleware], function () {
                         Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
                         Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
                         Route::put('/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');

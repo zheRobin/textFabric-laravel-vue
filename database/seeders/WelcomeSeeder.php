@@ -108,7 +108,7 @@ class WelcomeSeeder extends Seeder
                 'value' => $content['value'],
                 'link_name' => $content['link']['name'] ?? null,
                 'link' => $content['link']['value'] ?? null,
-                'block_name' => $content['icon'],
+                'icon' => $content['icon'],
             ]);
         }
     }

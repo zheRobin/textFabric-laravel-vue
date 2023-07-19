@@ -24,7 +24,8 @@ class WelcomeSeeder extends Seeder
                         'de' => null
                     ],
                     'value' => null
-                ]
+                ],
+                'icon' => "fa-solid fa-video"
             ],
             'secondBlock' => [
                 'title' => [
@@ -41,7 +42,8 @@ class WelcomeSeeder extends Seeder
                         'de' => "Erkunden Sie die Dokumentation"
                     ],
                     'value' => "https://laravel.com/docs"
-                ]
+                ],
+                'icon' => "fa-solid fa-video"
             ],
             'thirdBlock' => [
                 'title' => [
@@ -58,7 +60,8 @@ class WelcomeSeeder extends Seeder
                         'de' => "Beginnen Sie mit Laracasts"
                     ],
                     'value' => "https://laracasts.com"
-                ]
+                ],
+                'icon' => "fa-solid fa-video"
             ],
             'fourthBlock' => [
                 'title' => [
@@ -75,7 +78,8 @@ class WelcomeSeeder extends Seeder
                         'de' => null
                     ],
                     'value' => "https://tailwindcss.com/"
-                ]
+                ],
+                'icon' => "fa-solid fa-video"
             ],
             'fifthBlock' => [
                 'title' => [
@@ -92,7 +96,8 @@ class WelcomeSeeder extends Seeder
                         'de' => null
                     ],
                     'value' => ""
-                ]
+                ],
+                'icon' => "fa-solid fa-video"
             ],
         ];
 

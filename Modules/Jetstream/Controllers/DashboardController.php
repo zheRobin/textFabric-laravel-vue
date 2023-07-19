@@ -6,40 +6,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Translations\Models\Language;
-use App\Models\Dashboard;
+use App\Models\WelcomeData;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, WelcomeData $welcomeData)
     {
-        $langCodes = Language::pluck('name', 'code');
-//        dd($langCodes);
         return Inertia::render('Jetstream::Dashboard', [
-            "languages" => $langCodes
+            "data" => $welcomeData->get()
         ]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, WelcomeData $welcomeData)
     {
-         $dashboard = new Dashboard;
+        $data = $welcomeData->find($request->id);
+        $data->title = $request['title'];
+        $data->value = $request['value'];
+        $data->link_name = $request['link_name'];
+        $data->link = $request['link'];
+        $data->icon = $request['icon'];
 
-        dd($dashboard->whereLocales('title', ['en', 'de'])->get());
-        $dashboard = new Dashboard;
-        $data = $request['data'];
-
-//        $dashboard
-//            ->setTranslation('title', 'en', $data['title'])
-//            ->setTranslation('title', 'de', $data['title'])
-//            ->setTranslation('value', 'en', $data['value'])
-//            ->setTranslation('value', 'de', $data['value'])
-//            ->setTranslation('link_name', 'en', $data['link']['name'])
-//            ->setTranslation('link_name', 'de', $data['link']['name'])
-//            ->setTranslation('link', 'en', $data['link']['value'])
-//            ->setTranslation('link', 'de', $data['link']['value'])
-//            ->save();
-
-
-
-        $dashboard->save();
+        $data->save();
     }
 }

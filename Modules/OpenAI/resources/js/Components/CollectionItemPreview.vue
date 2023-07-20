@@ -8,6 +8,7 @@ import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.
 const props = defineProps({
     languages: Array,
     languageId: Number,
+    canChangeLanguage: Boolean,
 });
 
 const emit = defineEmits(['itemChanged', 'update:inputLanguage']);
@@ -86,9 +87,9 @@ const translateItem = () => {
         <div class="px-6 py-3 items-center border-b">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <LanguageInput @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
+                    <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
 
-                    <PrimaryButton v-if="currentItem && currentLanguage" @click="translateItem" class="inline-flex ml-3"> {{ $t('Translate') }} </PrimaryButton>
+                    <PrimaryButton v-if="currentItem && currentLanguage && canChangeLanguage" @click="translateItem" class="inline-flex ml-3"> {{ $t('Translate') }} </PrimaryButton>
                 </div>
 
                 <div class="flex">

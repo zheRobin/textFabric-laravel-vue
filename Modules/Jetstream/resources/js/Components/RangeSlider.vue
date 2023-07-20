@@ -2,6 +2,14 @@
 import Slider from '@vueform/slider';
 import TextInput from "Jetstream/Components/TextInput.vue";
 
+const props = defineProps({
+    modelValue: [String, Number],
+    min: Number,
+    max: Number,
+    step: Number,
+    disabled: Boolean
+})
+
 const emit = defineEmits(['update:modelValue']);
 
 const classes = {
@@ -35,13 +43,6 @@ const classes = {
     drag: 'slider-state-drag',
 };
 
-const props = defineProps({
-    modelValue: [String, Number],
-    min: Number,
-    max: Number,
-    step: Number,
-})
-
 const updateSlider = (value) => {
     emit('update:modelValue', value);
 }
@@ -62,6 +63,7 @@ const updateInput = (value) => {
                        :min="min"
                        :max="max"
                        :step="step"
+                       :disabled="disabled"
                        @change="updateInput($event.target.value)"
             />
         </div>
@@ -74,6 +76,7 @@ const updateInput = (value) => {
                 :min="min"
                 :max="max"
                 :step="step"
+                :disabled="disabled"
                 @slide="updateSlider"
         />
     </div>

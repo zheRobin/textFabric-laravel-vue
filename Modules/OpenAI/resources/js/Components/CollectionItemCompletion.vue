@@ -11,6 +11,7 @@ const props = defineProps({
     languageId: Number,
     languages: Array,
     updatePreset: Function,
+    canChangeLanguage: Boolean,
 });
 
 const emit = defineEmits(['update:outputLanguage']);
@@ -114,9 +115,9 @@ const translateContent = () => {
     <div class="overflow-hidden bg-gray-50 rounded mt-10">
         <div class="px-6 py-3 flex justify-between items-center border-b">
             <div class="flex items-center">
-                <LanguageInput @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
+                <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
 
-                <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent" class="inline-flex ml-3"> Translate </PrimaryButton>
+                <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent && canChangeLanguage" class="inline-flex ml-3"> Translate </PrimaryButton>
             </div>
 
             <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">

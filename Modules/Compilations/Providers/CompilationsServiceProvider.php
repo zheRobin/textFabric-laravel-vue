@@ -2,11 +2,22 @@
 
 namespace Modules\Compilations\Providers;
 
+use App\Models\Compilations;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Compilations\Policies\CompilationPolicy;
 
 class CompilationsServiceProvider extends ServiceProvider
 {
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        Compilations::class => CompilationPolicy::class,
+    ];
+
     /**
      * Register services.
      */
@@ -21,6 +32,7 @@ class CompilationsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRoutes();
+        $this->registerPolicies();
     }
 
     /**

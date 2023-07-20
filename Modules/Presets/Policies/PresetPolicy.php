@@ -8,6 +8,20 @@ use Modules\Presets\Models\Preset;
 
 class PresetPolicy
 {
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        if (!$user->ownsTeam($user->currentTeam) &&
+            $user->hasTeamRole($user->currentTeam, 'viewer')) {
+            return false;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can create models.
      */
@@ -23,5 +37,13 @@ class PresetPolicy
     {
         return $preset->collection->team->is($user->currentTeam) &&
             $user->currentTeam->ownsCollection($collection);
+    }
+
+    /**
+     * Determine whether the user can manage the model before real actions.
+     */
+    public function manage(User $user): bool
+    {
+        return true;
     }
 }

@@ -4,6 +4,7 @@ namespace Modules\Compilations\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Translations\Models\Language;
@@ -18,6 +19,9 @@ class CompilationsController extends Controller
             'previewItem' => $request->user()->currentCollection->items()->get(),
             'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
             'languages' => Language::all(),
+            'permissions' => [
+                'canManageCompilations' => Gate::check('manage', Compilations::class)
+            ]
         ]);
     }
 

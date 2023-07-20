@@ -2,7 +2,9 @@
 
 namespace Modules\Imports\Actions;
 
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 use Modules\Collections\Models\Collection;
@@ -16,8 +18,10 @@ class ImportImage implements ImportsImage
      * @param array $input
      * @return void
      */
-    public function import(Collection $collection, array $input): void
+    public function import(User $user, Collection $collection, array $input): void
     {
+        Gate::forUser($user)->authorize('update', $collection);
+
         Validator::make($input, [
             'upload' => ['required', 'array'],
             'upload.*' => [

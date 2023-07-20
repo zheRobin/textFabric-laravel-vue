@@ -7,6 +7,7 @@ const props = defineProps({
     preset: Object,
     languages: Array,
     updatePreset: Function,
+    canChangeLanguage: Boolean,
 });
 
 const currentInputLanguage = ref(props.preset.input_language_id ?? null);
@@ -49,6 +50,7 @@ const changeOutputLanguage = (language) => {
                                    :item="previewItem"
                                    :languages="languages"
                                    :languageId="currentInputLanguage"
+                                   :canChangeLanguage="canChangeLanguage"
                                    class="mt-10" />
         </div>
 
@@ -58,6 +60,7 @@ const changeOutputLanguage = (language) => {
                                       :item="previewItem"
                                       :languages="languages"
                                       :languageId="currentOutputLanguage"
+                                      :canChangeLanguage="canChangeLanguage"
                                       class="flex-col" />
         </div>
     </div>

@@ -143,4 +143,20 @@ class User extends Authenticatable
 
         return false;
     }
+
+    /**
+     * Get the default profile photo URL if no profile photo has been uploaded.
+     *
+     * @return string
+     */
+    protected function defaultProfilePhotoUrl()
+    {
+        $name = implode([
+            mb_substr($this->first_name, 0, 1),
+            ' ',
+            mb_substr($this->last_name, 0, 1),
+        ]);
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=0094FFFF&background=A7D8FFFF';
+    }
 }

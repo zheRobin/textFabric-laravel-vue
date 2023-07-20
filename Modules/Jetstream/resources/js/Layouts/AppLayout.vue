@@ -122,14 +122,16 @@ const logout = () => {
                                         <div class="w-60">
                                             <!-- Collection Management -->
                                             <template v-if="$page.props.jetstream.hasTeamFeatures">
-                                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    {{ $t('Manage Collections') }}
-                                                </div>
+                                                <template v-if="currentCollection && $page.props.collections.canViewCollection">
+                                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                                        {{ $t('Manage Collections') }}
+                                                    </div>
 
-                                                <!-- Team Settings -->
-                                                <DropdownLink v-if="currentCollection" :href="route('collections.show', currentCollection)">
-                                                    {{ $t('Collection Settings') }}
-                                                </DropdownLink>
+                                                    <!-- Collection Settings -->
+                                                    <DropdownLink :href="route('collections.show', currentCollection)">
+                                                        {{ $t('Collection Settings') }}
+                                                    </DropdownLink>
+                                                </template>
 
                                                 <DropdownLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')">
                                                     {{$t('Create New Collection')}}
@@ -320,14 +322,16 @@ const logout = () => {
                             <div>
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
-                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                    {{ $t('Manage Collection') }}
-                                </div>
+                                <template>
+                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                        {{ $t('Manage Collection') }}
+                                    </div>
 
-                                <!-- Collection Settings -->
-                                <ResponsiveNavLink v-if="currentCollection" :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
-                                    {{ $t('Collection Settings') }}
-                                </ResponsiveNavLink>
+                                    <!-- Collection Settings -->
+                                    <ResponsiveNavLink v-if="currentCollection && $page.props.collections.canViewCollection" :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
+                                        {{ $t('Collection Settings') }}
+                                    </ResponsiveNavLink>
+                                </template>
 
                                 <ResponsiveNavLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')" :active="route().current('collections.create')">
                                     {{ $t('Create New Collection') }}

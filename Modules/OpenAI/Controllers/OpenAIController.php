@@ -14,8 +14,6 @@ class OpenAIController extends Controller
 {
     public function index(Request $request): \Inertia\Response
     {
-        $canManagePresets = Gate::check('manage', Preset::class);
-
         return Inertia::render('OpenAI::Editor',[
             'presets' => $request->user()->currentCollection->presets ?? [],
             'selectedPreset' => session('preset'),
@@ -23,7 +21,7 @@ class OpenAIController extends Controller
             'models' => ChatModelEnum::values(),
             'languages' => Language::all(),
             'permissions' => [
-                'canManagePresets' => $canManagePresets,
+                'canManagePresets' => Gate::check('manage', Preset::class),
             ]
         ]);
     }

@@ -21,6 +21,7 @@ import {useForm, usePage} from "@inertiajs/vue3";
 const props = defineProps({
     complications: Array,
     positions: Array,
+    canManageCompilations: Boolean,
 });
 
 const form = useForm(
@@ -183,37 +184,41 @@ const updatePreset = () => {
     <div class="flex border-b border-gray-200 pb-8 items-center">
         <div class="items-center flex flex-1">
             <template v-if="!complications.length || addingPreset">
-                <label class="mr-2 font-medium">Name:</label>
-                <TextInput v-model="form.name" type="text" class="w-60"/>
-                <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
-                    {{$t('Save')}}
-                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                </PrimaryButton>
-                <SecondaryButton v-if="complications.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                    {{$t('Cancel')}}
-                    <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                </SecondaryButton>
+                <template v-if="canManageCompilations">
+                    <label class="mr-2 font-medium">Name:</label>
+                    <TextInput v-model="form.name" type="text" class="w-60"/>
+                    <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
+                        {{$t('Save')}}
+                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                    </PrimaryButton>
+                    <SecondaryButton v-if="complications.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                        {{$t('Cancel')}}
+                        <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                    </SecondaryButton>
+                </template>
             </template>
 
             <template v-else>
                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                 <SelectMenu @update:modelValue="changePreset" class="w-60" v-model="selectedPreset" :options="presetOptions()" placeholder="Select" />
-                <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                    {{$t('Add')}}
-                    <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                </PrimaryButton>
-                <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                    <PrimaryButton class="ml-2 gap-x-1.5">
-                        {{$t('Rename')}}
-                        <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                <template v-if="canManageCompilations">
+                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                        {{$t('Add')}}
+                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                     </PrimaryButton>
-                </RenamePreset>
-                <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                    <DangerButton class="ml-2 gap-x-1.5">
-                        {{$t('Delete')}}
-                        <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                    </DangerButton>
-                </DeletePreset>
+                    <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                        <PrimaryButton class="ml-2 gap-x-1.5">
+                            {{$t('Rename')}}
+                            <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                        </PrimaryButton>
+                    </RenamePreset>
+                    <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                        <DangerButton class="ml-2 gap-x-1.5">
+                            {{$t('Delete')}}
+                            <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                        </DangerButton>
+                    </DeletePreset>
+                </template>
             </template>
         </div>
     </div>

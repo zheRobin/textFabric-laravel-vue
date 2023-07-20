@@ -70,6 +70,8 @@ class HandleInertiaRequests extends Middleware
                 return [
                     'canCreateCollection' => $user &&
                                              Gate::forUser($user)->check('create', Collection::class),
+                    'canViewCollection' => $user &&
+                                           Gate::forUser($user)->check('manage', Collection::class),
                 ];
             },
             'canUseApiFeatures' => function () use ($user) {

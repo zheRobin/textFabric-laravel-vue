@@ -61,4 +61,12 @@ class CollectionPolicy
     {
         return $user->currentTeam->is($collection->team);
     }
+
+    /**
+     * Determine whether the user can manage the model before real actions.
+     */
+    public function manage(User $user): bool
+    {
+        return true;
+    }
 }

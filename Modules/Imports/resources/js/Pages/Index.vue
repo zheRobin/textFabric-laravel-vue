@@ -10,6 +10,7 @@ import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 
 const props = defineProps({
     items: Object,
+    permissions: Object,
 });
 
 const hasItems = ref(!!props.items.data.length);
@@ -40,11 +41,12 @@ const hasItems = ref(!!props.items.data.length);
             </EmptyState>
 
             <template v-else>
-                <UploadFileForm :hasItems="hasItems" class="px-2 sm:px-0" />
+                <UploadFileForm v-if="permissions.canUpdateCollection" :hasItems="hasItems" class="px-2 sm:px-0 mb-2" />
 
                 <CollectionDataTable v-if="hasItems"
-                                     :items="props.items"
-                                     :headers="$page.props.auth.user.current_collection.headers" class="mt-2" />
+                                     :canUpdateCollection="permissions.canUpdateCollection"
+                                     :items="items"
+                                     :headers="$page.props.auth.user.current_collection.headers" class="" />
             </template>
         </DashboardPanel>
     </AppLayout>

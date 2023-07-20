@@ -3,6 +3,7 @@
 namespace Modules\Imports\Actions;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 use Modules\Imports\Contracts\StoresImportingFile;
@@ -12,6 +13,8 @@ class StoreImportingFile implements StoresImportingFile
 {
     public function store(User $user, array $input): void
     {
+        Gate::forUser($user)->authorize('update', $user->currentCollection);
+
         Validator::make($input, [
             'upload' => [
                 'required',

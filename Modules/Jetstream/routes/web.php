@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\LocalizationController;
-use App\Services\GetLocaleService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\CurrentTeamController;
@@ -70,8 +69,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
                 // API...
                 if (Jetstream::hasApiFeatures()) {
                     $apiFeaturesMiddleware = [
+                        'subscribed',
                         implode(':', ['subscription', SubscriptionPlanEnum::ENTERPRISE->slug()]),
-                        'team.role:admin'
+                        'team.role:admin',
                     ];
 
                     Route::group(['middleware' => $apiFeaturesMiddleware], function () {

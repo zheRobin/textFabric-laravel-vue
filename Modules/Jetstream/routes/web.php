@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\LocalizationController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\CurrentTeamController;
 use Modules\Jetstream\Controllers\ApiTokenController;
 use Laravel\Jetstream\Http\Controllers\Inertia\CurrentUserController;
@@ -17,6 +16,7 @@ use Laravel\Jetstream\Jetstream;
 use Modules\Jetstream\Controllers\TeamController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
+use Modules\Jetstream\Controllers\DashboardController;
 
 Route::post('/change-language', [LocalizationController::class, 'changeLanguage']);
 
@@ -27,11 +27,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
         config('jetstream.auth_session'),
         'verified',
     ])->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Jetstream::Dashboard');
-        })->name('dashboard');
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     });
 
+    Route::post('/dashboard/update', [DashboardController::class, 'update'])->name('dashboard.update');
     Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
         if (Jetstream::hasTermsAndPrivacyPolicyFeature()) {
             Route::get('/terms-of-service', [TermsOfServiceController::class, 'show'])->name('terms.show');

@@ -98,6 +98,11 @@ const logout = () => {
                                     API
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('export.index')" :class="route().current('export.index') ? 'dark:text-white' : ''" :active="route().current('export.index')">
+                                    {{$t('Export')}}
+                                </NavLink>
+                            </div>
 
                         </div>
 

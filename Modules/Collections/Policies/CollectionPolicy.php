@@ -17,6 +17,11 @@ class CollectionPolicy
             return true;
         }
 
+        if (!$user->ownsTeam($user->currentTeam) &&
+            $user->hasTeamRole($user->currentTeam, 'viewer')) {
+            return false;
+        }
+
         return null;
     }
 
@@ -55,5 +60,13 @@ class CollectionPolicy
     public function delete(User $user, Collection $collection): bool
     {
         return $user->currentTeam->is($collection->team);
+    }
+
+    /**
+     * Determine whether the user can manage the model before real actions.
+     */
+    public function manage(User $user): bool
+    {
+        return true;
     }
 }

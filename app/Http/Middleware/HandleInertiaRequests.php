@@ -39,10 +39,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return array_merge(parent::share($request), [
             'googleRecaptchaSiteKey' => config('services.google_recaptcha.site_key'),
-            'planSubscription' => function () use ($request) {
-                if ($user = $request->user()) {
+            'planSubscription' => function () use ($user) {
+                if ($user) {
                     if (!$user->currentTeam->disabled && $user->currentTeam->planSubscription) {
                         $user->currentTeam->planSubscription->plan->features;
 
@@ -64,13 +66,16 @@ class HandleInertiaRequests extends Middleware
                 }
                 return json_decode(file_get_contents(resource_path('lang/'.app()->getLocale() .'/'.app()->getLocale() .'.json')) , true);
             },
-            'collections' => function () use ($request) {
-                $user = $request->user();
-
+            'collections' => function () use ($user) {
                 return [
                     'canCreateCollection' => $user &&
                                              Gate::forUser($user)->check('create', Collection::class),
+                    'canViewCollection' => $user &&
+                                           Gate::forUser($user)->check('manage', Collection::class),
                 ];
+            },
+            'canUseApiFeatures' => function () use ($user) {
+                return Gate::forUser($user)->allows('use-api-features');
             }
         ]);
     }

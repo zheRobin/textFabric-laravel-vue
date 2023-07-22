@@ -24,6 +24,7 @@ const props = defineProps({
     attributes: Array,
     models: Array,
     languages: Array,
+    permissions: Object,
 });
 
 const selectedPreset = ref(null);
@@ -226,37 +227,41 @@ initSelectedPreset();
                 <div class="flex border-b border-gray-200 pb-8 items-center">
                     <div class="items-center flex flex-1">
                         <template v-if="!presets.length || addingPreset">
-                            <label class="mr-2 font-medium">Name:</label>
-                            <TextInput v-model="form.name" type="text" class="w-60"/>
-                            <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
-                                {{$t('Save')}}
-                                <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                            </PrimaryButton>
-                            <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                                {{$t('Cancel')}}
-                                <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                            </SecondaryButton>
+                            <template v-if="permissions.canManagePresets">
+                                <label class="mr-2 font-medium">Name:</label>
+                                <TextInput v-model="form.name" type="text" class="w-60"/>
+                                <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
+                                    {{$t('Save')}}
+                                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                </PrimaryButton>
+                                <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                                    {{$t('Cancel')}}
+                                    <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                </SecondaryButton>
+                            </template>
                         </template>
 
                         <template v-else>
                             <label class="mr-2 font-medium">Preset:</label>
                             <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
-                            <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                {{$t('Add')}}
-                                <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                            </PrimaryButton>
-                            <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                                <PrimaryButton class="ml-2 gap-x-1.5">
-                                    {{$t('Rename')}}
-                                    <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                            <template v-if="permissions.canManagePresets">
+                                <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                                    {{$t('Add')}}
+                                    <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                 </PrimaryButton>
-                            </RenamePreset>
-                            <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                                <DangerButton class="ml-2 gap-x-1.5">
-                                    {{$t('Delete')}}
-                                    <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                </DangerButton>
-                            </DeletePreset>
+                                <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                                    <PrimaryButton class="ml-2 gap-x-1.5">
+                                        {{$t('Rename')}}
+                                        <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
+                                </RenamePreset>
+                                <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                                    <DangerButton class="ml-2 gap-x-1.5">
+                                        {{$t('Delete')}}
+                                        <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </DangerButton>
+                                </DeletePreset>
+                            </template>
                         </template>
                     </div>
                 </div>
@@ -271,10 +276,10 @@ initSelectedPreset();
             <template v-if="showMainPanel">
                 <section aria-labelledby="filter-heading" class="py-8">
                     <div class="flex items-center justify-between space-x-6">
-                        <SelectMenu @update:modelValue="() => updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+                        <SelectMenu :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                 </template>
@@ -282,7 +287,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                 </template>
@@ -290,7 +295,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                 </template>
@@ -298,7 +303,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider @update:modelValue="() => updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                 </template>
@@ -310,11 +315,11 @@ initSelectedPreset();
                 <!-- Prompt fields -->
                 <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="attributes" />
+                        <PromptEditor :canEdit="permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="attributes" />
                     </div>
 
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="attributes" />
+                        <PromptEditor :canEdit="permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="attributes" />
                     </div>
                 </div>
 
@@ -322,6 +327,7 @@ initSelectedPreset();
                                        @update:outputLanguage="changeOutputLanguage"
                                        :preset="selectedPreset"
                                        :languages="languages"
+                                       :canManage="permissions.canManagePresets"
                                        :updatePreset="() => updatePreset(false)"/>
             </template>
         </DashboardPanel>

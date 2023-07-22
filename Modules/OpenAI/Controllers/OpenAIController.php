@@ -4,6 +4,7 @@ namespace Modules\OpenAI\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\OpenAI\Enums\ChatModelEnum;
 use Modules\Translations\Models\Language;
@@ -19,6 +20,9 @@ class OpenAIController extends Controller
             'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
             'languages' => Language::all(),
+            'permissions' => [
+                'canManagePresets' => Gate::check('manage', Preset::class),
+            ]
         ]);
     }
 }

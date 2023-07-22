@@ -8,6 +8,7 @@ const props = defineProps({
     item: Object,
     colsCount: Number,
     colNumber: Number,
+    canUpdate: Boolean,
 });
 
 const form = useForm({
@@ -31,7 +32,7 @@ const updateItem = () => {
 
 <template>
     <div v-for="(cell, index) in form.items" :key="`cell-${item.id}-${index}`" class="h-14 border">
-        <ImageCard v-if="cell.path" :cell="cell" :item="item" />
+        <ImageCard :canUpload="canUpdate" v-if="cell.path" :cell="cell" :item="item" />
 
         <CellInput v-else
                    v-model="cell.value"
@@ -39,6 +40,7 @@ const updateItem = () => {
                    :colsCount="colsCount"
                    :colNumber="colNumber"
                    :rowsCount="form.items.length"
-                   :rowNumber="index" />
+                   :rowNumber="index"
+                   :editable="canUpdate" />
     </div>
 </template>

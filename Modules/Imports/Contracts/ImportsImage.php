@@ -2,7 +2,7 @@
 
 namespace Modules\Imports\Contracts;
 
-use Illuminate\Http\UploadedFile;
+use App\Models\User;
 use Modules\Collections\Models\Collection;
 
 interface ImportsImage
@@ -12,5 +12,5 @@ interface ImportsImage
      * @param array $input
      * @return void
      */
-    public function import(Collection $collection, array $input): void;
+    public function import(User $user, Collection $collection, array $input): void;
 }

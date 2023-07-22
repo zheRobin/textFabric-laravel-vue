@@ -5,7 +5,8 @@ import {notify} from "notiwind";
 
 const props = defineProps({
     item: Object,
-    cell: Object
+    cell: Object,
+    canUpload: Boolean,
 });
 
 const form = useForm({
@@ -18,7 +19,10 @@ const imageInput = ref(null);
 const imageSource = ref(`storage/${props.cell.path}`);
 
 const selectImage = () => {
-    imageInput.value.click();
+    console.log(props.canUpload);
+    if (props.canUpload) {
+        imageInput.value.click();
+    }
 }
 
 const updateImage = () => {

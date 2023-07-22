@@ -6,7 +6,8 @@ import {useForm, usePage} from "@inertiajs/vue3";
 import {notify} from "notiwind";
 
 const props = defineProps({
-    header: Object
+    header: Object,
+    canUpdate: Boolean,
 });
 
 const form = useForm({
@@ -48,7 +49,7 @@ const updateHeaderType = (header) => {
             {{ makeTitle(header.name) }}
         </div>
 
-        <Dropdown align="left" width="30">
+        <Dropdown v-if="canUpdate" align="left" width="30">
             <template #trigger>
                 <span class="inline-flex rounded-md">
                     <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -68,5 +69,9 @@ const updateHeaderType = (header) => {
 
             </template>
         </Dropdown>
+
+        <span v-else class="inline-flex items-center text-sm leading-4 font-medium text-gray-500">
+            {{ header.type }}
+        </span>
     </div>
 </template>

@@ -12,6 +12,7 @@ const props = defineProps({
     rowsCount: Number,
     rowNumber: Number,
     minHeight: Number,
+    editable: Boolean,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -26,9 +27,6 @@ watch(focused, (focused) => {
         const content = props.modelValue === null
             ? ''
             : props.modelValue;
-
-        console.log(content)
-        console.log(cell.value.innerText)
 
         if (content !== cell.value.innerText) {
             emit('update:modelValue', cell.value.innerText);
@@ -67,7 +65,7 @@ const activeCellMaxHeight = computed( () => {
             <div class="overflow-scroll focus:absolute focus:z-20 focus:bg-white border-1 py-3 px-2 text-gray-900 ring-0 ring-gray-400 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-600 focus-visible:outline-none sm:text-sm sm:leading-6" aria-multiline="true" role="textbox"
                  :class="focused ? '' : 'truncate'"
                  ref="cell"
-                 contenteditable="true"
+                 :contenteditable="editable"
                  v-text="modelValue"
                  :style="{'min-width': activeCellMinWidth, 'max-width': activeCellMaxWidth, 'min-height': activeCellMinHeight, 'max-height': activeCellMaxHeight}"
             />

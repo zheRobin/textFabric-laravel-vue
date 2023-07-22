@@ -1,56 +1,3 @@
-<template>
-    <div class="w-2/5 mt-5 bg-gray-50 rounded p-4"
-         @drop="onDrop($event, 1)"
-         @dragenter="onDragEnter($event)"
-         @dragover.prevent
-         @dragenter.prevent>
-        <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Available presets')}}</div>
-        <div class="mx-auto mt-5  mb-10">
-            <div class="text-center py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900 truncate"
-                 v-for="item in items" :key="item.id"
-                 @dragstart="onDragStart($event, item, 1)"
-                 @drop="onDropOurColumn($event, item, 1)"
-                 draggable="true">
-                {{ item.name }}
-            </div>
-        </div>
-    </div>
-    <div class="w-3/5 mt-5 bg-gray-50 rounded pt-4 pl-4 pr-4"
-         @drop="onDrop($event, 2)"
-         @dragenter="onDragEnter($event)"
-         @dragover.prevent
-         @dragenter.preven>
-        <div class="flex justify-between">
-            <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
-            <div class="flex">
-                  <span class="isolate inline-flex rounded-md shadow-sm">
-                    <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
-                      <span class="sr-only">Previous</span>
-                      <ChevronLeftIcon class="h-5 w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
-                    </button>
-                    <button type="button" @click="nextPrevElements('next')" :class="idItems === lastElementNumber - 1 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
-                      <span class="sr-only">Next</span>
-                      <ChevronRightIcon class="h-5 w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
-                    </button>
-                  </span>
-            </div>
-        </div>
-        <div>
-            <div class=" mx-auto mt-5 mb-10">
-                <div v-if="loading === true">Loading</div>
-                <div v-else class="py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900"
-                     v-for="item in itemsRight" :key="item.id"
-                     :id="item.title"
-                     @dragstart="onDragStart($event, item, 2)"
-                     @drop="onDropOurColumn($event, item, 2)"
-                     draggable="true">
-                    <TextGenerate :key="item.id" :languages="languages" :id="item.id" :activeItem="activeItem" :item="item"/>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue';
@@ -59,12 +6,15 @@ import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
 
 const emit = defineEmits(['idItemsPage']);
+
 const props = defineProps({
-        presets: Array,
-        previewItem: Object,
-        compilation: Object,
-        languages: Array,
+    presets: Array,
+    previewItem: Object,
+    compilation: Object,
+    languages: Array,
+    canEdit: Boolean,
 });
+
 const {presets, previewItem, compilation} = props;
 const loading = ref(false);
 const idItems = ref(0);
@@ -193,3 +143,56 @@ function onDropOurColumn (e, arr, column) {
     }
 }
 </script>
+
+<template>
+    <div class="w-2/5 mt-5 bg-gray-50 rounded p-4"
+         @drop="onDrop($event, 1)"
+         @dragenter="onDragEnter($event)"
+         @dragover.prevent
+         @dragenter.prevent>
+        <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Available presets')}}</div>
+        <div class="mx-auto mt-5  mb-10">
+            <div class="text-center py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900 truncate"
+                 v-for="item in items" :key="item.id"
+                 @dragstart="onDragStart($event, item, 1)"
+                 @drop="onDropOurColumn($event, item, 1)"
+                 :draggable="canEdit">
+                {{ item.name }}
+            </div>
+        </div>
+    </div>
+    <div class="w-3/5 mt-5 bg-gray-50 rounded pt-4 pl-4 pr-4"
+         @drop="onDrop($event, 2)"
+         @dragenter="onDragEnter($event)"
+         @dragover.prevent
+         @dragenter.preven>
+        <div class="flex justify-between">
+            <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
+            <div class="flex">
+                  <span class="isolate inline-flex rounded-md shadow-sm">
+                    <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                      <span class="sr-only">Previous</span>
+                      <ChevronLeftIcon class="h-5 w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
+                    </button>
+                    <button type="button" @click="nextPrevElements('next')" :class="idItems === lastElementNumber - 1 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
+                      <span class="sr-only">Next</span>
+                      <ChevronRightIcon class="h-5 w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
+                    </button>
+                  </span>
+            </div>
+        </div>
+        <div>
+            <div class=" mx-auto mt-5 mb-10">
+                <div v-if="loading === true">Loading</div>
+                <div v-else class="py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900"
+                     v-for="item in itemsRight" :key="item.id"
+                     :id="item.title"
+                     @dragstart="onDragStart($event, item, 2)"
+                     @drop="onDropOurColumn($event, item, 2)"
+                     :draggable="canEdit">
+                    <TextGenerate :key="item.id" :languages="languages" :id="item.id" :activeItem="activeItem" :item="item"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -7,6 +7,7 @@ import CollectionHeader from "Modules/Imports/resources/js/Components/Collection
 const props = defineProps({
     items: Object,
     headers: Array,
+    canUpdateCollection: Boolean,
 });
 
 const colsCount = computed(() => props.items.data.length);
@@ -26,7 +27,7 @@ const colNumber = (index) => {
                 <div>
                     <div class="p-4 bg-gray-200 h-14" />
                     <div v-for="header in headers" class="flex items-center px-2 bg-gray-200 h-14 border-t border-b border-gray-300">
-                        <CollectionHeader :header="header" />
+                        <CollectionHeader :canUpdate="canUpdateCollection" :header="header" />
                     </div>
                 </div>
 
@@ -34,7 +35,7 @@ const colNumber = (index) => {
                     <div class="p-4 bg-gray-200 h-14 text-center">
                         <span class="font-semibold text-gray-600"> {{ colNumber(index) }} </span>
                     </div>
-                    <CollectionItem :item="item" :colsCount="colsCount" :colNumber="index" />
+                    <CollectionItem :canUpdate="canUpdateCollection" :item="item" :colsCount="colsCount" :colNumber="index" />
                 </div>
             </div>
         </div>

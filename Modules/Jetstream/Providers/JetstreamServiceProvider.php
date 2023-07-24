@@ -13,8 +13,10 @@ use Modules\Jetstream\Actions\DeleteUser;
 use Modules\Jetstream\Actions\ToggleDisabledTeam;
 use Modules\Jetstream\Actions\InviteTeamMember;
 use Modules\Jetstream\Actions\RemoveTeamMember;
+use Modules\Jetstream\Actions\UpdateLogo;
 use Modules\Jetstream\Actions\UpdateTeamName;
 use Modules\Jetstream\Contracts\TogglesDisabledTeam;
+use Modules\Jetstream\Contracts\UpdatesLogo;
 use Modules\Jetstream\Policies\TeamPolicy;
 
 class JetstreamServiceProvider extends ServiceProvider
@@ -26,6 +28,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         TogglesDisabledTeam::class => ToggleDisabledTeam::class,
+        UpdatesLogo::class => UpdateLogo::class,
     ];
 
     /**

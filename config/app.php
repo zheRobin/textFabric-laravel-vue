@@ -207,6 +207,7 @@ return [
         Modules\Presets\Providers\PresetServiceProvider::class,
         Modules\Translations\Providers\TranslationServiceProvider::class,
         Modules\Compilations\Providers\CompilationsServiceProvider::class,
+        Modules\Export\Providers\ExportProvider::class,
         Modules\Fortify\Providers\FortifyServiceProvider::class,
         Modules\RestApi\Providers\RestApiServiceProvider::class,
     ],

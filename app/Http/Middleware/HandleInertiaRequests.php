@@ -4,9 +4,12 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 use Modules\Collections\Models\Collection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Modules\Jetstream\Enums\AppSettingEnum;
+use Modules\Jetstream\Services\AppSettings;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -76,7 +79,8 @@ class HandleInertiaRequests extends Middleware
             },
             'canUseApiFeatures' => function () use ($user) {
                 return Gate::forUser($user)->allows('use-api-features');
-            }
+            },
+            'mainLogoPath' => Storage::url(AppSettings::get(AppSettingEnum::LOGO)),
         ]);
     }
 }

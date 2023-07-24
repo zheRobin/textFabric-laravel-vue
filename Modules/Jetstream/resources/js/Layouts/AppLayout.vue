@@ -226,6 +226,14 @@ const logout = () => {
                                             </form>
                                         </template>
 
+                                        <template v-if="$page.props.auth.user.is_admin">
+                                            <div class="border-t border-gray-200 dark:border-gray-600" />
+
+                                            <DropdownLink :href="route('app.settings.index')">
+                                                {{$t('App Settings')}}
+                                            </DropdownLink>
+                                        </template>
+
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                         <!-- Authentication -->
@@ -314,6 +322,10 @@ const logout = () => {
 
                             <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
                                 {{ $t('API Tokens') }}
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink v-if="$page.props.auth.user.is_admin" :href="route('app.settings.index')" :active="route().current('app.settings.index')">
+                                {{$t('App Settings')}}
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->

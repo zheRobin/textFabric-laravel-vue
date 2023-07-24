@@ -13,6 +13,8 @@ use Laravel\Jetstream\Http\Controllers\Inertia\TermsOfServiceController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 use Laravel\Jetstream\Jetstream;
+use Modules\Jetstream\Controllers\AppSettingsController;
+use Modules\Jetstream\Controllers\LogoController;
 use Modules\Jetstream\Controllers\TeamController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
@@ -102,6 +104,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
                     Route::delete('/team-invitations/{invitation}', [TeamInvitationController::class, 'destroy'])
                         ->name('team-invitations.destroy');
                 }
+
+                Route::get('app/settings', [AppSettingsController::class, 'index'])->name('app.settings.index');
+                Route::post('app/settings/logo', [LogoController::class, 'store'])->name('app.settings.logo');
             });
         });
     });

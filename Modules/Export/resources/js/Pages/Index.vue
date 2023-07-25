@@ -6,17 +6,21 @@ import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import DialogModal from "Jetstream/Components/DialogModal.vue";
 import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
+import CollectionDataTable from "Modules/Export/resources/js/Components/CollectionDataTable.vue";
 import axios from "axios";
 import {notify} from "notiwind";
 import { ref } from "vue"
 import {useForm} from "@inertiajs/vue3";
-import VueJsonPretty from "vue-json-pretty";
-import 'vue-json-pretty/lib/styles.css';
+import {options} from "Modules/Export/resources/js/optionsForDownload";
+import Select from "Modules/Export/resources/js/Components/Select.vue";
+
 const props = defineProps({
     languages: Array,
     complications: Array,
     exports: Array
 });
+
+console.log(props.exports, 'exports')
 const activeLanguages = ref([]);
 const activeModal = ref(false);
 const selectedCompilations = ref(null);
@@ -103,7 +107,30 @@ const translation = () => {
             }, 4000)
             activeViewJson.value = res.props.exports[0].value;
         }
+
     });
+}
+
+const download = () => {
+    axios.post(route('export.download'), {id: form.id, format: selectedDownloadFormat.value})
+        .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            if(selectedDownloadFormat.value === '.xml'){
+                link.setAttribute('download', 'data.xml');
+            }else if(selectedDownloadFormat.value === '.json'){
+                link.setAttribute('download', 'data.json');
+            }
+
+            document.body.appendChild(link);
+            link.click();
+        })
+}
+
+const changeDownloadFormat = (value) => {
+    selectedDownloadFormat.value = value;
+    console.log(value);
 }
 
 const setLanguage = (value) => {
@@ -125,11 +152,28 @@ const closeViewModal = () => {
     activeViewModal.value = false;
 }
 const activeViewJson = ref(null);
-const showViewModal = (value) => {
+const showViewModal = (item) => {
     form.value = null;
-    activeViewJson.value = value;
-    activeViewModal.value = true;
+    axios.get(`/export/${item.id}`).then((res) => {
+        activeViewJson.value = res;
+
+        activeViewModal.value = true;
+    });
 }
+
+const activeDownloadModal = ref(false);
+
+const showDownloadModal = (id) => {
+    form.id = id;
+    activeDownloadModal.value = true;
+}
+
+const closeDownloadModal = () => {
+    console.log('close')
+    selectedDownloadFormat.value = null;
+    activeDownloadModal.value = false;
+}
+
 const closeModal = () => {
     form.id = null;
     form.value = null;
@@ -141,6 +185,8 @@ const data = props.complications.map(item => {
         label: item.name
     }
 });
+
+const selectedDownloadFormat = ref(null);
 
 </script>
 
@@ -241,13 +287,13 @@ const data = props.complications.map(item => {
                                 </div>
                                 <div class="hidden sm:flex sm:flex-col sm:items-end">
                                     <p class="text-sm leading-6 text-gray-900">
-                                        <PrimaryButton @click="showViewModal(item.value)" class="ml-2 gap-x-1.5">
+                                        <PrimaryButton @click="showViewModal(item)" class="ml-2 gap-x-1.5">
                                             View
                                         </PrimaryButton>
                                         <PrimaryButton @click="showModal(item.id, item.value)" class="ml-2 gap-x-1.5">
                                             Translation
                                         </PrimaryButton>
-                                        <PrimaryButton class="ml-2 gap-x-1.5">
+                                        <PrimaryButton @click="showDownloadModal(item.id)" class="ml-2 gap-x-1.5">
                                             Download
                                         </PrimaryButton>
                                         <SecondaryButton @click="deleteExport(item.id)" class="ml-2 gap-x-1.5">
@@ -269,7 +315,6 @@ const data = props.complications.map(item => {
 
             <template #content>
                 <div class="mt-4">
-                    <vue-json-pretty class="mb-4" :data="activeViewJson" />
                     <InputLabel for="title" value="Select languages" />
                     <span @click="setLanguage(key)" v-for="(item, key) in props.languages" :class="activeLanguages.includes(key) ? style.enable : style.disable">
                       {{ item }}
@@ -293,13 +338,34 @@ const data = props.complications.map(item => {
                 </SecondaryButton>
             </template>
         </DialogModal>
-        <ApiModal :show="activeViewModal" @close="closeViewModal">
+        <DialogModal :show="activeDownloadModal" @close="closeDownloadModal">
             <template #title>
                 Download
             </template>
 
             <template #content>
-                <vue-json-pretty class="mb-4" :data="activeViewJson" />
+                <div class="mt-5 h-40">
+                    <InputLabel value="Select format"></InputLabel>
+                    <SelectMenu @update:modelValue="changeDownloadFormat" v-model="selectedDownloadFormat" class="mt-3"  :options="options"/>
+                </div>
+            </template>
+
+            <template #footer>
+                <PrimaryButton @click="download">
+                    Download
+                </PrimaryButton>
+                <SecondaryButton class="ml-3" @click="closeDownloadModal">
+                    Close
+                </SecondaryButton>
+            </template>
+        </DialogModal>
+        <ApiModal :show="activeViewModal" @close="closeViewModal">
+            <template #title>
+                View
+            </template>
+
+            <template #content>
+                <CollectionDataTable :items="activeViewJson" :headers="$page.props.auth.user.current_collection.headers" class="" />
             </template>
 
             <template #footer>

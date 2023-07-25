@@ -7,7 +7,7 @@ use DeepL\Translator;
 use Modules\Imports\Models\CollectionItem;
 use Modules\Export\Contracts\BuildsPrompt;
 use Modules\Export\Contracts\CompletesCollectionItem;
-use Modules\OpenAI\Services\PromptService;
+use Modules\Export\Services\PromptService;
 use Modules\Presets\Models\Preset;
 use Modules\Translations\Contracts\TranslatesData;
 use OpenAI\Laravel\Facades\OpenAI;

@@ -17,6 +17,7 @@
         "maatwebsite/excel": "^3.1",
         "mcamara/laravel-localization": "^1.8",
         "openai-php/laravel": "^0.4.1",
+        "spatie/array-to-xml": "^3.2",
         "spatie/laravel-data": "^3.6",
         "spatie/laravel-translatable": "^6.5",
         "symfony/filesystem": "^6.2",

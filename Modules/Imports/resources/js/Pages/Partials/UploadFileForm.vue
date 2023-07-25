@@ -120,7 +120,7 @@ const clearFileInput = () => {
                     </small>
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
                     <div v-if="canUpload" class="block mt-2 pointer-events-auto">
-                        <PrimaryButton @click="confirmUploading">{{ $t('Upload') }}</PrimaryButton>
+                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
                     </div>
                 </div>
             </span>

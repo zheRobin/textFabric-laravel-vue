@@ -17,12 +17,20 @@ import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import {ref, watch} from "vue";
 import {notify} from "notiwind";
 import {useForm, usePage} from "@inertiajs/vue3";
-
+import { onMounted } from 'vue';
 const props = defineProps({
     complications: Array,
     positions: Array,
     canManageCompilations: Boolean,
 });
+
+const initSelectedCompilation = () => {
+    const preset = localStorage.getItem('selected-compilations');
+
+    if (preset) {
+        changePreset(Number.parseInt(preset));
+    }
+}
 
 const form = useForm(
     {
@@ -32,7 +40,7 @@ const form = useForm(
         preset_ids: [],
     }
 )
-
+console.log('selceted', localStorage.getItem('selected-compilations'))
 const selectedPreset = ref(null);
 const addingPreset = ref(!props.complications.length);
 
@@ -84,6 +92,7 @@ const newItems = (items) => {
 const emit = defineEmits(['selectedPreset']);
 const changePreset = (value) => {
     selectedPreset.value = value;
+    localStorage.setItem('selected-compilations', value);
     addingPreset.value = false;
     const preset = getPreset(value);
     emit('selectedPreset', selectedPreset.value);
@@ -178,6 +187,8 @@ const updatePreset = () => {
         }
     })
 }
+
+initSelectedCompilation();
 </script>
 
 <template>

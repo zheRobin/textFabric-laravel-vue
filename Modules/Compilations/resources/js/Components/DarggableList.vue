@@ -44,7 +44,7 @@ const items = ref(nonExistingPresets);
 const generatedText = ref();
 
 const nextPrevElements = (item) => {
-    if(itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
+    if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
         loading.value = true;
 
         setTimeout(() => {
@@ -168,7 +168,10 @@ function onDropOurColumn (e, arr, column) {
          @dragenter.preven>
         <div class="flex justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
-            <div class="flex">
+            <div class="flex" v-if="itemsRight.length !== 0">
+                <div class="mr-4 mt-1">
+                    #{{ idItems + 1 }}
+                </div>
                   <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Previous</span>
@@ -182,7 +185,7 @@ function onDropOurColumn (e, arr, column) {
             </div>
         </div>
         <div>
-            <div class=" mx-auto mt-5 mb-10">
+            <div class=" mx-auto mt-5 mb-10" v-if="itemsRight.length !== 0">
                 <div v-if="loading === true">Loading</div>
                 <div v-else class="py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900"
                      v-for="item in itemsRight" :key="item.id"
@@ -192,6 +195,9 @@ function onDropOurColumn (e, arr, column) {
                      :draggable="canEdit">
                     <TextGenerate :key="item.id" :languages="languages" :id="item.id" :activeItem="activeItem" :item="item"/>
                 </div>
+            </div>
+            <div class=" mx-auto mt-5 mb-10" v-else>
+                <div class="text-base font-semibold leading-7 text-gray-500 text-center mt-10">Drag, drop rearrange available presets here</div>
             </div>
         </div>
     </div>

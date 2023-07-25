@@ -5,6 +5,7 @@ namespace Modules\Imports\Traits;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Modules\Imports\Models\CollectionItem;
 
 trait HasImport
@@ -16,8 +17,9 @@ trait HasImport
     public function uploadImportFile(UploadedFile $uploadedFile): void
     {
         $this->forceFill([
-            'last_uploaded_file_path' => $uploadedFile->store(
+            'last_uploaded_file_path' => $uploadedFile->storeAs(
                 $this->importFileDirectory(),
+                $this->hashName($uploadedFile->getClientOriginalExtension()),
                 ['disk' => $this->importFileDisk()]
             )
         ])->save();
@@ -47,6 +49,17 @@ trait HasImport
     public function importFileDisk(): string
     {
         return 'public';
+    }
+
+    /**
+     * @param string $extension
+     * @return string
+     */
+    public function hashName(string $extension): string
+    {
+        $hash = Str::random(40);
+
+        return implode('.', [$hash, $extension]);
     }
 
     /**

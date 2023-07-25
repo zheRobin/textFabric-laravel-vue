@@ -41,9 +41,9 @@ const hasItems = ref(!!props.items.data.length);
             </EmptyState>
 
             <template v-else>
-                <UploadFileForm v-if="permissions.canUpdateCollection" :hasItems="hasItems" class="px-2 sm:px-0 mb-2" />
+                <UploadFileForm v-if="permissions.canUpdateCollection" :hasItems="!!items.data.length" class="px-2 sm:px-0 mb-2" />
 
-                <CollectionDataTable v-if="hasItems"
+                <CollectionDataTable v-if="items.data.length"
                                      :canUpdateCollection="permissions.canUpdateCollection"
                                      :items="items"
                                      :headers="$page.props.auth.user.current_collection.headers" class="" />

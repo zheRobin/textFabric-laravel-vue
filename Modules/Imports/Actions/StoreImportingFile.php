@@ -18,7 +18,7 @@ class StoreImportingFile implements StoresImportingFile
         Validator::make($input, [
             'upload' => [
                 'required',
-                File::types(['xlsx', 'xls', 'csv', 'xml', 'json',])
+                File::types(['xlsx', 'xls', 'csv', 'xml', 'json', 'txt'])
                     ->max(5 * 1024),
             ],
             'append' => ['required', 'boolean']

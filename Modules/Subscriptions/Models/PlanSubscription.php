@@ -144,13 +144,23 @@ class PlanSubscription extends Model
     }
 
     /**
+     * @param SubscriptionFeatureEnum $featureEnum
+     * @return string|null
+     */
+    public function getFeatureValue(SubscriptionFeatureEnum $featureEnum): ?string
+    {
+        $feature =  $this->getFeature($featureEnum);
+
+        return $feature->value ?? null;
+    }
+
+    /**
      * @param SubscriptionFeatureEnum $feature
      * @return bool
      */
     public function canUseFeature(SubscriptionFeatureEnum $feature): bool
     {
-        $feature = $this->getFeature($feature);
-        $featureKey = $feature->getKey() ?? null;
+        $featureKey = $this->getKey() ?? null;
         $featureValue = $feature->value ?? null;
 
         $usage = $this->usage()->where('feature_id', $featureKey)->first();
@@ -172,6 +182,24 @@ class PlanSubscription extends Model
         }
 
         return $featureValue - $usage->used > 0;
+    }
+
+    public function featureAllowsValue(SubscriptionFeatureEnum $feature, int $value): bool
+    {
+        $feature = $this->getFeature($feature);
+        $featureValue = $feature->value ?? null;
+
+        if ($featureValue === 'true') {
+            return true;
+        }
+
+        if (is_null($featureValue) ||
+            $featureValue === '0' ||
+            $featureValue === 'false') {
+            return false;
+        }
+
+        return intval($featureValue) - $value >= 0;
     }
 
     /**

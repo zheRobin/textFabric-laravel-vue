@@ -46,7 +46,7 @@ class ImportController extends Controller
         }
 
         // import
-        $importer->import($request->user()->currentCollection);
+        $importer->import($request->user(), $request->user()->currentCollection);
 
         return back(303);
     }

@@ -80,7 +80,7 @@ const upload = (append = false) => {
 
     if (Array.isArray(form.upload)) {
         form.post(route('import.images'), {
-            errorBag: 'importImages',
+            errorBag: 'importFile',
             preserveScroll: true,
             preserveState: false,
         });
@@ -118,6 +118,7 @@ const clearFileInput = () => {
                     <small v-if="canUpload" :class="`text-gray-600 block`">
                         {{ uploadInfo }}
                     </small>
+                    <!-- TODO: fix validation message for images -->
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
                     <div v-if="canUpload" class="block mt-2 pointer-events-auto">
                         <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>

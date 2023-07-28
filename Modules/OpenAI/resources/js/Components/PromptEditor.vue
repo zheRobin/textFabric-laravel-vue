@@ -4,6 +4,7 @@ import {ref, watch} from "vue";
 import Dropdown from "Jetstream/Components/Dropdown.vue";
 import DropdownLink from "Jetstream/Components/DropdownLink.vue";
 import {ChevronUpDownIcon} from "@heroicons/vue/20/solid";
+import {useFocus} from "@vueuse/core";
 
 const props = defineProps({
     modelValue: String,
@@ -15,6 +16,16 @@ const props = defineProps({
     title: String,
     canEdit: Boolean,
 });
+
+const textInput = ref(null);
+
+const { focused } = useFocus(textInput);
+
+watch(focused, (focused) => {
+    if (!focused) {
+        emit('update:modelValue', promptText.value);
+    }
+})
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -78,7 +89,7 @@ const update = () => {
             offset="6"
             insert-space
         >
-            <textarea @input="update" :disabled="!canEdit" v-model="promptText" placeholder="Enter text and then type @ to trigger the attribute" rows="8" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
+            <textarea ref="textInput" :disabled="!canEdit" v-model="promptText" placeholder="Enter text and then type @ to trigger the attribute" rows="8" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
 
             <template #no-result>
                 <div class="font-medium text-sm p-2">

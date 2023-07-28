@@ -2,6 +2,7 @@
 
 namespace Modules\Subscriptions\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,5 +35,18 @@ class PlanSubscriptionUsage extends Model
      */
     protected $casts = [
         'used' => 'integer',
+        'valid_until' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function expired(): bool
+    {
+        if (is_null($this->valid_until)) {
+            return false;
+        }
+
+        return Carbon::now()->gte($this->valid_until);
+    }
 }

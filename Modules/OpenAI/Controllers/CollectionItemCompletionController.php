@@ -18,8 +18,8 @@ class CollectionItemCompletionController extends Controller
 
         $params = $builder->build($request->user(), $preset, $item);
 
-        return response()->stream(function () use ($completer, $params) {
-            $completer->complete($params);
+        return response()->stream(function () use ($completer, $params, $request) {
+            $completer->complete($request->user(), $params);
         }, 200, [
             'Cache-Control' => 'no-cache',
             'X-Accel-Buffering' => 'no',

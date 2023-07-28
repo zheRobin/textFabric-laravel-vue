@@ -2,9 +2,12 @@
 
 namespace Modules\Imports\Services;
 
+use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use Modules\Collections\Models\Collection;
 use Modules\Imports\Contracts\Importer;
 use Modules\Imports\Models\CollectionItem;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 
 class JsonImporter implements Importer
 {
@@ -13,9 +16,13 @@ class JsonImporter implements Importer
      */
     public const JSON_MAX_DEPTH = 3;
 
-    public function import(Collection $collection): void
+    /**
+     * @throws ValidationException
+     */
+    public function import(User $user, Collection $collection): void
     {
         $data = $this->validateJsonStructure($collection->importFileContent());
+        $this->validate($user, $collection, $data);
 
         if (empty($data)) {
             return;
@@ -66,6 +73,25 @@ class JsonImporter implements Importer
         return array_keys(current($data));
     }
 
+    /**
+     * @throws ValidationException
+     */
+    protected function validate(User $user, Collection $collection, array $data)
+    {
+        $planSubscription = $user->currentTeam->planSubscription;
+        if (!$planSubscription->featureAllowsValue(
+            SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT, count($data))
+        ) {
+            $collection->removeImportedFile();
+            throw ValidationException::withMessages([
+                'upload' => [__('import.validation.max-items', [
+                    'number' => $planSubscription->getFeatureValue(
+                        SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT)
+                ])],
+            ])->errorBag('importFile');
+        }
+    }
+
     protected function validateJsonStructure($data): array|false
     {
         $array = json_decode(
@@ -74,17 +100,14 @@ class JsonImporter implements Importer
             self::JSON_MAX_DEPTH,
         );
 
-        // skip if empty or max depth received
         if (empty($array)) {
             return false;
         }
 
-        // skip if there is no headers
         if (!is_array(current($array))) {
             return false;
         }
 
-        // check if there is valid headers
         $headers = array_filter(array_keys(current($array)), function ($item) {
             return $item && is_string($item);
         });

@@ -2,14 +2,27 @@
 
 namespace Modules\OpenAI\Actions;
 
+use App\Models\User;
 use Modules\OpenAI\Contracts\CompletesItemStreamed;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateStreamedResponse;
 
 class CompleteItemStreamed implements CompletesItemStreamed
 {
-    public function complete(array $config): void
+    public function complete(User $user, array $config): void
     {
+        if (!$this->validate($user)) {
+            echo "event: error\n";
+            echo 'data: '.__('openai.limit-reached');
+            echo "\n\n";
+            echo str_pad('-', 4096)."\n";
+            ob_flush();
+            flush();
+
+            return;
+        }
+
         $stream = OpenAI::chat()->createStreamed($config);
 
         foreach ($stream as $response) {
@@ -33,6 +46,9 @@ class CompleteItemStreamed implements CompletesItemStreamed
         echo str_pad('-', 4096)."\n";
         ob_flush();
         flush();
+
+        $user->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
     }
 
     protected function formatResponse(CreateStreamedResponse $response): array
@@ -42,5 +58,12 @@ class CompleteItemStreamed implements CompletesItemStreamed
         return [
             'content' => $firstChoice['delta']['content'] ?? '',
         ];
+    }
+
+    protected function validate(User $user)
+    {
+        $planSubscription = $user->currentTeam->planSubscription;
+
+        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS);
     }
 }

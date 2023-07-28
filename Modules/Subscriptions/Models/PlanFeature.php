@@ -2,8 +2,10 @@
 
 namespace Modules\Subscriptions\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Subscriptions\Services\Period;
 
 /**
  * @property int $plan_id
@@ -36,6 +38,18 @@ class PlanFeature extends Model
      *
      * @var array
      */
-    protected $casts = [];
+    protected $casts = [
+        'resettable' => 'boolean'
+    ];
 
+    /**
+     * @param Carbon $dateFrom
+     * @return Carbon
+     */
+    public function getResetDate(Carbon $dateFrom): Carbon
+    {
+        $period = new Period($this->resettable_period, $dateFrom ?? now(), $this->resettable_interval);
+
+        return $period->getEndDate();
+    }
 }

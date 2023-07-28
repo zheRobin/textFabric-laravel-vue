@@ -80,9 +80,9 @@ const changePreset = (value) => {
         ? value
         : getPreset(value)
 
-    selectedPreset.value = preset;
+    selectedPreset.value = preset ? preset : null;
     selectedPresetId.value = preset ? preset.id : null;
-    addingPreset.value = false;
+    addingPreset.value = !preset;
 
     if (preset) {
         localStorage.setItem('selected-preset', preset.id);

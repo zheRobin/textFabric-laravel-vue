@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Modules\Subscriptions\Database\Seeders\PlanSeeder;
+use Modules\Translations\Database\Seeders\LanguageSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +15,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-           PlanSeeder::class,
+            PlanSeeder::class,
+            WelcomeSeeder::class,
+            LanguageSeeder::class,
         ]);
     }
 }

@@ -12,6 +12,11 @@ class Period
     protected int $period;
 
     /**
+     * @var string
+     */
+    protected string $interval;
+
+    /**
      * @var Carbon
      */
     protected Carbon $start;
@@ -21,9 +26,10 @@ class Period
      */
     protected Carbon $end;
 
-    public function __construct(int $period, ?Carbon $start = null)
+    public function __construct(int $period, ?Carbon $start = null, string $interval = 'day')
     {
         $this->period = $period;
+        $this->interval = $interval;
 
         if (is_null($start)) {
             $this->start = Carbon::now();
@@ -31,7 +37,9 @@ class Period
             $this->start = $start;
         }
 
-        $this->end = $this->start->copy()->addDays($this->period);
+        $start = clone $this->start;
+        $method = 'add'.ucfirst($this->interval).'s';
+        $this->end = $start->{$method}($this->period);
     }
 
     /**

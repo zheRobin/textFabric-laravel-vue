@@ -327,7 +327,7 @@ initSelectedPreset();
                                        @update:outputLanguage="changeOutputLanguage"
                                        :preset="selectedPreset"
                                        :languages="languages"
-                                       :canManage="permissions.canManagePresets"
+                                       :canChangeLanguage="permissions.canManagePresets"
                                        :updatePreset="() => updatePreset(false)"/>
             </template>
         </DashboardPanel>

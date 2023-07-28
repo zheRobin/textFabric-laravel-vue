@@ -74,7 +74,7 @@ class CreateNewUser implements CreatesNewUsers
     protected function createPlanSubscription(Team $team): void
     {
         $plan = Plan::query()
-            ->where('slug', SubscriptionPlanEnum::PRO->slug())
+            ->where('slug', SubscriptionPlanEnum::BASE->slug())
             ->firstOrFail();
 
         $team->newPlanSubscription($plan);

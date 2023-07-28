@@ -160,7 +160,8 @@ class PlanSubscription extends Model
      */
     public function canUseFeature(SubscriptionFeatureEnum $feature): bool
     {
-        $featureKey = $this->getKey() ?? null;
+        $feature = $this->getFeature($feature);
+        $featureKey = $feature->getKey() ?? null;
         $featureValue = $feature->value ?? null;
 
         $usage = $this->usage()->where('feature_id', $featureKey)->first();
@@ -179,6 +180,13 @@ class PlanSubscription extends Model
             $featureValue === '0' ||
             $featureValue === 'false') {
             return false;
+        }
+
+        if ($usage->expired()) {
+            $usage->forceFill([
+                'valid_until' => $feature->getResetDate($usage->valid_until),
+                'used' => 0,
+            ]);
         }
 
         return $featureValue - $usage->used > 0;
@@ -218,6 +226,14 @@ class PlanSubscription extends Model
         ]);
 
         // TODO: Add possible resettable period
+        if ($feature->resettable_interval) {
+            if (is_null($usage->valid_until)) {
+                $usage->valid_until = $feature->getResetDate($this->created_at);
+            } elseif ($usage->expired()) {
+                $usage->valid_until = $feature->getResetDate($usage->valid_until);
+                $usage->used = 0;
+            }
+        }
 
         $usage->used = $incremental
             ? $usage->used + $uses

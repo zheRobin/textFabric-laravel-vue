@@ -4,6 +4,7 @@ namespace Modules\Subscriptions\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Subscriptions\Contracts\CreatesPlan;
+use Modules\Subscriptions\Enums\ResettableIntervalEnum;
 use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Modules\Subscriptions\Models\PlanFeature;
@@ -36,7 +37,15 @@ class PlanSeeder extends Seeder
                 'name' => 'Collection Items',
                 'description' => 'Collection items limit',
                 'value' => 100
-            ])
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'OpenAI requests limit',
+                'value' => 10000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
         ]);
 
         $pro = $createPlan([
@@ -60,7 +69,15 @@ class PlanSeeder extends Seeder
                 'name' => 'Collection Items',
                 'description' => 'Collection items limit',
                 'value' => 200
-            ])
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'OpenAI requests limit',
+                'value' => 20000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
         ]);
 
         $enterprise = $createPlan([
@@ -84,7 +101,15 @@ class PlanSeeder extends Seeder
                 'name' => 'Collection Items',
                 'description' => 'Collection items limit',
                 'value' => 1000
-            ])
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'OpenAI requests limit',
+                'value' => 50000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
         ]);
     }
 }

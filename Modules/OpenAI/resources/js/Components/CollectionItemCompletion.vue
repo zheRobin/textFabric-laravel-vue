@@ -4,6 +4,7 @@ import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import Spinner from "Jetstream/Components/Spinner.vue";
 import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
+import {notify} from "notiwind";
 
 const props = defineProps({
     item: Object,
@@ -64,6 +65,14 @@ const setupStream = () => {
     }, () => {
         generatingContent.value = false;
         triggerLoading(false);
+    }, (error) => {
+        generatingContent.value = false;
+        triggerLoading(false);
+        notify({
+            group: "error",
+            title: "Error",
+            text: error
+        }, 4000)
     });
 }
 

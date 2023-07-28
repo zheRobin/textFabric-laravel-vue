@@ -9,6 +9,8 @@
 
     "import.validation.max-items": "You cannot upload a file with more than :number items.",
 
+    "openai.limit-reached": "You have reached your limit.",
+
     "English": "English",
     "German": "German",
     "Dashboard": "Dashboard",

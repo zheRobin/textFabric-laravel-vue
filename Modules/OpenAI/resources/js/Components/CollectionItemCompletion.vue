@@ -6,6 +6,7 @@ import Spinner from "Jetstream/Components/Spinner.vue";
 import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
 import {notify} from "notiwind";
 import {trans} from "laravel-vue-i18n";
+import CopyToClipboard from "Jetstream/Components/CopyToClipboard.vue";
 
 const props = defineProps({
     item: Object,
@@ -142,9 +143,13 @@ const translateContent = () => {
                 <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent && canChangeLanguage" class="inline-flex ml-3"> Translate </PrimaryButton>
             </div>
 
-            <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
-                {{ generationText }}
-            </PrimaryButton>
+            <div class="flex items-center">
+                <CopyToClipboard v-if="!generatingContent && generatedContent" :content="generatedContent" class="mr-2" />
+
+                <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
+                    {{ generationText }}
+                </PrimaryButton>
+            </div>
         </div>
 
         <div v-if="loading" class="min-h-56 flex justify-center items-center">

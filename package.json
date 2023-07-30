@@ -33,6 +33,7 @@
         "lodash": "^4.17.21",
         "notiwind": "^2.0.1",
         "npm": "^9.7.2",
+        "nprogress": "^0.2.0",
         "vue-json-pretty": "^2.2.4",
         "vue-mention": "^2.0.0-alpha.3",
         "vue3-youtube": "^0.1.9"

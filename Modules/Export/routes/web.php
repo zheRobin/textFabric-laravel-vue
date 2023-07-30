@@ -22,5 +22,9 @@ Route::middleware($authMiddleware)->group(function () {
             Route::get('/export/{id}', [ExportController::class, 'getExport'])->name('export.getExport');
 
             Route::post('/export/download', [ExportController::class, 'download'])->name('export.download');
+            Route::post('/export/pagination', [ExportController::class, 'pagination'])->name('export.pagination');
+            Route::post('/export', [ExportController::class, 'search'])->name('export.search');
+
+            Route::get('/get-progress', [ExportController::class, 'getProgress']);
         });
 });

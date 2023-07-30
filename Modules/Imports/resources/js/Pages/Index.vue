@@ -1,5 +1,4 @@
 <script setup>
-import {ref} from "vue";
 import { Link } from '@inertiajs/vue3';
 import { DocumentPlusIcon } from '@heroicons/vue/20/solid';
 import AppLayout from 'Jetstream/Layouts/AppLayout.vue';
@@ -12,8 +11,6 @@ const props = defineProps({
     items: Object,
     permissions: Object,
 });
-
-const hasItems = ref(!!props.items.data.length);
 
 </script>
 

@@ -80,7 +80,9 @@ class HandleInertiaRequests extends Middleware
             'canUseApiFeatures' => function () use ($user) {
                 return Gate::forUser($user)->allows('use-api-features');
             },
-            'mainLogoPath' => Storage::url(AppSettings::get(AppSettingEnum::LOGO)),
+            'mainLogoPath' => AppSettings::get(AppSettingEnum::LOGO)
+                ? Storage::url(AppSettings::get(AppSettingEnum::LOGO))
+                : null,
         ]);
     }
 }

@@ -7,9 +7,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\ValidationException;
 use Modules\Collections\Models\Collection;
 use Modules\Imports\Contracts\ImportsImage;
 use Modules\Imports\Enums\HeaderTypeEnum;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 
 class ImportImage implements ImportsImage
 {
@@ -29,18 +31,18 @@ class ImportImage implements ImportsImage
                 File::image()
                     ->max(5 * 1024)
             ]
-        ])->validateWithBag('updateCollectionItemImage');
+        ])->validateWithBag('importFile');
 
         if ($collection->items->isEmpty()) {
             $collection->addHeader('image', HeaderTypeEnum::IMAGE);
 
-            $this->addCollectionItems($collection, $input['upload']);
+            $this->addCollectionItems($user, $collection, $input['upload']);
 
             return;
         }
 
         if ($collection->isImageCollection()) {
-            $this->addCollectionItems($collection, $input['upload']);
+            $this->addCollectionItems($user, $collection, $input['upload']);
 
             return;
         }
@@ -62,7 +64,7 @@ class ImportImage implements ImportsImage
         }
 
         if (!empty($insertImages)) {
-            $this->addCollectionItems($collection, $insertImages);
+            $this->addCollectionItems($user, $collection, $insertImages);
         }
     }
 
@@ -71,8 +73,20 @@ class ImportImage implements ImportsImage
      * @param UploadedFile[] $images
      * @return void
      */
-    protected function addCollectionItems(Collection $collection, array $images): void
+    protected function addCollectionItems(User $user, Collection $collection, array $images): void
     {
+        $planSubscription = $user->currentTeam->planSubscription;
+        if (!$planSubscription->featureAllowsValue(
+            SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT, $collection->items->count() + count($images))
+        ) {
+            throw ValidationException::withMessages([
+                'upload' => [__('import.validation.max-items', [
+                    'number' => $planSubscription->getFeatureValue(
+                        SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT)
+                ])],
+            ])->errorBag('importFile');
+        }
+
         foreach ($images as $image) {
             $collectionItem = $collection->items()->create(['data' => $collection->newRow()]);
 

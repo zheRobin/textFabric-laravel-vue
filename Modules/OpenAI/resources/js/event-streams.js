@@ -1,4 +1,4 @@
-export const streamItemCompletion = (preset, item, callable, closeCallable) => {
+export const streamItemCompletion = (preset, item, callable, closeCallable, errorCallable) => {
     const eventSource = new EventSource(route('openai.item-completion', {
         preset: preset,
         item: item,
@@ -13,6 +13,11 @@ export const streamItemCompletion = (preset, item, callable, closeCallable) => {
 
         const data = JSON.parse(event.data);
         callable(data);
+    });
+
+    eventSource.addEventListener('error', error => {
+        eventSource.close();
+        errorCallable(error.data);
     });
 
     return eventSource;

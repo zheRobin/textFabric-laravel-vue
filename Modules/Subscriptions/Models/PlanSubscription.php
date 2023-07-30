@@ -144,6 +144,17 @@ class PlanSubscription extends Model
     }
 
     /**
+     * @param SubscriptionFeatureEnum $featureEnum
+     * @return string|null
+     */
+    public function getFeatureValue(SubscriptionFeatureEnum $featureEnum): ?string
+    {
+        $feature =  $this->getFeature($featureEnum);
+
+        return $feature->value ?? null;
+    }
+
+    /**
      * @param SubscriptionFeatureEnum $feature
      * @return bool
      */
@@ -171,7 +182,32 @@ class PlanSubscription extends Model
             return false;
         }
 
+        if ($usage->expired()) {
+            $usage->forceFill([
+                'valid_until' => $feature->getResetDate($usage->valid_until),
+                'used' => 0,
+            ]);
+        }
+
         return $featureValue - $usage->used > 0;
+    }
+
+    public function featureAllowsValue(SubscriptionFeatureEnum $feature, int $value): bool
+    {
+        $feature = $this->getFeature($feature);
+        $featureValue = $feature->value ?? null;
+
+        if ($featureValue === 'true') {
+            return true;
+        }
+
+        if (is_null($featureValue) ||
+            $featureValue === '0' ||
+            $featureValue === 'false') {
+            return false;
+        }
+
+        return intval($featureValue) - $value >= 0;
     }
 
     /**
@@ -190,6 +226,14 @@ class PlanSubscription extends Model
         ]);
 
         // TODO: Add possible resettable period
+        if ($feature->resettable_interval) {
+            if (is_null($usage->valid_until)) {
+                $usage->valid_until = $feature->getResetDate($this->created_at);
+            } elseif ($usage->expired()) {
+                $usage->valid_until = $feature->getResetDate($usage->valid_until);
+                $usage->used = 0;
+            }
+        }
 
         $usage->used = $incremental
             ? $usage->used + $uses

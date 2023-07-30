@@ -2,6 +2,7 @@
 
 namespace Modules\Imports\Services;
 
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
@@ -17,7 +18,7 @@ class ExcelImporter implements Importer
     {
         HeadingRowFormatter::default('none');
     }
-    public function import(Collection $collection): void
+    public function import(User $user, Collection $collection): void
     {
         $headers = $this->getHeaders($collection);
 
@@ -26,7 +27,7 @@ class ExcelImporter implements Importer
         }
 
         // TODO: get headers from collection
-        $importer = new ImportOnEachRow($this->getHeaders($collection), $collection);
+        $importer = new ImportOnEachRow($user, $this->getHeaders($collection), $collection);
 
         $importer->import($collection->importFilePath());
 

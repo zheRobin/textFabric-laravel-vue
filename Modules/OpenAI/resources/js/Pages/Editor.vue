@@ -1,9 +1,8 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import {XCircleIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, ArrowDownTrayIcon} from "@heroicons/vue/20/solid";
 import {notify} from "notiwind";
-import {debounce} from "lodash";
 import {isObject} from "Jetstream/utilities";
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
@@ -30,6 +29,8 @@ const props = defineProps({
 const selectedPreset = ref(null);
 const selectedPresetId = ref(selectedPreset.id);
 
+const presetNeedsUpdate = ref(false);
+
 const initSelectedPreset = () => {
     const preset = localStorage.getItem('selected-preset');
 
@@ -51,6 +52,17 @@ const form = useForm({
     input_language_id: null,
     output_language_id: null,
 });
+
+watch(() => selectedPresetId.value, (value, oldValue) => {
+    presetNeedsUpdate.value = false;
+})
+
+watch(() => form.data(),
+    (value, oldValue) => presetNeedsUpdate.value = true,
+    { deep: true }
+);
+
+onMounted(() => presetNeedsUpdate.value = false )
 
 const modelOptions = () => {
     const models = [];
@@ -82,12 +94,14 @@ const changePreset = (value) => {
 
     selectedPreset.value = preset ? preset : null;
     selectedPresetId.value = preset ? preset.id : null;
-    addingPreset.value = !preset;
+    addingPreset.value = false;
 
     if (preset) {
         localStorage.setItem('selected-preset', preset.id);
         fillPresetForm(preset);
     }
+
+    presetNeedsUpdate.value = false;
 }
 
 const getPreset = (presetId) => {
@@ -155,20 +169,22 @@ const createPreset = () => {
     })
 }
 
-const updatePreset = debounce((showNotification = true) => {
+const updatePreset = (onSuccess) => {
     form.patch(route('presets.update', selectedPreset.value), {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
             changePreset(selectedPreset.value.id);
 
-            if (showNotification) {
-                notify({
-                    group: "success",
-                    title: "Success",
-                    text: "Preset updated!"
-                }, 4000)
+            if (onSuccess) {
+                onSuccess();
             }
+
+            notify({
+                group: "success",
+                title: "Success",
+                text: "Preset updated!"
+            }, 4000);
         },
         onError: (error) => {
             notify({
@@ -178,7 +194,7 @@ const updatePreset = debounce((showNotification = true) => {
             }, 4000)
         }
     })
-}, 1000);
+};
 
 const renamePreset = (value) => {
     form.name = value;
@@ -193,7 +209,6 @@ const deletePreset = () => {
         onSuccess: () => {
             changePreset(null);
             resetForm();
-
             notify({
                 group: "success",
                 title: "Success",
@@ -226,14 +241,16 @@ initSelectedPreset();
             <template #header>
                 <div class="flex border-b border-gray-200 pb-8 items-center">
                     <div class="items-center flex flex-1">
-                        <template v-if="!presets.length || addingPreset">
+                        <template v-if="addingPreset">
                             <template v-if="permissions.canManagePresets">
                                 <label class="mr-2 font-medium">Name:</label>
                                 <TextInput v-model="form.name" type="text" class="w-60"/>
+
                                 <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
                                     {{$t('Save')}}
                                     <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                 </PrimaryButton>
+
                                 <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
                                     {{$t('Cancel')}}
                                     <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
@@ -244,17 +261,29 @@ initSelectedPreset();
                         <template v-else>
                             <label class="mr-2 font-medium">Preset:</label>
                             <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+
                             <template v-if="permissions.canManagePresets">
                                 <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                    {{$t('Add')}}
+                                    {{ $t('Add') }}
                                     <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                 </PrimaryButton>
+
+                                <PrimaryButton v-if="selectedPreset"
+                                               :class="{ 'opacity-50': form.processing }"
+                                               :disabled="form.processing"
+                                               @click="savePreset"
+                                               class="ml-2 gap-x-1.5">
+                                    {{$t('Save')}}
+                                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                </PrimaryButton>
+
                                 <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
                                     <PrimaryButton class="ml-2 gap-x-1.5">
                                         {{$t('Rename')}}
                                         <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
                                     </PrimaryButton>
                                 </RenamePreset>
+
                                 <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
                                     <DangerButton class="ml-2 gap-x-1.5">
                                         {{$t('Delete')}}
@@ -276,10 +305,10 @@ initSelectedPreset();
             <template v-if="showMainPanel">
                 <section aria-labelledby="filter-heading" class="py-8">
                     <div class="flex items-center justify-between space-x-6">
-                        <SelectMenu :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+                        <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
 
                         <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
                                 </template>
@@ -287,7 +316,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
                                 </template>
@@ -295,7 +324,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
                                 </template>
@@ -303,7 +332,7 @@ initSelectedPreset();
                         </div>
 
                         <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                 <template #label>
                                     <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
                                 </template>
@@ -315,11 +344,11 @@ initSelectedPreset();
                 <!-- Prompt fields -->
                 <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor :canEdit="permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" title="System" v-model="form.system_prompt" :attributes="attributes" />
+                        <PromptEditor :canEdit="permissions.canManagePresets" title="System" v-model="form.system_prompt" :attributes="attributes" />
                     </div>
 
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor :canEdit="permissions.canManagePresets" @update:modelValue="() => updatePreset(false)" title="User" v-model="form.user_prompt" :attributes="attributes" />
+                        <PromptEditor :canEdit="permissions.canManagePresets" title="User" v-model="form.user_prompt" :attributes="attributes" />
                     </div>
                 </div>
 
@@ -328,7 +357,8 @@ initSelectedPreset();
                                        :preset="selectedPreset"
                                        :languages="languages"
                                        :canChangeLanguage="permissions.canManagePresets"
-                                       :updatePreset="() => updatePreset(false)"/>
+                                       :needPresetUpdate="presetNeedsUpdate"
+                                       :updatePreset="updatePreset"/>
             </template>
         </DashboardPanel>
     </AppLayout>

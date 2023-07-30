@@ -1,10 +1,11 @@
 <script setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import Spinner from "Jetstream/Components/Spinner.vue";
 import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
 import {notify} from "notiwind";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     item: Object,
@@ -13,6 +14,13 @@ const props = defineProps({
     languages: Array,
     updatePreset: Function,
     canChangeLanguage: Boolean,
+    needPresetUpdate: Boolean,
+});
+
+const generationText = computed(() => {
+    return props.needPresetUpdate
+        ? `${trans('Save')} & ${trans('Generate')}`
+        :  trans('Generate');
 });
 
 const emit = defineEmits(['update:outputLanguage']);
@@ -79,7 +87,12 @@ const setupStream = () => {
 const generate = async () => {
     await purgeStream();
     triggerLoading(true);
-    setupStream();
+
+    if (props.needPresetUpdate) {
+        props.updatePreset(() => setupStream());
+    } else {
+        setupStream();
+    }
 }
 
 const clearOutput = () => {
@@ -130,7 +143,7 @@ const translateContent = () => {
             </div>
 
             <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
-                {{$t('Generate')}}
+                {{ generationText }}
             </PrimaryButton>
         </div>
 

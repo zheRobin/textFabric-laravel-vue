@@ -82,7 +82,7 @@ class HandleInertiaRequests extends Middleware
             },
             'mainLogoPath' => AppSettings::get(AppSettingEnum::LOGO)
                 ? Storage::url(AppSettings::get(AppSettingEnum::LOGO))
-                : null,
+                : '/texthub-logo.svg',
         ]);
     }
 }

@@ -27,6 +27,23 @@ trait HasOpenAIParams
         ]);
     }
 
+    public function getDefaultChatParams(string $systemMessage, string $userMessage)
+    {
+        return [
+            'messages' => [
+                [
+                    'role' => ChatRoleEnum::SYSTEM->roleName(),
+                    'content' => $systemMessage,
+                ],
+                [
+                    'role' => ChatRoleEnum::USER->roleName(),
+                    'content' => $userMessage,
+                ]
+            ],
+            ...config('openai.default-params')
+        ];
+    }
+
     public function getSystemMessage()
     {
         return strval($this->system_prompt);

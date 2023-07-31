@@ -4,6 +4,7 @@ import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {useForm} from "@inertiajs/vue3";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     hasItems: Boolean,
@@ -46,13 +47,13 @@ const handleUpload = () => {
     });
 
     if (imageFiles.length && dataFiles.length) {
-        uploadingError.value = t('import_form_1');
+        uploadingError.value = trans('import_form_1');
         clearFileInput();
         return;
     }
 
     if (dataFiles.length > 1) {
-        uploadingError.value = t('import_form_2');
+        uploadingError.value = trans('import_form_2');
         clearFileInput();
         return;
     }

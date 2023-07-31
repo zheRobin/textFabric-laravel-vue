@@ -11,6 +11,10 @@ class TranslateData implements TranslatesData
 {
     public function translate(array $data, Language $language): array
     {
+        if (empty($data)) {
+            return $data;
+        }
+
         $translator = app(Translator::class);
 
         $attributes = array_map(fn ($value) => strval($value), $data);

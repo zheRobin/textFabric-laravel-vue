@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Compilations extends Model
 {
-    protected $fillable = ['name', 'owner'];
+    protected $fillable = ['name', 'owner', 'preset_ids'];
 
     /**
      * The attributes that should be cast.

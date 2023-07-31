@@ -94,9 +94,9 @@ const changePreset = (value) => {
 
     selectedPreset.value = preset ? preset : null;
     selectedPresetId.value = preset ? preset.id : null;
-    addingPreset.value = false;
 
     if (preset) {
+        addingPreset.value = false;
         localStorage.setItem('selected-preset', preset.id);
         fillPresetForm(preset);
     }
@@ -303,7 +303,7 @@ initSelectedPreset();
             </div>
 
             <template v-if="showMainPanel">
-                <section aria-labelledby="filter-heading" class="py-8">
+                <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
                     <div class="flex items-center justify-between space-x-6">
                         <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
 
@@ -342,7 +342,7 @@ initSelectedPreset();
                 </section>
 
                 <!-- Prompt fields -->
-                <div class=" lg:grid lg:grid-cols-2 lg:gap-x-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 pt-8">
                     <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
                         <PromptEditor :canEdit="permissions.canManagePresets" title="System" v-model="form.system_prompt" :attributes="attributes" />
                     </div>

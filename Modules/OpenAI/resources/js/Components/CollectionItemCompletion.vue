@@ -135,7 +135,7 @@ const translateContent = () => {
 </script>
 
 <template>
-    <div class="overflow-hidden bg-gray-50 rounded mt-10">
+    <div class="bg-gray-50 rounded mt-10">
         <div class="px-6 py-3 flex justify-between items-center border-b">
             <div class="flex items-center">
                 <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
@@ -156,7 +156,7 @@ const translateContent = () => {
             <Spinner class="" />
         </div>
 
-        <div v-else class="min-h-56 pt-3 px-10 text-base leading-7 text-gray-900 pb-6 whitespace-pre-wrap">
+        <div v-else class="overflow-hidden min-h-56 pt-3 px-10 text-base leading-7 text-gray-900 pb-6 whitespace-pre-wrap">
             {{ generatedContent }}
         </div>
     </div>

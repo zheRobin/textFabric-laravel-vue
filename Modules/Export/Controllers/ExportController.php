@@ -2,6 +2,7 @@
 
 namespace Modules\Export\Controllers;
 
+use Carbon\Carbon;
 use DeepL\Translator;
 
 use Illuminate\Support\Facades\Log;
@@ -30,7 +31,7 @@ class ExportController extends Controller
         return Inertia::render('Export::Index', [
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
-            'exports' => Exports::paginate(10),
+            'exports' => Exports::orderBy('id', 'DESC')->paginate(10),
             'exportCount' => count(Exports::get())
         ]);
     }
@@ -58,18 +59,21 @@ class ExportController extends Controller
                 $result[$compilation_name . '_' . $pres->name][$lang][$index] = $content;
             }
         }
-        $id = \Carbon\Carbon::now()->format('h:i');
-        $resultData[$id] = [];
+        $now = Carbon::now(); // Отримуємо поточний час
+
+        $fullDate = $now->format('Y-m-d H:i:s');
+
+        $resultData[$fullDate] = [];
         foreach ($result as $name => $value) {
             $resultData[$id][$name] = $value;
         }
 
-        $exports->name = $compilation_name . '_' . $id;
-        $exports->value = $resultData[$id];
+        $exports->name = $compilation_name . '_' . $fullDate;
+        $exports->value = $resultData[$fullDate];
 
         $exports->save();
 
-        return Exports::paginate(10);
+        return Exports::orderBy('id', 'DESC')->paginate(10);
     }
 
 
@@ -77,7 +81,7 @@ class ExportController extends Controller
     {
         $exports->where('id', $request['id'])->delete();
 
-        return Exports::paginate(10);
+        return Exports::orderBy('id', 'DESC')->paginate(10);
     }
 
     public function translation(Request $request, Exports $exports)
@@ -111,7 +115,7 @@ class ExportController extends Controller
         }
         return [
             'export' => $extractedData,
-            'count' => count($request->user()->currentCollection->headers)
+            'count' => count($data[0][array_keys($data[0])[0]])
         ];
     }
 

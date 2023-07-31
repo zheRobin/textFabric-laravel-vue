@@ -56,14 +56,14 @@ class CreateNewUser implements CreatesNewUsers
         Company: {$data['company']}
         Employees: {$data['employees']}
     ";
-        $recipientEmail = 'romandzindzyura@gmail.com';
+        $recipientEmail = 'raif@kp.technology';
 
         $subject = 'New Team Account Created';
 
-        Mail::raw($content, function ($message) use ($recipientEmail, $subject) {
-            $message->to($recipientEmail);
-            $message->subject($subject);
-        });
+         Mail::raw($content, function ($message) use ($recipientEmail, $subject) {
+             $message->to($recipientEmail);
+             $message->subject($subject);
+         });
 
         return DB::transaction(function () use ($input) {
             return tap(User::create([

@@ -27,6 +27,10 @@ class ImportOnEachRow implements OnEachRow, WithHeadingRow, WithEvents
 
     public function onRow(Row $row)
     {
+        if ($row->isEmpty()) {
+            return;
+        }
+
         $collectionItem = new CollectionItem();
         $collectionItemFields = [];
 

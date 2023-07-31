@@ -37,7 +37,12 @@ const attributesMentions = () => {
 }
 
 const addAttribute = (attribute) => {
-    promptText.value = `${promptText.value}@${attribute} `;
+    const caretPosition = textInput.value.selectionStart;
+
+    const start = promptText.value.slice(0, caretPosition);
+    const end = promptText.value.slice(caretPosition, promptText.value.length);
+
+    promptText.value = `${start}@${attribute}${end} `;
 
     emit('update:modelValue', promptText.value);
 }

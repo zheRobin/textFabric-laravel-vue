@@ -111,7 +111,7 @@ class ExportController extends Controller
         }
         return [
             'export' => $extractedData,
-            'count' => count($request->user()->currentCollection->headers)
+            'count' => count($data[0][array_keys($data[0])[0]])
         ];
     }
 

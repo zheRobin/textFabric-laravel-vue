@@ -49,6 +49,7 @@ class CollectionsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRoutes();
+        $this->mergeConfigFrom(__DIR__ . '/../Config/collection.php', 'collection');
         $this->registerMigrations();
         $this->registerPolicies();
     }

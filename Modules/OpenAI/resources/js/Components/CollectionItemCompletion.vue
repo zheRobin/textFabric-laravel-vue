@@ -1,10 +1,12 @@
 <script setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import Spinner from "Jetstream/Components/Spinner.vue";
 import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
 import {notify} from "notiwind";
+import {trans} from "laravel-vue-i18n";
+import CopyToClipboard from "Jetstream/Components/CopyToClipboard.vue";
 
 const props = defineProps({
     item: Object,
@@ -13,6 +15,13 @@ const props = defineProps({
     languages: Array,
     updatePreset: Function,
     canChangeLanguage: Boolean,
+    needPresetUpdate: Boolean,
+});
+
+const generationText = computed(() => {
+    return props.needPresetUpdate
+        ? `${trans('Save')} & ${trans('Generate')}`
+        :  trans('Generate');
 });
 
 const emit = defineEmits(['update:outputLanguage']);
@@ -79,7 +88,12 @@ const setupStream = () => {
 const generate = async () => {
     await purgeStream();
     triggerLoading(true);
-    setupStream();
+
+    if (props.needPresetUpdate) {
+        props.updatePreset(() => setupStream());
+    } else {
+        setupStream();
+    }
 }
 
 const clearOutput = () => {
@@ -121,7 +135,7 @@ const translateContent = () => {
 </script>
 
 <template>
-    <div class="overflow-hidden bg-gray-50 rounded mt-10">
+    <div class="bg-gray-50 rounded mt-10">
         <div class="px-6 py-3 flex justify-between items-center border-b">
             <div class="flex items-center">
                 <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
@@ -129,16 +143,20 @@ const translateContent = () => {
                 <PrimaryButton @click="translateContent" v-if="generatedContent && currentLanguage && !generatingContent && canChangeLanguage" class="inline-flex ml-3"> Translate </PrimaryButton>
             </div>
 
-            <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
-                {{$t('Generate')}}
-            </PrimaryButton>
+            <div class="flex items-center">
+                <CopyToClipboard v-if="!generatingContent && generatedContent" :content="generatedContent" class="mr-2" />
+
+                <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
+                    {{ generationText }}
+                </PrimaryButton>
+            </div>
         </div>
 
         <div v-if="loading" class="min-h-56 flex justify-center items-center">
             <Spinner class="" />
         </div>
 
-        <div v-else class="min-h-56 pt-3 px-10 text-base leading-7 text-gray-900 pb-6 whitespace-pre-wrap">
+        <div v-else class="overflow-hidden min-h-56 pt-3 px-10 text-base leading-7 text-gray-900 pb-6 whitespace-pre-wrap">
             {{ generatedContent }}
         </div>
     </div>

@@ -21,6 +21,8 @@ const form = useForm({
     password: '',
     google_recaptcha: '',
     terms: false,
+    // TODO: refactor (remove from form and make auto detection of current lang)
+    locale: localStorage.getItem('locale')
 });
 
 const recaptchaSiteKey = usePage().props.googleRecaptchaSiteKey;

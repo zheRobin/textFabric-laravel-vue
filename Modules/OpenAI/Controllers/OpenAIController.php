@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\OpenAI\Enums\ChatModelEnum;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Models\Language;
 use Modules\Presets\Models\Preset;
 
@@ -22,6 +23,10 @@ class OpenAIController extends Controller
             'languages' => Language::all(),
             'permissions' => [
                 'canManagePresets' => Gate::check('manage', Preset::class),
+                'canChangeOpenAIParams' => $request->user()
+                    ->currentTeam
+                    ->planSubscription
+                    ->canUseFeature(SubscriptionFeatureEnum::OPENAI_PARAMS),
             ]
         ]);
     }

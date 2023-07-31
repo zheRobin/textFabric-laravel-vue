@@ -84,7 +84,7 @@ const translateItem = () => {
 
 <template>
     <div class="bg-gray-50 rounded">
-        <div class="px-6 py-3 items-center border-b">
+        <div class="px-6 py-3 items-center">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
@@ -92,7 +92,10 @@ const translateItem = () => {
                     <PrimaryButton v-if="currentItem && currentLanguage && canChangeLanguage" @click="translateItem" class="inline-flex ml-3"> {{ $t('Translate') }} </PrimaryButton>
                 </div>
 
-                <div class="flex">
+                <div class="flex items-center">
+                    <span class="mr-4">
+                        {{ `#${currentPage}` }}
+                    </span>
                     <span class="isolate inline-flex rounded-md shadow-sm">
                         <button type="button" @click="previousItem" :disabled="currentPage === 1" :class="currentPage > 1 ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                             <span class="sr-only"> {{ $t('Previous') }} </span>
@@ -112,15 +115,7 @@ const translateItem = () => {
 <!--        </div>-->
 
         <div  class="min-h-56">
-            <div>
-                <dl class="divide-y divide-gray-100 cursor-default">
-                    <div class="px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-900 truncate" :title="$t('ID')"> {{ `#${$t('ID')}` }} </dt>
-                        <dd class="mt-1 text-right text-sm leading-6 text-gray-700 sm:mt-0">{{ currentPage }}</dd>
-                    </div>
-                </dl>
-            </div>
-            <div v-for="item in itemData" class="border-t border-gray-200">
+            <div v-for="(item, index) in itemData" :key="`item-${index}`" class="border-t border-gray-200">
                 <dl class="divide-y divide-gray-100 cursor-default">
                     <div class="px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-900 truncate" :title="item.header">{{ item.header }}</dt>

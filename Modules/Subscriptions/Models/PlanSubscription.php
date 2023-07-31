@@ -161,7 +161,7 @@ class PlanSubscription extends Model
     public function canUseFeature(SubscriptionFeatureEnum $feature): bool
     {
         $feature = $this->getFeature($feature);
-        $featureKey = $feature->getKey() ?? null;
+        $featureKey = $feature?->getKey();
         $featureValue = $feature->value ?? null;
 
         $usage = $this->usage()->where('feature_id', $featureKey)->first();

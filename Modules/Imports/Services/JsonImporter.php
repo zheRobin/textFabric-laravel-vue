@@ -22,11 +22,14 @@ class JsonImporter implements Importer
     public function import(User $user, Collection $collection): void
     {
         $data = $this->validateJsonStructure($collection->importFileContent());
-        $this->validate($user, $collection, $data);
 
         if (empty($data)) {
-            return;
+            throw ValidationException::withMessages([
+                'upload' => [__('import.validation.wrong-format')],
+            ])->errorBag('importFile');
         }
+
+        $this->validate($user, $collection, $data);
 
         $headers = array_keys(current($data));
 
@@ -100,7 +103,7 @@ class JsonImporter implements Importer
             self::JSON_MAX_DEPTH,
         );
 
-        if (empty($array)) {
+        if (empty($array) || !is_array($array)) {
             return false;
         }
 

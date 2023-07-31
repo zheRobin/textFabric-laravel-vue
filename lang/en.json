@@ -8,6 +8,7 @@
     "Available presets": "Available presets",
 
     "import.validation.max-items": "You cannot upload a file with more than :number items.",
+    "import.validation.wrong-format": "Wrong file format.",
 
     "openai.limit-reached": "You have reached your limit.",
 

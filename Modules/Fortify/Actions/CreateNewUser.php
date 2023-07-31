@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Modules\Collections\Actions\CreateDemoCollection;
 use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Modules\Subscriptions\Models\Plan;
 
@@ -47,8 +48,8 @@ class CreateNewUser implements CreatesNewUsers
                 'email' => $input['email'],
                 'phone_number' => $input['phone_number'],
                 'password' => Hash::make($input['password']),
-            ]), function (User $user) {
-                $this->createTeam($user);
+            ]), function (User $user) use ($input) {
+                $this->createTeam($user, $input['locale']);
             });
         });
     }
@@ -56,14 +57,17 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Create a personal team for the user.
      */
-    protected function createTeam(User $user): void
+    protected function createTeam(User $user, string $locale): void
     {
         tap(Team::forceCreate([
             'user_id' => $user->id,
             'name' => explode(' ', $user->company, 2)[0]."'s Team",
             'personal_team' => true,
-        ]), function (Team $team) {
+        ]), function (Team $team) use ($locale, $user) {
             $this->createPlanSubscription($team);
+
+            $demoCollectionCreator = app(CreateDemoCollection::class);
+            $demoCollectionCreator->create($user, $team, $locale);
         });
     }
 

@@ -91,11 +91,13 @@ const newItems = (items) => {
 }
 const emit = defineEmits(['selectedPreset']);
 const changePreset = (value) => {
+    console.log(value)
     selectedPreset.value = value;
     localStorage.setItem('selected-compilations', value);
     addingPreset.value = false;
     const preset = getPreset(value);
     emit('selectedPreset', selectedPreset.value);
+    console.log(selectedPreset.value, 'sele');
     if (preset) {
         fillPresetForm(preset);
     }
@@ -107,7 +109,11 @@ const renamePreset = (value) => {
 }
 
 
-const savePreset = () => {
+const savePreset = (status) => {
+    console.log(addingPreset.value);
+    if(status === 'create'){
+        addingPreset.value = true;
+    }
     if (addingPreset.value) {
         createPreset();
     } else if (selectedPreset.value) {
@@ -116,6 +122,7 @@ const savePreset = () => {
 }
 
 const createPreset = () => {
+    console.log(form.name);
     // const newPresetIds = [];
     // from.preset_ids = newPresetIds;
     form.patch(route('compilations.store'), {
@@ -156,6 +163,8 @@ const deletePreset = () => {
                 title: "Success",
                 text: "Compilation deleted!"
             }, 4000)
+            localStorage.removeItem('selected-compilations');
+            form.name = null;
         },
     })
 }
@@ -198,7 +207,7 @@ initSelectedCompilation();
                 <template v-if="canManageCompilations">
                     <label class="mr-2 font-medium">Name:</label>
                     <TextInput v-model="form.name" type="text" class="w-60"/>
-                    <PrimaryButton @click="savePreset" class="ml-2 gap-x-1.5">
+                    <PrimaryButton @click="savePreset('create')" class="ml-2 gap-x-1.5">
                         {{$t('Save')}}
                         <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
                     </PrimaryButton>

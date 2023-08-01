@@ -21,6 +21,7 @@ class CreateDemoPresets
         }
 
         Compilations::create([
+            'collection_id' => $collection->getKey(),
             'name' => 'Website Content',
             'owner' => $collection->team->getKey(),
             'preset_ids' => array_map(fn ($el) => $el->getKey(), $demoPresets)

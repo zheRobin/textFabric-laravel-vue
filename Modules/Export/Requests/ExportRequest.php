@@ -15,7 +15,6 @@ class ExportRequest extends FormRequest
     {
         $export = Exports::get()->where('id', $id)->first()->value;
         $result = [];
-
         foreach ($export as $key => $item){
             foreach ($item as $lang => $value){
                 $result[$key.'_'.$lang] = $value;

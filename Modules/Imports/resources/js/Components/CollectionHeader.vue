@@ -15,16 +15,6 @@ const form = useForm({
     type: ''
 });
 
-const makeTitle = (slug) => {
-    if (!slug) {
-        return 'Undefined';
-    }
-
-    const title = slug.split('_').join(' ');
-
-    return title.charAt(0).toUpperCase() + title.slice(1);
-}
-
 const updateHeaderType = (header) => {
     form.type = header;
 
@@ -45,8 +35,8 @@ const updateHeaderType = (header) => {
 
 <template>
     <div class="w-full">
-        <div class="block truncate"  :title="makeTitle(header.name)">
-            {{ makeTitle(header.name) }}
+        <div class="block truncate"  :title="header.name">
+            {{ header.name }}
         </div>
 
         <Dropdown v-if="canUpdate" align="left" width="30">

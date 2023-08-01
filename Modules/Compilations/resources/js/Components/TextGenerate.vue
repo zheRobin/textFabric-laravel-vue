@@ -102,7 +102,7 @@ const triggerLoading = (value) => {
 const setupStream = () => {
     generatingContent.value = true;
     triggerLoading(true);
-
+    console.log(props.activeItem, 'props');
     if(loading.value){
         currentEventSource.value = streamItemCompletion(props.id, props.activeItem, (data) => {
             activeCopyButton.value = false;

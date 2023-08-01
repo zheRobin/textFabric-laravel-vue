@@ -11,7 +11,7 @@ const props = defineProps({
     languages: Array,
     permissions: Object,
 });
-
+console.log(props, 'props.index')
 const loader = ref(true);
 
 const dataRight = ref();
@@ -25,6 +25,7 @@ const onDelete = (data) => {
 }
 
 const selectedPresetData = async (data) => {
+    console.log(props);
     loader.value = true;
     activeCompilations.value = await props.complications.find(item => item.id === data);
     loader.value = false;

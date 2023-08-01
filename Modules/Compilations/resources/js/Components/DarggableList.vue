@@ -14,7 +14,7 @@ const props = defineProps({
     languages: Array,
     canEdit: Boolean,
 });
-
+console.log(props, 'props')
 const {presets, previewItem, compilation} = props;
 const loading = ref(false);
 const idItems = ref(0);
@@ -41,6 +41,8 @@ const sortedPresets = existingPresets.sort((a, b) => {
 
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
+console.log(items.value, 'itemsRight')
+
 const generatedText = ref();
 
 const nextPrevElements = (item) => {

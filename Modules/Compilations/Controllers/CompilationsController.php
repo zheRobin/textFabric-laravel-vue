@@ -13,11 +13,14 @@ class CompilationsController extends Controller
 {
     public function index(Request $request)
     {
+        $compilations = Compilations::where('owner', $request->user()->current_team_id)
+            ->where('collection_id', $request->user()->currentCollection->id)
+            ->get();
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection->presets,
             'previewItem' => $request->user()->currentCollection->items()->get(),
-            'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
+            'complications' => $compilations,
             'languages' => Language::all(),
             'permissions' => [
                 'canManageCompilations' => Gate::check('manage', Compilations::class)
@@ -36,6 +39,7 @@ class CompilationsController extends Controller
         $compilation->name = $data['name'];
         $compilation->owner = $request->user()->current_team_id;
         $compilation->preset_ids = $data['preset_ids'];
+        $compilation->collection_id = $request->user()->currentCollection->id;
 
         $compilation->save();
 

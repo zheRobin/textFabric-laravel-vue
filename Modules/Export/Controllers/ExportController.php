@@ -55,7 +55,9 @@ class ExportController extends Controller
             foreach ($request->user()->currentCollection->items()->get() as $index => $item) {
                 $params = $builder->build($request->user(), $pres, $item);
                 $response = OpenAI::chat()->create($params);
+
                 $content = $response->choices[0]->message->content;
+
                 $result[$compilation_name . '_' . $pres->name][$lang][$index] = $content;
             }
         }
@@ -65,7 +67,7 @@ class ExportController extends Controller
 
         $resultData[$fullDate] = [];
         foreach ($result as $name => $value) {
-            $resultData[$id][$name] = $value;
+            $resultData[$fullDate][$name] = $value;
         }
 
         $exports->name = $compilation_name . '_' . $fullDate;

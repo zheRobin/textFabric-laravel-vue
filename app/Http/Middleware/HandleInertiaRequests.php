@@ -49,8 +49,6 @@ class HandleInertiaRequests extends Middleware
             'planSubscription' => function () use ($user) {
                 if ($user) {
                     if (!$user->currentTeam->disabled && $user->currentTeam->planSubscription) {
-                        $user->currentTeam->planSubscription->plan->features;
-
                         return $user->currentTeam->planSubscription;
                     }
                 }

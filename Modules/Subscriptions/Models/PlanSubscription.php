@@ -36,7 +36,7 @@ class PlanSubscription extends Model
      *
      * @var array
      */
-    protected $with = ['plan'];
+    protected $with = ['plan', 'usage'];
 
     /**
      * The accessors to append to the model's array form.

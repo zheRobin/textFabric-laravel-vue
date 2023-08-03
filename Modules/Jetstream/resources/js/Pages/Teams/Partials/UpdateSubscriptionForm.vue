@@ -59,8 +59,6 @@ const getUsage = (feature) => {
 const getFeatureUsage = (feature) => {
     const usage = getUsage(feature);
 
-    console.log(usage)
-
     if (getUsage(feature)) {
         return usage.used;
     }

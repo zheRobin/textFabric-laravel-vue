@@ -21,8 +21,6 @@ use Modules\Export\Models\Exports;
 use Modules\Export\Requests\ExportRequest;
 use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
-use App\Events\ProgressUpdateEvent;
-use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller
 {
@@ -32,6 +30,7 @@ class ExportController extends Controller
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
             'exports' => Exports::orderBy('id', 'DESC')->paginate(10),
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'exportCount' => count(Exports::get())
         ]);
     }

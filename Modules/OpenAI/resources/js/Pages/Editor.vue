@@ -16,6 +16,8 @@ import RenamePreset from "Modules/OpenAI/resources/js/Components/RenamePreset.vu
 import DeletePreset from "Modules/OpenAI/resources/js/Components/DeletePreset.vue";
 import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/ItemCompletionPreview.vue";
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
+import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
+import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 
 const props = defineProps({
     selectedPreset: Object,
@@ -23,6 +25,7 @@ const props = defineProps({
     attributes: Array,
     models: Array,
     languages: Array,
+    hasItems: Boolean,
     permissions: Object,
 });
 
@@ -40,7 +43,7 @@ const initSelectedPreset = () => {
 }
 
 const form = useForm({
-    collection_id: usePage().props.auth.user.current_collection.id,
+    collection_id: null,
     model: 'gpt-3.5-turbo',
     system_prompt: '',
     user_prompt: '',
@@ -136,6 +139,8 @@ const cancelPreset = () => {
 }
 
 const savePreset = () => {
+    form.collection_id = usePage().props.auth.user.current_collection.id;
+
     if (addingPreset.value) {
         createPreset();
     } else if (selectedPreset.value) {
@@ -238,7 +243,11 @@ initSelectedPreset();
         </template>
 
         <DashboardPanel>
-            <template #header>
+            <EmptyCollection v-if="!$page.props.auth.user.current_collection" />
+
+            <EmptyImport v-else-if="!hasItems" />
+
+            <template v-else>
                 <div class="flex border-b border-gray-200 pb-8 items-center">
                     <div class="items-center flex flex-1">
                         <template v-if="addingPreset">
@@ -294,71 +303,71 @@ initSelectedPreset();
                         </template>
                     </div>
                 </div>
-            </template>
 
-            <div v-if="!showMainPanel" class="text-center mt-5 text-gray-700">
+                <div v-if="!showMainPanel" class="text-center mt-5 text-gray-700">
                 <span>
                     Select or create a new preset...
                 </span>
-            </div>
-
-            <template v-if="showMainPanel">
-                <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
-                    <div class="flex items-center justify-between space-x-6">
-                        <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
-
-                        <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">
-                                <template #label>
-                                    <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
-                                </template>
-                            </RangeSlider>
-                        </div>
-
-                        <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.top_p" :min="0" :max="1" :step="0.01">
-                                <template #label>
-                                    <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
-                                </template>
-                            </RangeSlider>
-                        </div>
-
-                        <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
-                                <template #label>
-                                    <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
-                                </template>
-                            </RangeSlider>
-                        </div>
-
-                        <div class="w-56">
-                            <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
-                                <template #label>
-                                    <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
-                                </template>
-                            </RangeSlider>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Prompt fields -->
-                <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 pt-8">
-                    <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor :canEdit="permissions.canManagePresets" title="System" v-model="form.system_prompt" :attributes="attributes" />
-                    </div>
-
-                    <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                        <PromptEditor :canEdit="permissions.canManagePresets" title="User" v-model="form.user_prompt" :attributes="attributes" />
-                    </div>
                 </div>
 
-                <ItemCompletionPreview @update:inputLanguage="changeInputLanguage"
-                                       @update:outputLanguage="changeOutputLanguage"
-                                       :preset="selectedPreset"
-                                       :languages="languages"
-                                       :canChangeLanguage="permissions.canManagePresets"
-                                       :needPresetUpdate="presetNeedsUpdate"
-                                       :updatePreset="updatePreset"/>
+                <template v-if="showMainPanel">
+                    <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
+                        <div class="flex items-center justify-between space-x-6">
+                            <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+
+                            <div class="w-56">
+                                <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">
+                                    <template #label>
+                                        <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
+                                    </template>
+                                </RangeSlider>
+                            </div>
+
+                            <div class="w-56">
+                                <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.top_p" :min="0" :max="1" :step="0.01">
+                                    <template #label>
+                                        <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
+                                    </template>
+                                </RangeSlider>
+                            </div>
+
+                            <div class="w-56">
+                                <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
+                                    <template #label>
+                                        <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
+                                    </template>
+                                </RangeSlider>
+                            </div>
+
+                            <div class="w-56">
+                                <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
+                                    <template #label>
+                                        <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>
+                                    </template>
+                                </RangeSlider>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Prompt fields -->
+                    <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 pt-8">
+                        <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                            <PromptEditor :canEdit="permissions.canManagePresets" title="System" v-model="form.system_prompt" :attributes="attributes" />
+                        </div>
+
+                        <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
+                            <PromptEditor :canEdit="permissions.canManagePresets" title="User" v-model="form.user_prompt" :attributes="attributes" />
+                        </div>
+                    </div>
+
+                    <ItemCompletionPreview @update:inputLanguage="changeInputLanguage"
+                                           @update:outputLanguage="changeOutputLanguage"
+                                           :preset="selectedPreset"
+                                           :languages="languages"
+                                           :canChangeLanguage="permissions.canManagePresets"
+                                           :needPresetUpdate="presetNeedsUpdate"
+                                           :updatePreset="updatePreset"/>
+                </template>
             </template>
         </DashboardPanel>
     </AppLayout>

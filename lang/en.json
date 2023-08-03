@@ -10,6 +10,11 @@
     "import.validation.max-items": "You cannot upload a file with more than :number items.",
     "import.validation.wrong-format": "Wrong file format.",
 
+    "collection.empty.title": "No collection selected",
+    "collection.empty.description": "Get started by selecting or creating a collection.",
+    "collection-items.empty.title": "No imported data",
+    "collection-items.empty.description": "Get started by importing a data.",
+
     "openai.limit-reached": "You have reached your limit.",
 
     "English": "English",

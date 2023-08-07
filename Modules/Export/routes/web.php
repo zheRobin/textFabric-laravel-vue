@@ -26,5 +26,7 @@ Route::middleware($authMiddleware)->group(function () {
             Route::post('/export', [ExportController::class, 'search'])->name('export.search');
 
             Route::get('/get-progress', [ExportController::class, 'getProgress']);
+
+            Route::post('/export/cancel', [ExportController::class, 'cancel'])->name('export.cancel');
         });
 });

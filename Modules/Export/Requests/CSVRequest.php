@@ -2,10 +2,7 @@
 
 namespace Modules\Export\Requests;
 
-use League\Csv\Writer;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Export\Models\Exports;
 
 class CSVRequest extends FormRequest
 {

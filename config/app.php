@@ -225,6 +225,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // ...
+        'Auth' => Illuminate\Support\Facades\Auth::class,
         'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
     ])->toArray(),
 

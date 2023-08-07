@@ -3,7 +3,7 @@
 namespace Modules\Export\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Export\Models\Exports;
+use Modules\Export\Models\CompilationExport;
 
 class JSONRequest extends FormRequest
 {
@@ -11,7 +11,7 @@ class JSONRequest extends FormRequest
     public function rules($id)
     {
 
-        $export = Exports::get()->where('id', $id)->first()->value;
+        $export = CompilationExport::get()->where('id', $id)->first()->data;
 
         $result = array();
         foreach ($export as $key => $item){

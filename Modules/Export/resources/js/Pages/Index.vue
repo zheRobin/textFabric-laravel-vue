@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "Jetstream/Layouts/AppLayout.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
+import SelectMenuForDownload from "Modules/Export/resources/js/Components/SelectMenu.vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import DialogModal from "Jetstream/Components/DialogModal.vue";
@@ -16,13 +17,14 @@ import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import Pagination from "Modules/Jetstream/resources/js/Components/Pagination.vue";
 import {MinusCircleIcon, EyeIcon} from "@heroicons/vue/20/solid";
-
 const props = defineProps({
     languages: Array,
     complications: Array,
     exports: Array,
-    exportCount: Number
+    exportCount: Number,
+    active: Array
 });
+console.log(props.active, 'active')
 const activeLanguages = ref([]);
 const activeModal = ref(false);
 const selectedCompilations = ref(null);
@@ -48,43 +50,67 @@ async function fetchProgress() {
         console.error('Error fetching progress:', error);
     }
 }
+if(props.active){
+    loading.value = true;
+    activeGenerations.value = {
+        value: 0,
+        label: props.complications.find(item => item.id === parseInt(localStorage.getItem('selectedCompilations'))).name
+    }
+}
+
+
+
+const generateActive = ref(false);
+
+let intervalFromBack;
+if(localStorage.getItem('progress') >= 0 && !generateActive.value){
+    progress.value = parseInt(localStorage.getItem('progress'));
+    intervalFromBack = setInterval(() => {
+        if(progress.value <= 99){
+            if(progress.value >= 75){
+                progress.value += 1;
+            }else{
+                progress.value += Math.ceil(Math.random() * 20);
+            }
+            localStorage.setItem('progress', progress.value);
+        }
+    }, 4000);
+    if(progress.value === 99){
+        window.clearInterval(intervalFromBack);
+    }
+}
 
 const generate = async () => {
+    generateActive.value = true;
+    window.clearInterval(intervalFromBack);
     if (!loading.value) {
-        const loadingPercent = setInterval(() => {
+        progress.value = parseInt(localStorage.getItem('progress'));
+        let interval = setInterval(() => {
             if(progress.value <= 99){
                 if(progress.value >= 75){
                     progress.value += 1;
                 }else{
                     progress.value += Math.ceil(Math.random() * 20);
                 }
+                localStorage.setItem('progress', progress.value);
             }
         }, 4000);
+        if(progress.value === 99){
+            window.clearInterval(interval);
+        }
         if (selectedCompilations.value) {
             loading.value = true;
             activeGenerations.value = dataLabel.find(
                 (item) => item.value === selectedCompilations.value
             );
-           axios.post(route('export.generate'), {compilations: form.compilations}).then((res) => {
-               window.clearTimeout(loadingPercent);
-               progress.value = 100;
-               setTimeout(() => {
-                   activeGenerations.value = null;
-                   loading.value = false;
-               }, 3000)
-               exports.value = res.data;
-               notify({
-                   group: 'success',
-                   title: 'Success',
-                   text: 'Export file created!',
-               }, 4000);
-           });
-
+           axios.post(route('export.generate'), {compilations: form.compilations});
         }
     }
+    localStorage.setItem('progress', 0);
     progress.value = 0;
 };
 const changePreset = (value) => {
+    localStorage.setItem('selectedCompilations', value)
     selectedCompilations.value = value;
     console.log(value);
 }
@@ -268,6 +294,11 @@ const search = (event) => {
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">
                                         <span class="text-xs font-medium text-gray-500">Loading... {{progress}} %</span>
                                     </div>
+<!--                                    <div class="mt-2">-->
+<!--                                        <SecondaryButton class="ml-3">-->
+<!--                                            Cancel-->
+<!--                                        </SecondaryButton>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                             <div v-else class="mt-6 text-center">Nothing is being generated now</div>
@@ -300,7 +331,7 @@ const search = (event) => {
                                                 </svg>
 
                                             </PrimaryButton>
-                                            <PrimaryButton @click="showModal(item.id, item.value)" class="ml-2 gap-x-1.5">
+                                            <PrimaryButton @click="showModal(item.id, item.data)" class="ml-2 gap-x-1.5">
                                                 Translation
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path fill-rule="evenodd" d="M9 2.25a.75.75 0 01.75.75v1.506a49.38 49.38 0 015.343.371.75.75 0 11-.186 1.489c-.66-.083-1.323-.151-1.99-.206a18.67 18.67 0 01-2.969 6.323c.317.384.65.753.998 1.107a.75.75 0 11-1.07 1.052A18.902 18.902 0 019 13.687a18.823 18.823 0 01-5.656 4.482.75.75 0 11-.688-1.333 17.323 17.323 0 005.396-4.353A18.72 18.72 0 015.89 8.598a.75.75 0 011.388-.568A17.21 17.21 0 009 11.224a17.17 17.17 0 002.391-5.165 48.038 48.038 0 00-8.298.307.75.75 0 01-.186-1.489 49.159 49.159 0 015.343-.371V3A.75.75 0 019 2.25zM15.75 9a.75.75 0 01.68.433l5.25 11.25a.75.75 0 01-1.36.634l-1.198-2.567h-6.744l-1.198 2.567a.75.75 0 01-1.36-.634l5.25-11.25A.75.75 0 0115.75 9zm-2.672 8.25h5.344l-2.672-5.726-2.672 5.726z" clip-rule="evenodd" />
@@ -362,9 +393,9 @@ const search = (event) => {
             </template>
 
             <template #content>
-                <div class="mt-5 h-60">
+                <div class="mt-5">
                     <InputLabel value="Select format"></InputLabel>
-                    <SelectMenu @update:modelValue="changeDownloadFormat" v-model="selectedDownloadFormat" class="mt-3"  :options="options"/>
+                    <SelectMenuForDownload @update:modelValue="changeDownloadFormat" v-model="selectedDownloadFormat" class="mt-3"  :options="options"/>
                 </div>
             </template>
 

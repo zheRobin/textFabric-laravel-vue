@@ -11,6 +11,7 @@ import { i18nVue } from 'laravel-vue-i18n'
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core';
+import Echo from 'laravel-echo';
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';

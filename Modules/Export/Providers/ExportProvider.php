@@ -8,9 +8,11 @@ use Modules\OpenAI\Actions\BuildPrompt;
 use Modules\Export\Contracts\BuildsPrompt;
 use Modules\Export\Actions\CompleteCollectionItem;
 use Modules\Export\Contracts\CompletesCollectionItem;
-
+use Illuminate\Queue\Events\JobProcessed;
+use Modules\Export\Listeners\AfterJobProcessedListener;
 class ExportProvider extends ServiceProvider
 {
+
     /**
      * All of the container bindings that should be registered.
      *

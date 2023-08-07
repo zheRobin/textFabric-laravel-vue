@@ -4,8 +4,8 @@ namespace Modules\Export\Controllers;
 
 use Carbon\Carbon;
 use DeepL\Translator;
-use Illuminate\Support\Facades\DB;
-use Modules\Export\Models\CompilationExport;
+
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Export\Requests\CSVRequest;
@@ -14,13 +14,15 @@ use Modules\Export\Requests\XLSXRequest;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
+use Modules\OpenAI\Contracts\BuildsParams;
+use Modules\Presets\Models\Preset;
+use OpenAI\Laravel\Facades\OpenAI;
+use Modules\Export\Models\Exports;
 use Modules\Export\Requests\ExportRequest;
 use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
-use Modules\Export\Jobs\GenerateExports;
-use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
-
+use App\Events\ProgressUpdateEvent;
+use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller
 {
@@ -30,7 +32,6 @@ class ExportController extends Controller
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
             'exports' => Exports::orderBy('id', 'DESC')->paginate(10),
-            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'exportCount' => count(Exports::get())
         ]);
     }
@@ -39,27 +40,53 @@ class ExportController extends Controller
     {
         $query = $request['query'];
 
-        return CompilationExport::where('name', 'LIKE', "%$query%")->orderBy('id', 'DESC')->paginate(10);
+        return Exports::where('name', 'LIKE', "%$query%")->paginate(10);
     }
-
-    public function generate(Request $request, CompilationExport $compilationsExport)
+    public function generate(Request $request, Preset $preset, Exports $exports)
     {
-        $compilationId = $request->get('compilations');
-        $items = $request->user()->currentCollection->items()->get();
-        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id);
-        $batch = Bus::dispatch($job);
-        session(['active_generation' => $batch]);
+        $builder = app(BuildsParams::class);
+        $preset_ids = Compilations::where('id', $request['compilations'])->get()->first()->preset_ids;
+        $compilation_name = Compilations::where('id', $request['compilations'])->get()->first()->name;
+        $result = [];
+        foreach ($preset_ids as $id) {
+            $pres = $preset->where('id', $id)->first();
+            $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code;
+            $result[$compilation_name . '_' . $pres->name] = [];
+            foreach ($request->user()->currentCollection->items()->get() as $index => $item) {
+                $params = $builder->build($request->user(), $pres, $item);
+                $response = OpenAI::chat()->create($params);
+
+                $content = $response->choices[0]->message->content;
+
+                $result[$compilation_name . '_' . $pres->name][$lang][$index] = $content;
+            }
+        }
+        $now = Carbon::now(); // Отримуємо поточний час
+
+        $fullDate = $now->format('Y-m-d H:i:s');
+
+        $resultData[$fullDate] = [];
+        foreach ($result as $name => $value) {
+            $resultData[$fullDate][$name] = $value;
+        }
+
+        $exports->name = $compilation_name . '_' . $fullDate;
+        $exports->value = $resultData[$fullDate];
+
+        $exports->save();
+
+        return Exports::orderBy('id', 'DESC')->paginate(10);
     }
 
 
-    public function delete(Request $request, CompilationExport $exports)
+    public function delete(Request $request, Exports $exports)
     {
         $exports->where('id', $request['id'])->delete();
 
-        return CompilationExport::orderBy('id', 'DESC')->paginate(10);
+        return Exports::orderBy('id', 'DESC')->paginate(10);
     }
 
-    public function translation(Request $request, CompilationExport $exports)
+    public function translation(Request $request, Exports $exports)
     {
         $result = [];
         $translator = app(Translator::class);
@@ -72,8 +99,9 @@ class ExportController extends Controller
                     }
             }
         }
+
         $data = $exports->find($request['id']);
-        $data->data = $result;
+        $data->value = $result;
 
         $data->save();
     }

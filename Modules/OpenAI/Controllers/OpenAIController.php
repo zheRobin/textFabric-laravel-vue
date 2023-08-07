@@ -21,6 +21,7 @@ class OpenAIController extends Controller
             'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
             'languages' => Language::all(),
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManagePresets' => Gate::check('manage', Preset::class),
                 'canChangeOpenAIParams' => $request->user()

@@ -35,6 +35,13 @@ class Plan extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['features'];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array

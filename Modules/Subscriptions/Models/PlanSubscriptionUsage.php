@@ -5,6 +5,7 @@ namespace Modules\Subscriptions\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PlanSubscriptionUsage extends Model
 {
@@ -29,6 +30,14 @@ class PlanSubscriptionUsage extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['feature'];
+
+
+    /**
      * The attributes that should be cast.
      *
      * @var array
@@ -37,6 +46,14 @@ class PlanSubscriptionUsage extends Model
         'used' => 'integer',
         'valid_until' => 'datetime',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function feature(): BelongsTo
+    {
+        return $this->belongsTo(PlanFeature::class);
+    }
 
     /**
      * @return bool

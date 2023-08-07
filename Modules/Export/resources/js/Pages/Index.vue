@@ -103,7 +103,7 @@ const generate = async () => {
             activeGenerations.value = dataLabel.find(
                 (item) => item.value === selectedCompilations.value
             );
-           axios.post(route('export.generate'), {compilations: form.compilations});
+            axios.post(route('export.generate'), {compilations: form.compilations});
         }
     }
     localStorage.setItem('progress', 0);
@@ -255,14 +255,14 @@ const selectedDownloadFormat = ref(null);
 
 const search = (event) => {
     console.log(form);
-        axios
-            .post(route('export.search'), {query: searchQuery.value})
-            .then((response) => {
-                exports.value = response.data;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    axios
+        .post(route('export.search'), {query: searchQuery.value})
+        .then((response) => {
+            exports.value = response.data;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 </script>
 
@@ -294,11 +294,11 @@ const search = (event) => {
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">
                                         <span class="text-xs font-medium text-gray-500">Loading... {{progress}} %</span>
                                     </div>
-<!--                                    <div class="mt-2">-->
-<!--                                        <SecondaryButton class="ml-3">-->
-<!--                                            Cancel-->
-<!--                                        </SecondaryButton>-->
-<!--                                    </div>-->
+                                    <!--                                    <div class="mt-2">-->
+                                    <!--                                        <SecondaryButton class="ml-3">-->
+                                    <!--                                            Cancel-->
+                                    <!--                                        </SecondaryButton>-->
+                                    <!--                                    </div>-->
                                 </div>
                             </div>
                             <div v-else class="mt-6 text-center">Nothing is being generated now</div>

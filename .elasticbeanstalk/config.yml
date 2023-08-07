@@ -1,0 +1,19 @@
+branch-defaults:
+  master:
+    environment: Texthub-prod-env
+environment-defaults:
+  Texthub-prod-env:
+    branch: null
+    repository: null
+global:
+  application_name: texthub-prod
+  default_ec2_keyname: texthub
+  default_platform: PHP 8.1 running on 64bit Amazon Linux 2
+  default_region: eu-central-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: git
+  workspace_type: Application

@@ -2,6 +2,7 @@
 
 namespace Modules\Export\Controllers;
 
+use Carbon\Carbon;
 use DeepL\Translator;
 use Illuminate\Support\Facades\DB;
 use Modules\Export\Models\CompilationExport;
@@ -19,6 +20,8 @@ use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
 use Modules\Export\Jobs\GenerateExports;
 use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
+
+
 class ExportController extends Controller
 {
     public function index(Request $request)
@@ -26,9 +29,9 @@ class ExportController extends Controller
         return Inertia::render('Export::Index', [
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
-            'exports' => CompilationExport::orderBy('id', 'DESC')->paginate(10),
-            'exportCount' => count(CompilationExport::get()),
-            'active' => DB::table('jobs')->where('id', session()->get('active_generation'))->get()->first()
+            'exports' => Exports::orderBy('id', 'DESC')->paginate(10),
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
+            'exportCount' => count(Exports::get())
         ]);
     }
 

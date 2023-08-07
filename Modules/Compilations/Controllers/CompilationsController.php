@@ -14,14 +14,15 @@ class CompilationsController extends Controller
     public function index(Request $request)
     {
         $compilations = Compilations::where('owner', $request->user()->current_team_id)
-            ->where('collection_id', $request->user()->currentCollection->id)
+            ->where('collection_id', $request->user()->currentCollection?->id)
             ->get();
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
-            'presets' => $request->user()->currentCollection->presets,
-            'previewItem' => $request->user()->currentCollection->items()->get(),
+            'presets' => $request->user()->currentCollection?->presets,
+            'previewItem' => $request->user()->currentCollection?->items()->get(),
             'complications' => $compilations,
             'languages' => Language::all(),
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManageCompilations' => Gate::check('manage', Compilations::class)
             ]

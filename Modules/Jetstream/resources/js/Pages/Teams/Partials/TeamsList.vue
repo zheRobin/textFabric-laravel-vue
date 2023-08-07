@@ -1,5 +1,5 @@
 <script setup>
-import { CalendarIcon } from '@heroicons/vue/20/solid';
+import { CalendarIcon, ClipboardDocumentListIcon } from '@heroicons/vue/20/solid';
 import PrimaryBadge from "Jetstream/Components/PrimaryBadge.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { teamRoleAdmin } from "Jetstream/teams.js";
@@ -50,6 +50,18 @@ const fillFilters = () => {
        }
     });
 }
+
+const openAIFeatureSlug = 'openai-requests';
+const openAIUsage = (team) => {
+    const usage = team.plan_subscription.usage.find((el) => el.feature.slug === openAIFeatureSlug);
+
+    if (usage) {
+        return usage.used;
+    }
+
+    return 0;
+}
+
 fillFilters();
 </script>
 
@@ -93,6 +105,12 @@ fillFilters();
                                         {{ teamRoleAdmin }}
                                     </p>
                                 </div>
+                            </div>
+                            <div v-if="team.plan_subscription" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                <ClipboardDocumentListIcon class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                                <p>
+                                    {{ `OpenAI: ${openAIUsage(team)} requests` }}
+                                </p>
                             </div>
                             <div v-if="team.plan_subscription" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                                 <CalendarIcon class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />

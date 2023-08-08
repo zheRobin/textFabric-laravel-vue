@@ -24,13 +24,13 @@ class ExportController extends Controller
     {
         $compilations = Compilations::where([
             'owner' => $request->user()->current_team_id,
-            'collection_id' => $request->user()->currentCollection->id,
+            'collection_id' => $request->user()->currentCollection?->id,
         ])->get();
 
         return Inertia::render('Export::Index', [
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => $compilations,
-            'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
+            'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection?->id)->paginate(10),
             'exportCount' => count(CompilationExport::get())
         ]);
     }

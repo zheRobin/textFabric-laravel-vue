@@ -6,6 +6,7 @@ use App\Models\Compilations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Collections\Models\Collection;
 
 class CompilationExport extends Model
 {
@@ -20,6 +21,7 @@ class CompilationExport extends Model
      */
     protected $fillable = [
         'compilation_id',
+        'collection_id',
         'team_id',
         'data',
     ];
@@ -34,7 +36,7 @@ class CompilationExport extends Model
     ];
 
     protected $with = [
-        'compilation'
+        'compilation',
     ];
 
     /**
@@ -43,5 +45,13 @@ class CompilationExport extends Model
     public function compilation(): BelongsTo
     {
         return $this->belongsTo(Compilations::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function collection(): BelongsTo
+    {
+        return $this->belongsTo(Collection::class);
     }
 }

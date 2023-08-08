@@ -9,33 +9,25 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class XLSXRequest extends FormRequest
 {
-    public function convertJsonToXlsx($json)
+    public function convertJsonToXlsx($item)
     {
         // Decode the JSON into an associative array
-        $data = json_decode($json, true);
+        $data = $item;
 
         // Convert the data into a format suitable for the Excel file
-        $excelData = collect($data)->map(function ($messages, $key) {
+        $excelData = collect($data)->map(function ($messages, $key) use ($data) {
+
             $messageCount = count($messages);
 
-            $rowData = [
-                'Key' => $key,
-            ];
-
             for ($i = 0; $i < $messageCount; $i++) {
-                $rowData['Message ' . ($i + 1)] = $messages[$i];
+                $rowData[array_keys($data[0])[$i]] = $messages[array_keys($data[0])[$i]];
             }
 
             return $rowData;
         });
 
         // Define column headings for the Excel file
-        $headings = array_merge(['Key'], array_map(function ($index) {
-            return 'Message ' . ($index + 1);
-        }, range(0, $excelData->max(function ($item) {
-            return count($item) - 1;
-        }))));
-
+        $headings = array_keys($data[0]);
         // Generate the Excel file and store it in memory
         $xlsxFile = Excel::download(new class($excelData, $headings) implements FromCollection, WithHeadings {
             private $data;

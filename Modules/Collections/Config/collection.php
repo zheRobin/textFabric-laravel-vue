@@ -2,7 +2,7 @@
 
 return [
     'en' => [
-        'name' => 'Demo Collection',
+        'name' => 'Demo',
         'headers' => [
             [
                 'name' => 'Product group',
@@ -143,7 +143,7 @@ return [
         ]
     ],
     'de' => [
-        'name' => 'Demo Kollektion',
+        'name' => 'Demo',
         'headers' => [
             [
                 'name' => 'Produktgruppe',
@@ -181,7 +181,7 @@ return [
         'items' => [
             [
                 [
-                    'value' => 'Akku Bohrschrauber',
+                    'value' => 'Akku-Bohrschrauber',
                     'header' => 'Product group'
                 ],
                 [
@@ -253,7 +253,7 @@ return [
                     'header' => 'Product group'
                 ],
                 [
-                    'value' => 'SuperSpray 45',
+                    'value' => 'Farbsprühsystem SuperSpray 45',
                     'header' => 'Product'
                 ],
                 [

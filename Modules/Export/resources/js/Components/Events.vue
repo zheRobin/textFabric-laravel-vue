@@ -27,7 +27,7 @@ export default {
             }, 4000);
 
             // Emit a custom event using Vue 2's $emit
-            self.$emit('update:generationDone', 'done');
+            self.$emit('update:generationDone', 'Done!');
         });
     },
 };

@@ -1,4 +1,4 @@
-export const subscriptionContactLink = 'https://www.textfabrik.io/kontakt/';
+export const subscriptionContactLink = 'https://www.texthub.io/kontakt';
 
 export function daysLeft(date) {
     const total = Date.parse(date) - Date.parse(new Date().toISOString());

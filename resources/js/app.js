@@ -2,7 +2,6 @@ import './bootstrap';
 import '../css/app.css';
 import '../css/vueform-slider.css';
 import 'floating-vue/dist/style.css';
-
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from './inertia-helpers';
@@ -11,7 +10,6 @@ import { i18nVue } from 'laravel-vue-i18n'
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core';
-import Echo from 'laravel-echo';
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';

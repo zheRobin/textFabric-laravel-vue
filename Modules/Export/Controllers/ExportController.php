@@ -22,10 +22,15 @@ class ExportController extends Controller
 {
     public function index(Request $request)
     {
+        $compilations = Compilations::where([
+            'owner' => $request->user()->current_team_id,
+            'collection_id' => $request->user()->currentCollection->id,
+        ])->get();
+
         return Inertia::render('Export::Index', [
             'languages' => Language::get()->pluck('name', 'code'),
-            'complications' => Compilations::where('owner', $request->user()->current_team_id)->get(),
-            'exports' => CompilationExport::orderBy('id', 'DESC')->paginate(10),
+            'complications' => $compilations,
+            'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
             'exportCount' => count(CompilationExport::get())
         ]);
     }
@@ -34,7 +39,7 @@ class ExportController extends Controller
     {
         $query = $request['query'];
 
-        return CompilationExport::where('name', 'LIKE', "%$query%")->paginate(10);
+        return CompilationExport::where('name', 'LIKE', "%$query%")->where('collection_id', $request->user()->currentCollection->id)->orderBy('id', 'DESC')->paginate(10);
     }
 
     public function generate(Request $request)
@@ -42,7 +47,7 @@ class ExportController extends Controller
         $compilationId = $request->get('compilations');
         $items = $request->user()->currentCollection->items()->get();
 
-        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id);
+        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
         Bus::dispatch($job);
     }
 
@@ -107,7 +112,7 @@ class ExportController extends Controller
     {
         if($request['format'] === '.xml')
         {
-            $data = (new XMLRequest)->rules($request['id'])[0];
+            $data = (new JSONRequest)->rules($request['id']);
             $xmlData = XmlHelper::arrayToXml($data);
 
             return response($xmlData);
@@ -116,7 +121,7 @@ class ExportController extends Controller
         {
             $data = (new JSONRequest)->rules($request['id']);
 
-            return response(json_encode($data));
+            return response(json_encode($data, JSON_PRETTY_PRINT));
         }
         else if($request['format'] === '.csv')
         {

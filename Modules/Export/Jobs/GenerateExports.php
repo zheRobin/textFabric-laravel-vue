@@ -27,12 +27,14 @@ class GenerateExports implements ShouldQueue
     protected $items;
     protected $user;
     protected $team_id;
-    public function __construct($compilationId, $items, $idUser, $team_id)
+    protected $collection_id;
+    public function __construct($compilationId, $items, $idUser, $team_id, $collection_id)
     {
         $this->compilationId = $compilationId;
         $this->items = $items;
         $this->user = User::where('id', $idUser)->get()->first();
         $this->team_id = $team_id;
+        $this->collection_id = $collection_id;
     }
 
     public function handle(Preset $preset): void
@@ -71,9 +73,11 @@ class GenerateExports implements ShouldQueue
         $exports->compilation_id = $this->compilationId;
         $exports->team_id = $this->team_id;
         $exports->data = $resultData[$fullDate];
-        $exports->name = $compilationName . '_' . $currentDateTime->format('Y-m-d H:i:s');;
+        $exports->name = $compilationName . '_' . $currentDateTime->format('Y-m-d H:i:s');
+        $exports->collection_id = $this->collection_id;
+
         $exports->save();
 
-        event(new GetNotificationWhenQueueEndEvents('Черга закінчена!'));
+        event(new GetNotificationWhenQueueEndEvents('Done!'));
     }
 }

@@ -10,12 +10,11 @@ class XmlHelper
             $xml = new \SimpleXMLElement('<dataset/>');
         }
 
-
         foreach ($data as $key => $value) {
 
             $record = $xml->addChild('record');
             foreach ($value as $index => $item) {
-                $record->addChild($key . '_' . $index + 1, $item);
+                $record->addChild($index, $item);
 
             }
 

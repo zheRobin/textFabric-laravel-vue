@@ -17,6 +17,8 @@ import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import Pagination from "Modules/Jetstream/resources/js/Components/Pagination.vue";
 import {MinusCircleIcon, EyeIcon} from "@heroicons/vue/20/solid";
+import Events from "Modules/Export/resources/js/Components/Events.vue";
+
 const props = defineProps({
     languages: Array,
     complications: Array,
@@ -264,6 +266,15 @@ const search = (event) => {
             console.error(error);
         });
 }
+
+const generationDone = (data) => {
+    loading.value = false;
+    form.compilations = null;
+    activeGenerations.value = null;
+    searchQuery.value = '';
+    search();
+    progress.value = 0;
+}
 </script>
 
 <template>
@@ -273,6 +284,7 @@ const search = (event) => {
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     {{ $t('Export') }}
                 </h2>
+                <Events @update:generationDone="generationDone"/>
             </div>
         </template>
         <div class="max-w-7xl mx-auto my-auto py-10 sm:px-6 lg:px-8">

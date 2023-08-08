@@ -17,6 +17,7 @@ class XMLRequest extends FormRequest
                     $result[$key.'_'.$lang] = $value;
             }
         }
+
         return[
             $result,
         ];

@@ -15,7 +15,6 @@ const props = defineProps({
 const form = useForm({
     items: props.item
 });
-console.log(props.item, 'items')
 const updateItem = () => {
     form.put(route('collection-items.update', props.item),{
         errorBag: 'updateCollectionItem',

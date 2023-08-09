@@ -9,11 +9,12 @@ use Modules\Export\Models\CompilationExport;
 class JSONRequest extends FormRequest
 {
 
-    public function rules($id)
+    public function rules($id, $imports)
     {
         $export = CompilationExport::get()->where('id', $id)->first()->data;
 
         $result = array();
+
 
         foreach ($export as $key => $item){
             foreach ($item as $lang => $value){
@@ -28,6 +29,14 @@ class JSONRequest extends FormRequest
             }
         }
 
-        return $output;
+        $import = array();
+        foreach ($imports as $index => $item){
+            foreach (json_decode($item->data) as $key => $value){
+                $import[$index][$value->header] = $value->value;
+            }
+            $import[$index] = [...$import[$index], ...$output[$index]];
+        }
+
+        return $import;
     }
 }

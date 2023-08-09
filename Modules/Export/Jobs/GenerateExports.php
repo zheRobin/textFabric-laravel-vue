@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
 use OpenAI\Laravel\Facades\OpenAI;
 use App\Models\User;
 use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
+use Modules\Export\Models\QueueProgress;
 
 class GenerateExports implements ShouldQueue
 {
@@ -39,6 +40,11 @@ class GenerateExports implements ShouldQueue
 
     public function handle(Preset $preset): void
     {
+        $queueProgress = new QueueProgress;
+        $queueProgress->job_id = $this->job->getJobId(); // Отримайте id чергового завдання
+        $queueProgress->status = 'pending';
+        $queueProgress->save();
+
         $compilationModel = Compilations::where('id', $this->compilationId)->first();
 
         $compilationName = $compilationModel->name;
@@ -46,7 +52,7 @@ class GenerateExports implements ShouldQueue
 
         $builder = app(BuildsParams::class);
         $result = [];
-
+        $count = 1;
         foreach ($presetIds as $id) {
             $pres = $preset->where('id', $id)->first();
             $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code;
@@ -56,7 +62,16 @@ class GenerateExports implements ShouldQueue
                 $response = OpenAI::chat()->create($params);
                 $content = $response->choices[0]->message->content;
                 $result[$compilationName . '_' . $pres->name]['def'][$index] = $content;
+
             }
+
+            if ($this->queueShouldStop($this->job->getJobId())) {
+                return; // Завдання не буде продовжувати виконання
+            }
+
+            $queueProgress->status = 'in_progress';
+            $queueProgress->progress = 100 * ($count++/count($presetIds));
+            $queueProgress->save();
         }
 
         $now = Carbon::now();
@@ -78,6 +93,14 @@ class GenerateExports implements ShouldQueue
 
         $exports->save();
 
-        event(new GetNotificationWhenQueueEndEvents('Done!'));
+        $queueProgress->status = 'done';
+        $queueProgress->save();
+
+        event(new GetNotificationWhenQueueEndEvents('Generation is complete!'));
+    }
+
+    public function queueShouldStop($id): bool
+    {
+        return QueueProgress::where('job_id', $id)->first()->status === 'stop';
     }
 }

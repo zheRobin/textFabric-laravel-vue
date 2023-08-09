@@ -16,10 +16,8 @@ const props = defineProps({
 const items = ref(props.items);
 const loading = ref(false);
 
-console.log(props.count, 'items')
 const colsCount = computed(() => items.value[Object.keys(items.value)[0]].length);
 const gridColsCount = computed(() => `grid-cols-${colsCount.value + 1}`);
-console.log(colsCount, 'value')
 const colNumber = (index) => {
     return 5 * (5 - 1) + (index + 1);
 }
@@ -30,14 +28,11 @@ const form = useForm({
 
 const page = (id) => {
         loading.value = true;
-        console.log(id);
         form.page = id;
         axios.post(route('export.pagination'), {page: form.page, id: props.idPage}).then((res) => {
-            console.log(res.data.export);
             items.value = res.data.export;
             loading.value = false;
         })
-    console.log(id);
 }
 </script>
 
@@ -61,7 +56,7 @@ const page = (id) => {
                         <span class="font-semibold text-gray-600"></span>
                     </div>
                     <div class="p-4 bg-gray-200 h-14 text-center" v-for="n in colsCount">
-                        <span class="font-semibold text-gray-600"> {{ n }} </span>
+                        <span class="font-semibold text-gray-600">{{ n + (form.page !== 1 ? form.page : 0) }}</span>
                     </div>
                 </div>
                     <div v-if="!loading" class="grid" :class="gridColsCount" v-for="(item, index) in items" :key="`item-${item.id}-${index}`">

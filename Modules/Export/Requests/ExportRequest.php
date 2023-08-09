@@ -7,7 +7,7 @@ use Modules\Export\Models\CompilationExport;
 
 class ExportRequest extends FormRequest
 {
-    public function rules($id): array
+    public function rules($id, $imports): array
     {
         $export = CompilationExport::get()->where('id', $id)->first()->data;
         $result = [];
@@ -16,8 +16,22 @@ class ExportRequest extends FormRequest
                 $result[$key.'_'.$lang] = $value;
             }
         }
+        $import = array();
+        foreach ($imports as $index => $item){
+            foreach (json_decode($item->data) as $key => $value){
+                $import[$index][$value->header] = $value->value;
+            }
+        }
+
+        $newData = [];
+        foreach ($import as $item) {
+            foreach ($item as $key => $value) {
+                $newData[$key][] = $value;
+            }
+        }
+
         return[
-            $result,
+            [...$newData ,...$result],
         ];
     }
 }

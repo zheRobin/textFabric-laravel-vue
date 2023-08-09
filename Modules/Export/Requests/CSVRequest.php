@@ -13,11 +13,9 @@ class CSVRequest extends FormRequest
 
         $csvOutput = '';
 
-// CSV header
         $header = array_keys($dataArray[0]);
         $csvOutput .= '"' . implode('","', $header) . '"' . "\n";
 
-// CSV rows
         foreach ($dataArray as $row) {
             $csvRow = array_map(function ($value) {
                 // Замінити подвійні лапки всередині поля на подвійні подвійні лапки (для екранизації)
@@ -26,7 +24,7 @@ class CSVRequest extends FormRequest
                 if (strpos($escapedValue, '"') !== false || strpos($escapedValue, ',') !== false || strpos($escapedValue, "\n") !== false || strpos($escapedValue, "\r") !== false) {
                     return '"' . $escapedValue . '"';
                 }
-                return $escapedValue;
+                return '"' . $escapedValue . '"';
             }, $row);
             $csvOutput .= implode(',', $csvRow) . "\n";
         }

@@ -35,7 +35,8 @@ class ExportController extends Controller
             'languages' => Language::get()->pluck('name', 'code'),
             'complications' => $compilations,
             'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
-            'exportCount' => count(CompilationExport::get())
+            'exportCount' => count(CompilationExport::get()),
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists())
         ]);
     }
 

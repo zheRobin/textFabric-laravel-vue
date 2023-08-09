@@ -65,7 +65,7 @@ class ExportController extends Controller
     {
         $exports->where('id', $request['id'])->delete();
 
-        return CompilationExport::orderBy('id', 'DESC')->paginate(10);
+        return CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10);
     }
 
     public function translation(Request $request, CompilationExport $exports)

@@ -104,7 +104,7 @@ const showProgress = (id) => {
             console.log(localStorage.getItem('selected_queue'), 'actives')
 
         });
-    }, 4000);
+    }, 2000);
 }
 
 if(localStorage.getItem('id_queue')){
@@ -331,7 +331,7 @@ const generationDone = (data) => {
                     <div class="flex border-b border-gray-200 pb-8 items-center">
                         <label class="mr-2 mt-1 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                         <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
-                        <PrimaryButton v-if="!loading" class="ml-2 gap-x-1.5" @click="generate">
+                        <PrimaryButton v-if="!generateActive" class="ml-2 gap-x-1.5" @click="generate">
                             Generate
                         </PrimaryButton>
                     </div>

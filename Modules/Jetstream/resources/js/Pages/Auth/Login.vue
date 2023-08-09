@@ -6,6 +6,8 @@ import InputLabel from "Jetstream/Components/InputLabel.vue";
 import Checkbox from "Jetstream/Components/Checkbox.vue";
 import InputError from "Jetstream/Components/InputError.vue";
 import TextInput from "Jetstream/Components/TextInput.vue";
+import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
+import NavLink from 'Jetstream/Components/NavLink.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -95,6 +97,14 @@ const submit = () => {
                 <PrimaryButton :class="{ 'opacity-50': form.processing }" :disabled="form.processing" class="w-full">
                     {{ $t("Sign in") }}
                 </PrimaryButton>
+            </div>
+
+            <div>
+                <Link class="" :href="route('demo.compilations.index')">
+                    <SecondaryButton class="w-full ring-2 ring-tf-blue-500 bg-white text-tf-blue-700 hover:bg-gray-50">
+                        {{ $t('Try without login') }}
+                    </SecondaryButton>
+                </Link>
             </div>
         </form>
 

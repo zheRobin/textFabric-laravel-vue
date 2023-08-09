@@ -4,10 +4,10 @@ import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import Banner from 'Jetstream/Components/Banner.vue';
 import NavLink from 'Jetstream/Components/NavLink.vue';
 import ResponsiveNavLink from 'Jetstream/Components/ResponsiveNavLink.vue';
-import SubscriptionBanner from 'Modules/Subscriptions/resources/js/Components/SubscriptionBanner.vue';
 import NotificationBanner from 'Jetstream/Components/NotificationBanner.vue';
 import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
 import LanguageSelector from "Jetstream/Components/LanguageSelector.vue";
+import DemoBanner from "Jetstream/Components/DemoBanner.vue";
 
 defineProps({
     title: String,
@@ -50,7 +50,7 @@ const logout = () => {
         <NotificationBanner />
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <SubscriptionBanner v-if="$page.props.planSubscription" :planSubscription="$page.props.planSubscription" />
+            <DemoBanner />
 
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->

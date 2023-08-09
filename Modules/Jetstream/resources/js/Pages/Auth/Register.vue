@@ -140,6 +140,14 @@ const firstErrorStep = () => {
                 </div>
                 <StepBullets :currentStep="currentIndex + 1" :totalSteps="totalSteps"  class="flex pr-2"/>
             </div>
+
+            <div>
+                <Link class="" :href="route('demo.compilations.index')">
+                    <SecondaryButton class="w-full ring-2 ring-tf-blue-500 bg-white text-tf-blue-700 hover:bg-gray-50">
+                        {{ $t('Try without login') }}
+                    </SecondaryButton>
+                </Link>
+            </div>
         </form>
 
         <template #second-screen>

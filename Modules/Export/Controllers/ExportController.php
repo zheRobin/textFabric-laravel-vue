@@ -7,6 +7,7 @@ use DeepL\Translator;
 use Illuminate\Support\Facades\Bus;
 use Inertia\Inertia;
 use App\Models\Compilations;
+use Modules\Export\Jobs\GenerateTranslations;
 use Modules\Export\Models\CompilationExport;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
@@ -18,6 +19,9 @@ use Modules\Export\Requests\ExportRequest;
 use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
 use Modules\Export\Jobs\GenerateExports;
+use Modules\Export\Models\QueueProgress;
+use Illuminate\Support\Facades\Queue;
+
 class ExportController extends Controller
 {
     public function index(Request $request)
@@ -48,7 +52,11 @@ class ExportController extends Controller
         $items = $request->user()->currentCollection->items()->get();
 
         $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
-        Bus::dispatch($job);
+        $dispatch = Bus::dispatch($job);
+
+        return [
+            'id_queue' => $dispatch
+        ];
     }
 
 
@@ -61,22 +69,21 @@ class ExportController extends Controller
 
     public function translation(Request $request, CompilationExport $exports)
     {
-        $result = [];
-        $translator = app(Translator::class);
-        foreach ($request['value'] as $key => $item) {
-            $result[$key][key($item)] = $item[key($item)];
-            foreach ($item as $text) {
-                    foreach ($request['languages'] as $index => $lang) {
-                        $translate = $translator->translateText($text, null, $lang);
-                        $result[$key][$lang] = array_map(fn($el) => $el->text, $translate);
-                    }
-            }
-        }
+        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
+        $dispatch = Bus::dispatch($job);
 
-        $data = $exports->find($request['id']);
-        $data->value = $result;
+        return [
+            'id_queue' => $dispatch
+        ];
+    }
 
-        $data->save();
+    public function showProgress(Request $request)
+    {
+        $id = $request['id'];
+        $progress = QueueProgress::where('job_id', $id)->get();
+        return [
+            'progress' => $progress[0]->progress
+        ];
     }
 
     public function getExport(Request $request)
@@ -92,6 +99,14 @@ class ExportController extends Controller
             'export' => $extractedData,
             'count' => count($data[0][array_keys($data[0])[0]])
         ];
+    }
+
+    public function cancel(Request $request){
+        $jobId = $request['id'];
+
+        $queueProgress = QueueProgress::where('job_id', $jobId)->first(); // Use first() to get a single record
+        $queueProgress->status = 'stop';
+        $queueProgress->save();
     }
 
     public function pagination(Request $request)

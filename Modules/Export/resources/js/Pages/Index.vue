@@ -26,11 +26,22 @@ const props = defineProps({
     exportCount: Number,
     active: Array
 });
-console.log(props.active, 'active')
+
 const activeLanguages = ref([]);
 const activeModal = ref(false);
 const selectedCompilations = ref(null);
-const activeGenerations = ref(null);
+
+const dataLabel = props.complications.map(item => {
+    return {
+        value: item.id,
+        label: item.name
+    }
+});
+let data = {
+    value: 0,
+    label: ''
+};
+const activeGenerations = ref(data);
 const loading = ref(false);
 const form = useForm({
     id: null,
@@ -52,72 +63,72 @@ async function fetchProgress() {
         console.error('Error fetching progress:', error);
     }
 }
-if(props.active){
-    loading.value = true;
-    activeGenerations.value = {
-        value: 0,
-        label: props.complications.find(item => item.id === parseInt(localStorage.getItem('selectedCompilations'))).name
-    }
-}
-
-
 
 const generateActive = ref(false);
 
-let intervalFromBack;
-if(localStorage.getItem('progress') >= 0 && !generateActive.value){
-    progress.value = parseInt(localStorage.getItem('progress'));
-    intervalFromBack = setInterval(() => {
-        if(progress.value <= 99){
-            if(progress.value >= 75){
-                progress.value += 1;
-            }else{
-                progress.value += Math.ceil(Math.random() * 20);
-            }
-            localStorage.setItem('progress', progress.value);
+let progressInterval;
+const showProgress = (id) => {
+    if(localStorage.getItem('selected_queue_translation'))(
+        activeGenerations.value = {
+            label: localStorage.getItem('selected_queue_translation')
         }
+    )
+    // Clear the previous interval if it exists
+    clearInterval(progressInterval);
+    generateActive.value = true;
+    // Set a new interval
+    progressInterval = setInterval(() => {
+        axios.get(`/export/showProgress/${id}`).then((res) => {
+            progress.value = res.data.progress;
+            if (progress.value === 100) {
+                generateActive.value = false;
+                clearInterval(progressInterval); // Clear the interval when progress reaches 100
+            }
+            if(localStorage.getItem('selected_queue')){
+                activeGenerations.value = dataLabel.find(
+                    (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
+                );
+            }else if(localStorage.getItem('selected_queue_translation'))(
+                activeGenerations.value = {
+                    label: localStorage.getItem('selected_queue_translation')
+                }
+            )
+            console.log(localStorage.getItem('selected_queue'), 'actives')
+
+        });
     }, 4000);
-    if(progress.value === 99){
-        window.clearInterval(intervalFromBack);
-    }
 }
 
+if(localStorage.getItem('id_queue')){
+    showProgress(localStorage.getItem('id_queue'));
+}
+
+const activeQueue = ref(null);
 const generate = async () => {
     generateActive.value = true;
-    window.clearInterval(intervalFromBack);
     if (!loading.value) {
-        progress.value = parseInt(localStorage.getItem('progress'));
-        let interval = setInterval(() => {
-            if(progress.value <= 99){
-                if(progress.value >= 75){
-                    progress.value += 1;
-                }else{
-                    progress.value += Math.ceil(Math.random() * 20);
-                }
-                localStorage.setItem('progress', progress.value);
-            }
-        }, 4000);
-        if(progress.value === 99){
-            window.clearInterval(interval);
-        }
         if (selectedCompilations.value) {
             loading.value = true;
-            activeGenerations.value = dataLabel.find(
-                (item) => item.value === selectedCompilations.value
-            );
-            axios.post(route('export.generate'), {compilations: form.compilations});
+            axios.post(route('export.generate'), {compilations: form.compilations}).then((res) => {
+                activeQueue.value = res.data.id_queue;
+                progress.value = 0;
+                activeGenerations.value = dataLabel.find(
+                    (item) => item.value === selectedCompilations.value
+                );
+                localStorage.setItem('id_queue', res.data.id_queue);
+                localStorage.setItem('selected_queue', selectedCompilations.value);
+                showProgress(activeQueue.value);
+            });
         }
     }
-    localStorage.setItem('progress', 0);
-    progress.value = 0;
 };
 const changePreset = (value) => {
     localStorage.setItem('selectedCompilations', value)
     selectedCompilations.value = value;
-    console.log(value);
 }
 
-const showModal = (id, value) => {
+const showModal = (id, value, name) => {
+    form.name = name;
     activeViewJson.value = value;
     form.id = id;
     form.value = value;
@@ -150,42 +161,54 @@ const deleteExport = () => {
         }, 4000)
     });
 }
-
 const translation = () => {
-    console.log('translate')
     axios.post(route('export.translation'), {id: form.id, value: form.value, languages: form.languages}).then((res) => {
-        activeGenerations.value = null;
+        // activeGenerations.value = null;
         loading.value = false;
-        console.log(activeModal.value);
         activeModal.value = false;
-        console.log(activeModal.value);
+        activeQueue.value = res.data.id_queue;
+        localStorage.setItem('id_queue', res.data.id_queue);
+        localStorage.setItem('selected_queue_translation', form.name);
+        progress.value = 0;
+        showProgress(activeQueue.value);
 
-        notify({
-            group: "success",
-            title: "Success",
-            text: "The translation was successful"
-        }, 4000)
-        activeViewJson.value = exports.value.exports[0].value;
     });
+    progress.value = 0;
+    localStorage.setItem('progress', 0);
+    generateActive.value = true;
+
+    activeGenerations.value = {
+        value: 0,
+        label: form.name
+    }
 }
 
 const download = () => {
-    axios.post(route('export.download'), {id: form.id, format: selectedDownloadFormat.value}, { responseType: "blob" })
+    const config = {
+        responseType: "blob",
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        }
+    };
+
+    axios.post(route('export.download'), {id: form.id, format: selectedDownloadFormat.value}, config)
         .then(response => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            if(selectedDownloadFormat.value === '.xml'){
+
+            if (selectedDownloadFormat.value === '.xml') {
                 link.setAttribute('download', 'data.xml');
-            }else if(selectedDownloadFormat.value === '.json'){
+            } else if (selectedDownloadFormat.value === '.json') {
                 link.setAttribute('download', 'data.json');
-            }else if (selectedDownloadFormat.value === '.csv') { // Corrected condition for CSV
+            } else if (selectedDownloadFormat.value === '.csv') {
                 link.setAttribute('download', 'data.csv');
-            }else if (selectedDownloadFormat.value === '.xlsx') { // Corrected condition for CSV
+            } else if (selectedDownloadFormat.value === '.xlsx') {
                 link.setAttribute('download', 'data.xlsx');
-            }else if(selectedDownloadFormat.value === '.xls'){
+            } else if (selectedDownloadFormat.value === '.xls') {
                 link.setAttribute('download', 'data.xls');
             }
+
             document.body.appendChild(link);
             link.click();
             activeDownloadModal.value = false;
@@ -236,7 +259,6 @@ const showDownloadModal = (id) => {
 }
 
 const closeDownloadModal = () => {
-    console.log('close')
     selectedDownloadFormat.value = null;
     activeDownloadModal.value = false;
 }
@@ -246,17 +268,11 @@ const closeModal = () => {
     form.value = null;
     activeModal.value = false;
 }
-const dataLabel = props.complications.map(item => {
-    return {
-        value: item.id,
-        label: item.name
-    }
-});
+
 const confirmingExportDeletion = ref(false);
 const selectedDownloadFormat = ref(null);
 
 const search = (event) => {
-    console.log(form);
     axios
         .post(route('export.search'), {query: searchQuery.value})
         .then((response) => {
@@ -267,12 +283,24 @@ const search = (event) => {
         });
 }
 
+const cancelQueue = () => {
+    const id = localStorage.getItem('id_queue');
+    axios.get(`/export/cancel/${id}`).then((res) => {
+        generationDone();
+        clearInterval(progressInterval);
+    })
+}
+
 const generationDone = (data) => {
     loading.value = false;
     form.compilations = null;
     activeGenerations.value = null;
     searchQuery.value = '';
     search();
+    localStorage.removeItem('selected_queue_translation');
+    localStorage.removeItem('id_queue');
+    localStorage.removeItem('selected_queue');
+    generateActive.value = false;
     progress.value = 0;
 }
 </script>
@@ -300,17 +328,17 @@ const generationDone = (data) => {
                     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8 mb-8">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">Currently running compilations</h2>
-                            <div class="flex justify-between mt-6" v-if="activeGenerations">
+                            <div class="flex justify-between mt-6" v-if="generateActive">
                                 <div class="my-3">{{activeGenerations.label}}</div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">
                                         <span class="text-xs font-medium text-gray-500">Loading... {{progress}} %</span>
                                     </div>
-                                    <!--                                    <div class="mt-2">-->
-                                    <!--                                        <SecondaryButton class="ml-3">-->
-                                    <!--                                            Cancel-->
-                                    <!--                                        </SecondaryButton>-->
-                                    <!--                                    </div>-->
+                                    <div class="mt-2">
+                                        <SecondaryButton @click="cancelQueue" class="ml-3">
+                                            Cancel
+                                        </SecondaryButton>
+                                    </div>
                                 </div>
                             </div>
                             <div v-else class="mt-6 text-center">Nothing is being generated now</div>
@@ -320,9 +348,6 @@ const generationDone = (data) => {
                             <div>
                                 <div class="relative mt-2 flex items-center">
                                     <input type="text" @keyup="search" v-model="searchQuery" name="search" placeholder="Search..." id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                                    <div @click="search" class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer">
-                                        <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">⌘K</kbd>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -343,7 +368,7 @@ const generationDone = (data) => {
                                                 </svg>
 
                                             </PrimaryButton>
-                                            <PrimaryButton @click="showModal(item.id, item.data)" class="ml-2 gap-x-1.5">
+                                            <PrimaryButton @click="showModal(item.id, item.data, item.name)" class="ml-2 gap-x-1.5">
                                                 Translation
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path fill-rule="evenodd" d="M9 2.25a.75.75 0 01.75.75v1.506a49.38 49.38 0 015.343.371.75.75 0 11-.186 1.489c-.66-.083-1.323-.151-1.99-.206a18.67 18.67 0 01-2.969 6.323c.317.384.65.753.998 1.107a.75.75 0 11-1.07 1.052A18.902 18.902 0 019 13.687a18.823 18.823 0 01-5.656 4.482.75.75 0 11-.688-1.333 17.323 17.323 0 005.396-4.353A18.72 18.72 0 015.89 8.598a.75.75 0 011.388-.568A17.21 17.21 0 009 11.224a17.17 17.17 0 002.391-5.165 48.038 48.038 0 00-8.298.307.75.75 0 01-.186-1.489 49.159 49.159 0 015.343-.371V3A.75.75 0 019 2.25zM15.75 9a.75.75 0 01.68.433l5.25 11.25a.75.75 0 01-1.36.634l-1.198-2.567h-6.744l-1.198 2.567a.75.75 0 01-1.36-.634l5.25-11.25A.75.75 0 0115.75 9zm-2.672 8.25h5.344l-2.672-5.726-2.672 5.726z" clip-rule="evenodd" />

@@ -51,12 +51,10 @@ const nextPage = () => {
     if(activeLink.value < (countLinks.value/3) - 1){
         activeLink.value += 1;
         emit('update:page', activeLink.value);
-        console.log(activeLink.value );
     }
 }
 
 const countLinks = ref(props.count);
-console.log('countLinks.value/3', countLinks.value/3)
 
 const links = [];
 

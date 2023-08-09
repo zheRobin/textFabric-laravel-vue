@@ -38,6 +38,5 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 const props = defineProps({
     option: Array
 })
-console.log(props.option)
 // const selected = ref(props.option[2])
 </script>

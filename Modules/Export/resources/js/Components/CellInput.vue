@@ -14,9 +14,7 @@ const props = defineProps({
     minHeight: Number,
     editable: Boolean,
 });
-console.log("PROPS", props)
 const emit = defineEmits(['update:modelValue']);
-console.log(props.modelValue, 'value')
 const container = ref(null);
 
 const cell = ref();

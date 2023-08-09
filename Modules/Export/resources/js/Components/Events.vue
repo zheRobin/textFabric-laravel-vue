@@ -20,14 +20,15 @@ export default {
 
         channel.bind('my-event', function (data) {
             self.messages.push(JSON.stringify(data));
+            console.log(data);
             notify({
                 group: 'success',
                 title: 'Success',
-                text: 'Generation is complete!',
+                text: data.message,
             }, 4000);
 
             // Emit a custom event using Vue 2's $emit
-            self.$emit('update:generationDone', 'Done!');
+            self.$emit('update:generationDone', data.message);
         });
     },
 };

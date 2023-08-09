@@ -77,16 +77,16 @@ const logout = () => {
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('compilations.index')" :class="route().current('compilations.index') ? 'dark:text-white' : ''" :active="route().current('compilations.index')">
+                                <NavLink :href="route('demo.compilations.index')" :class="route().current('demo.compilations.index') ? 'dark:text-white' : ''" :active="route().current('demo.compilations.index')">
                                     {{$t('Compilations')}}
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('export.index')" :class="route().current('export.index') ? 'dark:text-white' : ''" :active="route().current('export.index')">
-                                    {{$t('Export')}}
-                                </NavLink>
-                            </div>
+<!--                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">-->
+<!--                                <NavLink :href="route('export.index')" :class="route().current('export.index') ? 'dark:text-white' : ''" :active="route().current('export.index')">-->
+<!--                                    {{$t('Export')}}-->
+<!--                                </NavLink>-->
+<!--                            </div>-->
 
                         </div>
 

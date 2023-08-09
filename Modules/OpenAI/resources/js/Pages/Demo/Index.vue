@@ -24,7 +24,7 @@ const presetOptions = () => {
     const presetsOptions = [];
 
     presets.forEach((el) => {
-        presetsOptions.push({value: el.slug,label: el.name});
+        presetsOptions.push({value: el.slug, label: el.name});
     })
 
     return presetsOptions;
@@ -46,15 +46,15 @@ const changePreset = (value) => {
         <DashboardPanel>
             <div class="flex border-b border-gray-200 pb-8 items-center">
                 <div class="items-center flex flex-1">
-                    <label class="mr-2 font-medium">Preset:</label>
+                    <label class="mr-2 font-medium">{{$t('Presets')}}:</label>
                     <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetOption" :options="presetOptions()" class="w-60" placeholder="Select" />
                 </div>
             </div>
 
             <div v-if="!showMainPanel" class="text-center mt-5 text-gray-700">
-            <span>
-                Select or create a new preset...
-            </span>
+                <span>
+                    Select or create a new preset...
+                </span>
             </div>
 
             <template v-if="showMainPanel">

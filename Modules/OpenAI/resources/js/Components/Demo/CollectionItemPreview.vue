@@ -36,10 +36,6 @@ const nextButtonDisabled = computed(() => {
     return currentPage.value + 1 === lastPage.value;
 });
 
-const showNextButton = () => {
-    return currentPage.value !== (lastPage.value - 1);
-}
-
 const previousItem = () => {
     if ((currentPage.value) >= 1) {
         currentPage.value = currentPage.value - 1;

@@ -17,7 +17,6 @@ import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import Pagination from "Modules/Jetstream/resources/js/Components/Pagination.vue";
 import {MinusCircleIcon, EyeIcon} from "@heroicons/vue/20/solid";
-import Events from "Modules/Export/resources/js/Components/Events.vue";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 
@@ -85,7 +84,13 @@ const showProgress = (id) => {
             progress.value = res.data.progress;
             if (progress.value === 100) {
                 generateActive.value = false;
-                clearInterval(progressInterval); // Clear the interval when progress reaches 100
+                clearInterval(progressInterval);
+                generationDone();
+                notify({
+                    group: 'success',
+                    title: 'Success',
+                    text: 'Success!',
+                }, 4000);
             }
             if(localStorage.getItem('selected_queue')){
                 activeGenerations.value = dataLabel.find(
@@ -315,7 +320,6 @@ const generationDone = (data) => {
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     {{ $t('Export') }}
                 </h2>
-                <Events @update:generationDone="generationDone"/>
             </div>
         </template>
         <div class="max-w-7xl mx-auto my-auto py-10 sm:px-6 lg:px-8">

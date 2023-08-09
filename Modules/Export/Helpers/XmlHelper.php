@@ -11,11 +11,9 @@ class XmlHelper
         }
 
         foreach ($data as $key => $value) {
-
             $record = $xml->addChild('record');
             foreach ($value as $index => $item) {
-                $record->addChild($index, $item);
-
+                $record->addChild(str_replace(' ', '_', $index), $item);
             }
 
         }

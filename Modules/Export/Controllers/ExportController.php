@@ -5,6 +5,7 @@ namespace Modules\Export\Controllers;
 use DeepL\Translator;
 
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Export\Jobs\GenerateTranslations;
@@ -20,7 +21,7 @@ use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
 use Modules\Export\Jobs\GenerateExports;
 use Modules\Export\Models\QueueProgress;
-use Illuminate\Support\Facades\Queue;
+use Modules\Collections\Models\Collection;
 
 class ExportController extends Controller
 {
@@ -89,7 +90,9 @@ class ExportController extends Controller
 
     public function getExport(Request $request)
     {
-        $data = (new ExportRequest)->rules($request['id']);
+        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
+
+        $data = (new ExportRequest)->rules($request['id'], $imports);
         $extractedData = [];
         foreach ($data as $subArray) {
             foreach ($subArray as $key => $messages) {
@@ -126,29 +129,30 @@ class ExportController extends Controller
 
     public function download(Request $request)
     {
+        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
         if($request['format'] === '.xml')
         {
-            $data = (new JSONRequest)->rules($request['id']);
+            $data = (new JSONRequest)->rules($request['id'], $imports);
             $xmlData = XmlHelper::arrayToXml($data);
 
             return response($xmlData);
         }
         else if($request['format'] === '.json')
         {
-            $data = (new JSONRequest)->rules($request['id']);
+            $data = (new JSONRequest)->rules($request['id'], $imports);
 
             return response(json_encode($data, JSON_PRETTY_PRINT));
         }
         else if($request['format'] === '.csv')
         {
-            $data = (new JSONRequest)->rules($request['id']);
+            $data = (new JSONRequest)->rules($request['id'], $imports);
             $refactor = (new CSVRequest)->rules($data);
 
             return response($refactor);
         }
         else if($request['format'] === '.xlsx' || $request['format'] === '.xls')
         {
-            $data = (new JSONRequest)->rules($request['id']);
+            $data = (new JSONRequest)->rules($request['id'], $imports);
             $refactor = (new XLSXRequest)->convertJsonToXlsx($data);
 
             return response()->download($refactor);

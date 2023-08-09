@@ -315,6 +315,7 @@ const generationDone = (data) => {
 
 <template>
     <AppLayout title="Export">
+
         <template #header>
             <div class="flex">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -324,10 +325,10 @@ const generationDone = (data) => {
         </template>
         <div class="max-w-7xl mx-auto my-auto py-10 sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
-                <div class="mx-auto px-6 py-6">
-                    <EmptyCollection v-if="!$page.props.auth.user.current_collection" />
+                <EmptyCollection class="mx-auto px-6 py-6" v-if="!$page.props.auth.user.current_collection" />
 
-                    <EmptyImport v-else-if="!hasItems" />
+                <EmptyImport class="mx-auto px-6 py-6" v-else-if="!hasItems" />
+                <div v-else class="mx-auto px-6 py-6">
                     <div class="flex border-b border-gray-200 pb-8 items-center">
                         <label class="mr-2 mt-1 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                         <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />

@@ -182,11 +182,11 @@ return [
             [
                 [
                     'value' => 'Akku-Bohrschrauber',
-                    'header' => 'Product group'
+                    'header' => 'Produktgruppe'
                 ],
                 [
                     'value' => 'Akku-Bohrschrauber X234-1',
-                    'header' => 'Product'
+                    'header' => 'Produkt'
                 ],
                 [
                     'value' => 'Akkubohrschrauber zum Einsatz im Bauwesen, bei der Möbelmontage und in der Metallverarbeitung',
@@ -194,33 +194,33 @@ return [
                 ],
                 [
                     'value' => 'hohe Qualität und Robustheit',
-                    'header' => 'Feature 1'
+                    'header' => 'Merkmal 1'
                 ],
                 [
                     'value' => 'Nennspannung: 12 V/DC',
-                    'header' => 'Feature 2'
+                    'header' => 'Merkmal 2'
                 ],
                 [
                     'value' => 'Maschinengewicht mit Akku: 1,21 kg',
-                    'header' => 'Feature 3'
+                    'header' => 'Merkmal 3'
                 ],
                 [
                     'value' => 'handlich',
-                    'header' => 'Feature 4'
+                    'header' => 'Merkmal 4'
                 ],
                 [
                     'value' => 'leistungsstark',
-                    'header' => 'Feature 5'
+                    'header' => 'Merkmal 5'
                 ],
             ],
             [
                 [
                     'value' => 'Unterbau-Geschirrspüler',
-                    'header' => 'Product group'
+                    'header' => 'Produktgruppe'
                 ],
                 [
                     'value' => 'Geschirrspüler G 5423 Active Plus',
-                    'header' => 'Product'
+                    'header' => 'Produkt'
                 ],
                 [
                     'value' => 'Optimale Trocknungsergebnisse dank AutoOpen-Trocknung',
@@ -228,33 +228,33 @@ return [
                 ],
                 [
                     'value' => 'Beste Ergebnisse in weniger als einer Stunde',
-                    'header' => 'Feature 1'
+                    'header' => 'Merkmal 1'
                 ],
                 [
                     'value' => 'bis zu 50 % Strom sparen',
-                    'header' => 'Feature 2'
+                    'header' => 'Merkmal 2'
                 ],
                 [
                     'value' => 'ab 6,00 l Liter im Automatic Programm',
-                    'header' => 'Feature 3'
+                    'header' => 'Merkmal 3'
                 ],
                 [
                     'value' => 'Flexibel und sicher platziert',
-                    'header' => 'Feature 4'
+                    'header' => 'Merkmal 4'
                 ],
                 [
                     'value' => 'Maximale Flexibilität',
-                    'header' => 'Feature 5'
+                    'header' => 'Merkmal 5'
                 ],
             ],
             [
                 [
                     'value' => 'Farbsprühsystem',
-                    'header' => 'Product group'
+                    'header' => 'Produktgruppe'
                 ],
                 [
                     'value' => 'Farbsprühsystem SuperSpray 45',
-                    'header' => 'Product'
+                    'header' => 'Produkt'
                 ],
                 [
                     'value' => 'Farbspritzgerät für Airless-Einsteiger',
@@ -262,23 +262,23 @@ return [
                 ],
                 [
                     'value' => 'Professionell, praktisch und leicht',
-                    'header' => 'Feature 1'
+                    'header' => 'Merkmal 1'
                 ],
                 [
                     'value' => 'Einfachste Anwendung dank der HEA-Technologie',
-                    'header' => 'Feature 2'
+                    'header' => 'Merkmal 2'
                 ],
                 [
                     'value' => 'Bis zu 55 % weniger Farbnebel',
-                    'header' => 'Feature 3'
+                    'header' => 'Merkmal 3'
                 ],
                 [
                     'value' => 'Bis zu 35 % weniger Farbverbrauch',
-                    'header' => 'Feature 4'
+                    'header' => 'Merkmal 4'
                 ],
                 [
                     'value' => 'Hervorragende Ergebnisse beim Streichen',
-                    'header' => 'Feature 5'
+                    'header' => 'Merkmal 5'
                 ],
             ]
         ]

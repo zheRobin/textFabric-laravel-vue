@@ -82,5 +82,5 @@ export const defaultPresets = {
 }
 
 export function getPresets(locale) {
-    return defaultPresets[locale];
+    return [...defaultPresets[locale]];
 }

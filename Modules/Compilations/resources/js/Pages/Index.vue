@@ -1,10 +1,10 @@
 <script setup>
 import AppLayout from 'Jetstream/Layouts/AppLayout.vue';
-import DraggableList from '../Components/DarggableList.vue'
 import SelectOrCreateCompolations from "../Components/SelectOrCreateCompolations.vue";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 import {ref} from 'vue'
+import DarggableList from "Modules/Compilations/resources/js/Components/DarggableList.vue";
 
 const props = defineProps({
     presets: Array,
@@ -57,7 +57,7 @@ const selectedPresetData = async (data) => {
                             <div class="dark:text-gray-400">Select or create a new compilation</div>
                         </div>
                         <div class="flex gap-10" v-else>
-                            <DraggableList :canEdit="permissions.canManageCompilations" :presets="presets" :previewItem="previewItem" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
+                            <DarggableList :canEdit="permissions.canManageCompilations" :presets="presets" :previewItem="previewItem" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
                         </div>
                     </template>
                 </div>

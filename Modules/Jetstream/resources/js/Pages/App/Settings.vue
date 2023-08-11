@@ -9,7 +9,7 @@ import UpdateAppLogoForm from "Jetstream/Pages/App/Partials/UpdateAppLogoForm.vu
     <AppLayout title="App">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                App Settings
+                {{$t('App Settings')}}
             </h2>
         </template>
 

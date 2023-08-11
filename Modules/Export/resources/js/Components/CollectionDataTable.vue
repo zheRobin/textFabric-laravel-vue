@@ -23,7 +23,7 @@ const colNumber = (index) => {
 }
 
 const form = useForm({
-    page: 1
+    page: 0
 })
 
 const page = (id) => {
@@ -56,7 +56,7 @@ const page = (id) => {
                         <span class="font-semibold text-gray-600"></span>
                     </div>
                     <div class="p-4 bg-gray-200 h-14 text-center" v-for="n in colsCount">
-                        <span class="font-semibold text-gray-600">{{ n + (form.page !== 1 ? form.page : 0) }}</span>
+                        <span class="font-semibold text-gray-600">{{ n + (form.page*3) }}</span>
                     </div>
                 </div>
                     <div v-if="!loading" class="grid" :class="gridColsCount" v-for="(item, index) in items" :key="`item-${item.id}-${index}`">

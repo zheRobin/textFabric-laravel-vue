@@ -70,18 +70,18 @@ const getFeatureUsage = (feature) => {
 <template>
     <FormSection @submitted="updatePlanSubscription">
         <template #title>
-            Subscription Info
+            {{$t('Subscription Info')}}
         </template>
 
         <template #description>
-            Manage team subscription.
+            {{$t('Manage team subscription.')}}
         </template>
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel>Status</InputLabel>
-                <PrimaryBadge v-if="planSubscription.is_active" class="mt-1">Active</PrimaryBadge>
-                <DangerBadge v-else>Expired</DangerBadge>
+                <PrimaryBadge v-if="planSubscription.is_active" class="mt-1">{{$t('Active')}}</PrimaryBadge>
+                <DangerBadge v-else>{{$t('Expired')}}</DangerBadge>
             </div>
 
             <div class="col-span-6 sm:col-span-4">
@@ -116,7 +116,7 @@ const getFeatureUsage = (feature) => {
             <div class="col-span-6 sm:col-span-4">
                 <Toggle v-model="form.on_trial">
                     <template #label>
-                        <span class="font-medium text-gray-900">On Trial</span>
+                        <span class="font-medium text-gray-900">{{$t('On Trial')}}</span>
                     </template>
                 </Toggle>
                 <InputError :message="form.errors.on_trial" class="mt-2" />
@@ -131,11 +131,11 @@ const getFeatureUsage = (feature) => {
         </template>
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Updated.
+                {{$t('Updated.')}}
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Update
+                {{$t('Update')}}
             </PrimaryButton>
         </template>
     </FormSection>

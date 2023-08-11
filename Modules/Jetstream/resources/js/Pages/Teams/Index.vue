@@ -13,7 +13,7 @@ defineProps({
     <AppLayout title="Teams">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Teams
+                {{$t('Teams')}}
             </h2>
         </template>
 

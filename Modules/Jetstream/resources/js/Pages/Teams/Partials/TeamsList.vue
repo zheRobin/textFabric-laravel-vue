@@ -91,7 +91,7 @@ fillFilters();
                                     </p>
                                     <p class="truncate flex text-sm text-gray-500">
                                         <UserIcon class="w-5 mr-1 text-gray-700" />
-                                        Owner
+                                        {{$t('Owner')}}
                                     </p>
                                 </div>
 
@@ -127,7 +127,7 @@ fillFilters();
                 </Link>
             </li>
             <li v-if="!teams.total" class="px-4 py-4 sm:px-6 text-center">
-                <p class="truncate font-medium text-gray-600">Empty Data...</p>
+                <p class="truncate font-medium text-gray-600">{{$t('Empty Data...')}}</p>
             </li>
         </ul>
     </div>

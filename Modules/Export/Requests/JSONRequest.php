@@ -25,7 +25,7 @@ class JSONRequest extends FormRequest
         $output = [];
         foreach ($result as $key => $values) {
             foreach ($values as $index => $content) {
-                $output[$index][$key] = $content;
+                $output[$index][str_replace('_def', '', $key)] = $content;
             }
         }
 

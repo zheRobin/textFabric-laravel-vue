@@ -10,11 +10,11 @@ defineProps({
 <template>
     <ActionSection>
         <template #title>
-            Subscription plan
+            {{$t('Subscription plan')}}
         </template>
 
         <template #description>
-            Applicable to all team members.
+            {{$t('Applicable to all team members.')}}
         </template>
 
         <template #content>

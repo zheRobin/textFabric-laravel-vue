@@ -25,6 +25,7 @@ const itemRightData = (data) => {
 
 const onDelete = (data) => {
     loader.value = true;
+    dataRight.value = null;
 }
 
 const selectedPresetData = async (data) => {

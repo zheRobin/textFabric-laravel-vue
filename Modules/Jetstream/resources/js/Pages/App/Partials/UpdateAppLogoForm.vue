@@ -57,11 +57,11 @@ const clearLogoFileInput = () => {
 <template>
     <FormSection @submitted="updateLogo">
         <template #title>
-            Main App Logo
+            {{ $t('Main App Logo') }}
         </template>
 
         <template #description>
-            Update the main logo.
+            {{$t('Update the main logo.')}}
         </template>
 
         <template #form>
@@ -91,7 +91,7 @@ const clearLogoFileInput = () => {
                 </div>
 
                 <SecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewLogo">
-                    Select A New Logo
+                    {{$t('Select A New Logo')}}
                 </SecondaryButton>
 
                 <InputError :message="form.errors.logo" class="mt-2" />
@@ -100,11 +100,11 @@ const clearLogoFileInput = () => {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                {{$t('Saved.')}}
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+                {{$t('Save')}}
             </PrimaryButton>
         </template>
     </FormSection>

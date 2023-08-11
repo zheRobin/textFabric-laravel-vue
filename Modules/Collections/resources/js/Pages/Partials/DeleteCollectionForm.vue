@@ -27,37 +27,37 @@ const deleteCollection = () => {
 <template>
     <ActionSection>
         <template #title>
-            Delete Collection
+            {{$t('Delete Collection')}}
         </template>
 
         <template #description>
-            Permanently delete this collection.
+            {{$t('Permanently delete this collection.')}}
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
-                Collection will be deleted permanently.
+                {{$t('Collection will be deleted permanently.')}}
             </div>
 
             <div class="mt-5">
                 <DangerButton @click="confirmCollectionDeletion">
-                    Delete Collection
+                    {{$t('Delete Collection')}}
                 </DangerButton>
             </div>
 
             <!-- Delete Collection Confirmation Modal -->
             <ConfirmationModal :show="confirmingCollectionDeletion" @close="confirmingCollectionDeletion = false">
                 <template #title>
-                    Delete Collection
+                    {{$t('Delete Collection')}}
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete this collection?
+                    {{$t('Are you sure you want to delete this collection?')}}
                 </template>
 
                 <template #footer>
                     <SecondaryButton @click="confirmingCollectionDeletion = false">
-                        Cancel
+                        {{ $t('Cancel') }}
                     </SecondaryButton>
 
                     <DangerButton
@@ -66,7 +66,7 @@ const deleteCollection = () => {
                         :disabled="form.processing"
                         @click="deleteCollection"
                     >
-                        Delete Collection
+                        {{$t('Delete Collection')}}
                     </DangerButton>
                 </template>
             </ConfirmationModal>

@@ -115,7 +115,9 @@ class ExportController extends Controller
 
     public function pagination(Request $request)
     {
-        $data = (new ExportRequest)->rules($request['id']);
+        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
+
+        $data = (new ExportRequest)->rules($request['id'], $imports);
         $extractedData = [];
         foreach ($data as $subArray) {
             foreach ($subArray as $key => $messages) {

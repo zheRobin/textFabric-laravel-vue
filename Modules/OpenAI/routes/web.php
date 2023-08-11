@@ -13,7 +13,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
     ]);
     Route::middleware($authMiddleware)->group(function () {
         // dummy route
-        Route::get('openai', [OpenAIController::class, 'index'])->name('openai.index');
+        Route::get('editor', [OpenAIController::class, 'index'])->name('editor.index');
 
         Route::post('/update/presets', [OpenAIController::class, 'update'])->name('openai.update');
         Route::post('/delete/presets', [OpenAIController::class, 'delete'])->name('openai.delete');

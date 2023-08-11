@@ -22,6 +22,6 @@ class CreatePreset implements CreatesPreset
 
     public function redirectTo(): string
     {
-        return route('openai.index');
+        return route('editor.index');
     }
 }

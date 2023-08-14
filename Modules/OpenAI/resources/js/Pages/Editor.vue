@@ -18,6 +18,7 @@ import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/ItemCo
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     selectedPreset: Object,
@@ -65,7 +66,7 @@ watch(() => form.data(),
     { deep: true }
 );
 
-onMounted(() => presetNeedsUpdate.value = false )
+onMounted(() => { presetNeedsUpdate.value = false; initSelectedPreset(); } )
 
 const modelOptions = () => {
     const models = [];
@@ -90,7 +91,7 @@ const presetOptions = () => {
     return presets;
 }
 
-const changePreset = (value) => {
+const changePreset = (value, showNotifications = true) => {
     const preset = isObject(value)
         ? value
         : getPreset(value)
@@ -105,6 +106,10 @@ const changePreset = (value) => {
     }
 
     presetNeedsUpdate.value = false;
+
+    if (showNotifications) {
+        validatePrompts();
+    }
 }
 
 const getPreset = (presetId) => {
@@ -179,7 +184,7 @@ const updatePreset = (onSuccess) => {
         errorBag: 'errors',
         preserveScroll: true,
         onSuccess: () => {
-            changePreset(selectedPreset.value.id);
+            changePreset(selectedPreset.value.id, false);
 
             if (onSuccess) {
                 onSuccess();
@@ -231,7 +236,45 @@ const changeOutputLanguage = (language) => {
     form.output_language_id = language ? language.id : null;
 }
 
-initSelectedPreset();
+const validatePrompts = () => {
+    if (promptHasWrongAttribute(form.system_prompt) ||
+        promptHasWrongAttribute(form.user_prompt)) {
+        notify({
+            group: "warning",
+            title: "Warning",
+            text: trans('Prompt has wrong attributes!')
+        }, 2000)
+    }
+}
+
+const promptHasWrongAttribute = (prompt) => {
+    if (!prompt) {
+        return false;
+    }
+
+    let hasError = false;
+    const indexes = [...prompt.matchAll(new RegExp('@', 'gi'))].map(el => el.index);
+
+    indexes.forEach((index) => {
+        let wrongAttribute = true;
+
+        props.attributes.forEach((attr) => {
+            const foundedAttribute = prompt.slice(index + 1, index + attr.name.length + 1);
+
+            if (foundedAttribute == attr.name) {
+                wrongAttribute = false;
+                return;
+            }
+        });
+
+        if (wrongAttribute) {
+            hasError = true;
+            return;
+        }
+    });
+
+    return hasError;
+}
 </script>
 
 <template>

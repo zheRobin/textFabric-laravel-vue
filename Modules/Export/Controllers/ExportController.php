@@ -2,8 +2,10 @@
 
 namespace Modules\Export\Controllers;
 
+use Carbon\Carbon;
 use DeepL\Translator;
 
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -13,16 +15,15 @@ use Modules\Export\Models\CompilationExport;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
 use Modules\Export\Requests\XLSXRequest;
+use Modules\Presets\Models\Preset;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Export\Requests\ExportRequest;
-use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
-use Modules\Export\Jobs\GenerateExports;
+use Modules\Export\Jobs\ProccesExportJob;
 use Modules\Export\Models\QueueProgress;
-use Modules\Collections\Models\Collection;
-
+use Modules\Export\Http\Resources\ExportResource;
 class ExportController extends Controller
 {
     public function index(Request $request)
@@ -48,17 +49,61 @@ class ExportController extends Controller
         return CompilationExport::where('name', 'LIKE', "%$query%")->where('collection_id', $request->user()->currentCollection->id)->orderBy('id', 'DESC')->paginate(10);
     }
 
-    public function generate(Request $request)
+//    public function generate(Request $request)
+//    {
+//        $compilationId = $request->get('compilations');
+//        $items = $request->user()->currentCollection->items()->get();
+//
+//        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
+//        $dispatch = Bus::dispatch($job);
+//
+//        return [
+//            'id_queue' => $dispatch
+//        ];
+//    }
+
+    public function generate(Request $request, Preset $preset)
     {
         $compilationId = $request->get('compilations');
+        $user = $request->user();
+
+        $compilationModel = Compilations::where('id', $compilationId)->first();
         $items = $request->user()->currentCollection->items()->get();
+        $teamID = $request->user()->current_team_id;
+        $collection_id = $request->user()->currentCollection->id;
 
-        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
-        $dispatch = Bus::dispatch($job);
+        $compilationName = $compilationModel->name;
+        $presetIds = $compilationModel->preset_ids;
+        $currentDateTime = Carbon::now();
+        $export = new CompilationExport();
+        $export->compilation_id = $compilationId;
+        $export->team_id = $user->current_team_id;
+        $export->name = $compilationName . '_' . $currentDateTime->format('Y-m-d H:i:s');
+        $export->data = [];
+        $export->collection_id = $collection_id;
+        $export->save();
 
-        return [
-            'id_queue' => $dispatch
-        ];
+        $result = [];
+        $count = 1;
+        $jobs = [];
+        foreach ($presetIds as $id) {
+            $pres = $preset->where('id', $id)->first();
+            $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code;
+            $result[$compilationName . '_' . $pres->name] = [];
+            foreach ($items as $index => $item) {
+                $jobs[] = new ProccesExportJob($user, $pres, $item, $export);
+            }
+        }
+        $batch = Bus::batch($jobs)
+            ->then(function (Batch $batch) use ($export) {
+                $export->batch_id = null;
+                $export->save();
+            })
+            ->name('Export Compilation')
+            ->dispatch();
+
+        $export->batch_id = $batch->id;
+        $export->save();
     }
 
 
@@ -81,8 +126,8 @@ class ExportController extends Controller
 
     public function showProgress(Request $request)
     {
-        $id = $request['id'];
-        $progress = QueueProgress::where('job_id', $id)->get();
+        dd(ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection->progress);
+
         return [
             'progress' => $progress[0]->progress
         ];

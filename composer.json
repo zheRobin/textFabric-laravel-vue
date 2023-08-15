@@ -21,9 +21,12 @@
         "phpoffice/phpspreadsheet": "^1.29",
         "plesk/ext-laravel-integration": "^7.0",
         "pusher/pusher-php-server": "^7.2",
+        "react/event-loop": "^1.4",
+        "react/promise": "^3.0",
         "spatie/array-to-xml": "^3.2",
         "spatie/laravel-data": "^3.6",
         "spatie/laravel-translatable": "^6.5",
+        "swoolex/swoolex": "^2.5",
         "symfony/filesystem": "^6.2",
         "tightenco/ziggy": "^1.0"
     },

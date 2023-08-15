@@ -19,7 +19,6 @@ use OpenAI\Laravel\Facades\OpenAI;
 use App\Models\User;
 use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
 use Modules\Export\Models\QueueProgress;
-
 class GenerateExports implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -62,7 +61,6 @@ class GenerateExports implements ShouldQueue
                 $response = OpenAI::chat()->create($params);
                 $content = $response->choices[0]->message->content;
                 $result[$compilationName . '_' . $pres->name]['def'][$index] = $content;
-
             }
 
             if ($this->queueShouldStop($this->job->getJobId())) {

@@ -88,7 +88,6 @@ class ExportController extends Controller
         $jobs = [];
         foreach ($presetIds as $id) {
             $pres = $preset->where('id', $id)->first();
-            $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code;
             $result[$compilationName . '_' . $pres->name] = [];
             foreach ($items as $index => $item) {
                 $jobs[] = new ProccesExportJob($user, $pres, $item, $export);

@@ -15,12 +15,21 @@ class JSONRequest extends FormRequest
 
         $result = array();
 
-
         foreach ($export as $key => $item){
             foreach ($item as $lang => $value){
-                $result[$key . '_' . $lang] = $value;
+                foreach ($value as $newValueKey => $newValue){
+                    $result[$lang . '_' . $newValueKey][] = $value[$newValueKey];
+                }
             }
         }
+
+//        dd($result);
+//        foreach ($export as $key => $item){
+//            foreach ($item as $lang => $value){
+//                $result[$key . '_' . $lang] = $value;
+////                dd($value);
+//            }
+//        }
 
         $output = [];
         foreach ($result as $key => $values) {

@@ -18,16 +18,17 @@ class ProccesExportJob implements ShouldQueue
     protected $pres;
     protected $item;
     protected $export;
-
+    protected $compilation;
     /**
      * Create a new job instance.
      */
-    public function __construct($user, $pres, $item, $export)
+    public function __construct($user, $pres, $item, $export, $compilation)
     {
         $this->user = $user;
         $this->pres = $pres;
         $this->item = $item;
         $this->export = $export;
+        $this->compilation = $compilation;
     }
 
     /**
@@ -35,12 +36,21 @@ class ProccesExportJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $result = [];
+        if ($this->batch()->cancelled()) {
+            return;
+        }
+
+        sleep(3);
+
         $builder = app(BuildsParams::class);
         $params = $builder->build($this->user, $this->pres, $this->item);
         $response = OpenAI::chat()->create($params);
         $content = $response->choices[0]->message->content;
-        $data[$this->pres->id][$this->item->id] = $content;
-        $this->export->data = [...$this->export->data, $data];
+
+        $result[$this->compilation .'_'.$this->pres->name]['def22'] = $content;
+        $this->export->refresh();
+        $this->export->data = [...$this->export->data, $result];
         $this->export->save();
     }
 }

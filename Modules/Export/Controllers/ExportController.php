@@ -8,6 +8,8 @@ use DeepL\Translator;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Export\Jobs\GenerateTranslations;
@@ -49,25 +51,12 @@ class ExportController extends Controller
         return CompilationExport::where('name', 'LIKE', "%$query%")->where('collection_id', $request->user()->currentCollection->id)->orderBy('id', 'DESC')->paginate(10);
     }
 
-//    public function generate(Request $request)
-//    {
-//        $compilationId = $request->get('compilations');
-//        $items = $request->user()->currentCollection->items()->get();
-//
-//        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
-//        $dispatch = Bus::dispatch($job);
-//
-//        return [
-//            'id_queue' => $dispatch
-//        ];
-//    }
-
     public function generate(Request $request, Preset $preset)
     {
         $compilationId = $request->get('compilations');
         $user = $request->user();
-
         $compilationModel = Compilations::where('id', $compilationId)->first();
+
         $items = $request->user()->currentCollection->items()->get();
         $teamID = $request->user()->current_team_id;
         $collection_id = $request->user()->currentCollection->id;
@@ -90,7 +79,7 @@ class ExportController extends Controller
             $pres = $preset->where('id', $id)->first();
             $result[$compilationName . '_' . $pres->name] = [];
             foreach ($items as $index => $item) {
-                $jobs[] = new ProccesExportJob($user, $pres, $item, $export);
+                $jobs[] = new ProccesExportJob($user, $pres, $item, $export, $compilationModel->name);
             }
         }
         $batch = Bus::batch($jobs)
@@ -103,6 +92,10 @@ class ExportController extends Controller
 
         $export->batch_id = $batch->id;
         $export->save();
+
+        return [
+            'id_queue' => $batch->id
+        ];
     }
 
 
@@ -125,36 +118,34 @@ class ExportController extends Controller
 
     public function showProgress(Request $request)
     {
-        dd(ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection->progress);
+        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first()->batch;
+        $progress = $batch->total_jobs > 0 ? round(($batch->processedJobs() / $batch->total_jobs) * 100) : 0;
 
         return [
-            'progress' => $progress[0]->progress
-        ];
-    }
-
-    public function getExport(Request $request)
-    {
-        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
-
-        $data = (new ExportRequest)->rules($request['id'], $imports);
-        $extractedData = [];
-        foreach ($data as $subArray) {
-            foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, 0, 3);
-            }
-        }
-        return [
-            'export' => $extractedData,
-            'count' => count($data[0][array_keys($data[0])[0]])
+            'progress' => $progress
         ];
     }
 
     public function cancel(Request $request){
-        $jobId = $request['id'];
+        $batchId = $request['id'];
 
-        $queueProgress = QueueProgress::where('job_id', $jobId)->first(); // Use first() to get a single record
-        $queueProgress->status = 'stop';
-        $queueProgress->save();
+        try {
+            $batch = Bus::findBatch($batchId);
+            if ($batch) {
+                $batch->cancel();
+            }
+            CompilationExport::where('batch_id', $batchId)->delete();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine()
+            ]);
+        }
+
+        return Redirect::route('export.index')->with([
+            'exports' => ExportResource::collection(CompilationExport::history()->where('team_id', $request->user()->current_team_id)->paginate(10)),
+            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
+        ]);
     }
 
     public function pagination(Request $request)
@@ -170,6 +161,24 @@ class ExportController extends Controller
         }
         return [
             'export' => $extractedData,
+        ];
+    }
+
+    public function getExport(Request $request)
+    {
+        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
+
+        $data = (new ExportRequest)->rules($request['id'], $imports);
+        $extractedData = [];
+        foreach ($data as $subArray) {
+            foreach ($subArray as $key => $messages) {
+                $extractedData[$key] = array_slice($messages, 0, 3);
+            }
+        }
+
+        return [
+            'export' => $extractedData,
+            'count' => count($data[0][array_keys($data[0])[0]])
         ];
     }
 

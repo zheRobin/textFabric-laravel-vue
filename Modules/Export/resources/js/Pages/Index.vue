@@ -26,7 +26,8 @@ const props = defineProps({
     exports: Array,
     exportCount: Number,
     active: Array,
-    hasItems: Boolean
+    hasItems: Boolean,
+    activeExports: Array
 });
 
 const activeLanguages = ref([]);
@@ -70,45 +71,53 @@ const generateActive = ref(false);
 
 let progressInterval;
 const showProgress = (id) => {
+    clearInterval(progressInterval);
     if(localStorage.getItem('selected_queue_translation'))(
         activeGenerations.value = {
             label: localStorage.getItem('selected_queue_translation')
         }
     )
     // Clear the previous interval if it exists
-    clearInterval(progressInterval);
     generateActive.value = true;
-    // Set a new interval
-    progressInterval = setInterval(() => {
-        console.log('interval');
-        axios.get(route('export.showProgress')).then((res) => {
-            progress.value = res.data.progress;
-            if (progress.value === 100) {
-                generateActive.value = false;
-                generationDone();
-                notify({
-                    group: 'success',
-                    title: 'Success',
-                    text: 'Success!',
-                }, 4000);
+
+        // Set a new interval
+        progressInterval = setInterval(() => {
+            if(id){
+                axios.get(route('export.showProgress')).then((res) => {
+                    progress.value = res.data.progress;
+                    if (progress.value === 100) {
+                        generateActive.value = false;
+                        generationDone();
+                        notify({
+                            group: 'success',
+                            title: 'Success',
+                            text: 'Success!',
+                        }, 4000);
+                        clearInterval(progressInterval);
+                        progress.value = 0;
+                    }
+                    if(localStorage.getItem('selected_queue')){
+                        activeGenerations.value = dataLabel.find(
+                            (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
+                        );
+                    }else if(localStorage.getItem('selected_queue_translation'))(
+                        activeGenerations.value = {
+                            label: localStorage.getItem('selected_queue_translation')
+                        }
+                    )
+                });
+            }else{
                 clearInterval(progressInterval);
-                progress.value = 0;
             }
-            if(localStorage.getItem('selected_queue')){
-                activeGenerations.value = dataLabel.find(
-                    (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
-                );
-            }else if(localStorage.getItem('selected_queue_translation'))(
-                activeGenerations.value = {
-                    label: localStorage.getItem('selected_queue_translation')
-                }
-            )
-        });
-    }, 2000);
+        }, 2000);
+
+
 }
 
-if(localStorage.getItem('id_queue')){
-    showProgress(localStorage.getItem('id_queue'));
+if(props.activeExports.length > 0){
+    if(props.activeExports.length > 0){
+        showProgress(props.activeExports[0].batch_id);
+    }
 }
 
 const activeQueue = ref(null);

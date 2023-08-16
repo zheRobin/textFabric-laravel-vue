@@ -40,7 +40,8 @@ class ExportController extends Controller
             'complications' => $compilations,
             'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
             'exportCount' => count(CompilationExport::get()),
-            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists())
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
+            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection
         ]);
     }
 
@@ -118,8 +119,9 @@ class ExportController extends Controller
 
     public function showProgress(Request $request)
     {
-        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first()->batch;
-        $progress = $batch->total_jobs > 0 ? round(($batch->processedJobs() / $batch->total_jobs) * 100) : 0;
+
+        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first();
+        $progress = $batch ? $batch->batch->total_jobs > 0 ? round(($batch->batch->processedJobs() / $batch->batch->total_jobs) * 100) : 0 : 100;
 
         return [
             'progress' => $progress

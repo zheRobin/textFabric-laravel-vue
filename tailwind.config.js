@@ -10,7 +10,7 @@ module.exports = {
         './resources/js/**/*.vue',
         'Modules/*/resources/js/**/*.vue',
     ],
-
+    darkMode: 'false',
     safelist: [
         {
             pattern: /grid-cols-+/,

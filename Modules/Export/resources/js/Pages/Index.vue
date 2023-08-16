@@ -27,7 +27,8 @@ const props = defineProps({
     exportCount: Number,
     active: Array,
     hasItems: Boolean,
-    activeExports: Array
+    activeExports: Array,
+    items: Object
 });
 
 const activeLanguages = ref([]);
@@ -474,7 +475,7 @@ const generationDone = (data) => {
             </template>
 
             <template #content>
-                <CollectionDataTable :items="activeViewJson" :count="countViewPages" :idPage="form.id" :headers="$page.props.auth.user.current_collection.headers" class="" />
+                <CollectionDataTable :items="activeViewJson" :count="countViewPages" :idPage="form.id" :headers="$page.props.auth.user.current_collection.headers" :itemsPagination="props.items" class="" />
             </template>
 
             <template #footer>

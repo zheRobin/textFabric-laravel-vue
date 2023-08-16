@@ -41,7 +41,8 @@ class ExportController extends Controller
             'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
             'exportCount' => count(CompilationExport::get()),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
-            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection
+            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
+            'items' =>  $request->user()->currentCollection?->items()->paginate(5)->onEachSide(2)
         ]);
     }
 
@@ -203,7 +204,7 @@ class ExportController extends Controller
         $extractedData = [];
         foreach ($data as $subArray) {
             foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, 0, 3);
+                $extractedData[$key] = array_slice($messages, 0, 5);
             }
         }
 

@@ -214,7 +214,7 @@ const download = () => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-
+            console.log(activeDownloadName.value);
             if (selectedDownloadFormat.value === '.xml') {
                 link.setAttribute('download', `${activeDownloadName.value}.xml`);
             } else if (selectedDownloadFormat.value === '.json') {
@@ -271,10 +271,10 @@ const showViewModal = (item) => {
 
 const activeDownloadModal = ref(false);
 const activeDownloadName = ref(null);
-const showDownloadModal = (id) => {
+const showDownloadModal = (id, name) => {
     form.id = id;
     activeDownloadModal.value = true;
-    // activeDownloadName.value = name;
+    activeDownloadName.value = name;
 }
 
 const closeDownloadModal = () => {
@@ -397,7 +397,7 @@ const generationDone = (data) => {
                                                     <path fill-rule="evenodd" d="M9 2.25a.75.75 0 01.75.75v1.506a49.38 49.38 0 015.343.371.75.75 0 11-.186 1.489c-.66-.083-1.323-.151-1.99-.206a18.67 18.67 0 01-2.969 6.323c.317.384.65.753.998 1.107a.75.75 0 11-1.07 1.052A18.902 18.902 0 019 13.687a18.823 18.823 0 01-5.656 4.482.75.75 0 11-.688-1.333 17.323 17.323 0 005.396-4.353A18.72 18.72 0 015.89 8.598a.75.75 0 011.388-.568A17.21 17.21 0 009 11.224a17.17 17.17 0 002.391-5.165 48.038 48.038 0 00-8.298.307.75.75 0 01-.186-1.489 49.159 49.159 0 015.343-.371V3A.75.75 0 019 2.25zM15.75 9a.75.75 0 01.68.433l5.25 11.25a.75.75 0 01-1.36.634l-1.198-2.567h-6.744l-1.198 2.567a.75.75 0 01-1.36-.634l5.25-11.25A.75.75 0 0115.75 9zm-2.672 8.25h5.344l-2.672-5.726-2.672 5.726z" clip-rule="evenodd" />
                                                 </svg>
                                             </PrimaryButton>
-                                            <PrimaryButton @click="showDownloadModal(item.id)" class="ml-2 gap-x-1.5">
+                                            <PrimaryButton @click="showDownloadModal(item.id, item.name)" class="ml-2 gap-x-1.5">
                                                 {{ $t('Download') }}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4" id="download"><path fill="white" d="M21,14a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V15a1,1,0,0,0-2,0v4a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V15A1,1,0,0,0,21,14Zm-9.71,1.71a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l4-4a1,1,0,0,0-1.42-1.42L13,12.59V3a1,1,0,0,0-2,0v9.59l-2.29-2.3a1,1,0,1,0-1.42,1.42Z"></path></svg>
                                             </PrimaryButton>

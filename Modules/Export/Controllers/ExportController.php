@@ -109,11 +109,40 @@ class ExportController extends Controller
 
     public function translation(Request $request, CompilationExport $exports)
     {
-        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
-        $dispatch = Bus::dispatch($job);
+//        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
+//        $dispatch = Bus::dispatch($job);
+//
+//        return [
+//            'id_queue' => $dispatch
+//        ];
+        $result = [];
+        $jobs = [];
+        $export = $exports->find($request['id']);
+
+        $translator = app(Translator::class);
+        $count = 1;
+        foreach ($request['value'] as $key => $item) {
+            $result[$key][key($item)] = $item[key($item)];
+            foreach ($item as $textkey =>$text) {
+                foreach ($text as $lang => $value){
+                    $jobs[] = new GenerateTranslations($request['languages'], $value, $key, $export, $textkey);
+                }
+            }
+        }
+
+        $batch = Bus::batch($jobs)
+            ->then(function (Batch $batch) use ($export) {
+                $export->batch_id = null;
+                $export->save();
+            })
+            ->name('Export Compilation')
+            ->dispatch();
+
+        $export->batch_id = $batch->id;
+        $export->save();
 
         return [
-            'id_queue' => $dispatch
+            'id_queue' => $batch->id
         ];
     }
 

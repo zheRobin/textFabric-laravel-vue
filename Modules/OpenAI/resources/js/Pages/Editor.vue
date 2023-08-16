@@ -349,7 +349,7 @@ const promptHasWrongAttribute = (prompt) => {
 
                 <div v-if="!showMainPanel" class="text-center mt-5 text-gray-700">
                 <span>
-                    Select or create a new preset...
+                    {{$t('Select or create a new preset...')}}
                 </span>
                 </div>
 

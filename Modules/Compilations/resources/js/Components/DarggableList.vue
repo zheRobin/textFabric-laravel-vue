@@ -188,7 +188,7 @@ function onDropOurColumn (e, arr, column) {
         </div>
         <div>
             <div class=" mx-auto mt-5 mb-10" v-if="itemsRight.length !== 0">
-                <div v-if="loading === true">Loading</div>
+                <div v-if="loading === true">{{$t('Loading')}}</div>
                 <div v-else class="py-2 border-x border-y bg-white mt-2 rounded text-sm font-medium text-gray-900"
                      v-for="item in itemsRight" :key="item.id"
                      :id="item.title"
@@ -199,7 +199,7 @@ function onDropOurColumn (e, arr, column) {
                 </div>
             </div>
             <div class=" mx-auto mt-5 mb-10" v-else>
-                <div class="text-base font-semibold leading-7 text-gray-500 text-center mt-10">Drag, drop rearrange available presets here</div>
+                <div class="text-base font-semibold leading-7 text-gray-500 text-center mt-10">{{$t('Drag, drop rearrange available presets here')}}</div>
             </div>
         </div>
     </div>

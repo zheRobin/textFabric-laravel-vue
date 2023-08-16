@@ -2,10 +2,14 @@
 
 namespace Modules\Export\Controllers;
 
+use Carbon\Carbon;
 use DeepL\Translator;
 
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Export\Jobs\GenerateTranslations;
@@ -13,16 +17,15 @@ use Modules\Export\Models\CompilationExport;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
 use Modules\Export\Requests\XLSXRequest;
+use Modules\Presets\Models\Preset;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Export\Requests\ExportRequest;
-use Modules\Export\Requests\XMLRequest;
 use Modules\Export\Helpers\XmlHelper;
-use Modules\Export\Jobs\GenerateExports;
+use Modules\Export\Jobs\ProccesExportJob;
 use Modules\Export\Models\QueueProgress;
-use Modules\Collections\Models\Collection;
-
+use Modules\Export\Http\Resources\ExportResource;
 class ExportController extends Controller
 {
     public function index(Request $request)
@@ -48,16 +51,50 @@ class ExportController extends Controller
         return CompilationExport::where('name', 'LIKE', "%$query%")->where('collection_id', $request->user()->currentCollection->id)->orderBy('id', 'DESC')->paginate(10);
     }
 
-    public function generate(Request $request)
+    public function generate(Request $request, Preset $preset)
     {
         $compilationId = $request->get('compilations');
-        $items = $request->user()->currentCollection->items()->get();
+        $user = $request->user();
+        $compilationModel = Compilations::where('id', $compilationId)->first();
 
-        $job = new GenerateExports($compilationId, $items, $request->user()->id, $request->user()->current_team_id, $request->user()->currentCollection->id);
-        $dispatch = Bus::dispatch($job);
+        $items = $request->user()->currentCollection->items()->get();
+        $teamID = $request->user()->current_team_id;
+        $collection_id = $request->user()->currentCollection->id;
+
+        $compilationName = $compilationModel->name;
+        $presetIds = $compilationModel->preset_ids;
+        $currentDateTime = Carbon::now();
+        $export = new CompilationExport();
+        $export->compilation_id = $compilationId;
+        $export->team_id = $user->current_team_id;
+        $export->name = $compilationName . '_' . $currentDateTime->format('Y-m-d H:i:s');
+        $export->data = [];
+        $export->collection_id = $collection_id;
+        $export->save();
+
+        $result = [];
+        $count = 1;
+        $jobs = [];
+        foreach ($presetIds as $id) {
+            $pres = $preset->where('id', $id)->first();
+            $result[$compilationName . '_' . $pres->name] = [];
+            foreach ($items as $index => $item) {
+                $jobs[] = new ProccesExportJob($user, $pres, $item, $export, $compilationModel->name);
+            }
+        }
+        $batch = Bus::batch($jobs)
+            ->then(function (Batch $batch) use ($export) {
+                $export->batch_id = null;
+                $export->save();
+            })
+            ->name('Export Compilation')
+            ->dispatch();
+
+        $export->batch_id = $batch->id;
+        $export->save();
 
         return [
-            'id_queue' => $dispatch
+            'id_queue' => $batch->id
         ];
     }
 
@@ -81,10 +118,49 @@ class ExportController extends Controller
 
     public function showProgress(Request $request)
     {
-        $id = $request['id'];
-        $progress = QueueProgress::where('job_id', $id)->get();
+        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first()->batch;
+        $progress = $batch->total_jobs > 0 ? round(($batch->processedJobs() / $batch->total_jobs) * 100) : 0;
+
         return [
-            'progress' => $progress[0]->progress
+            'progress' => $progress
+        ];
+    }
+
+    public function cancel(Request $request){
+        $batchId = $request['id'];
+
+        try {
+            $batch = Bus::findBatch($batchId);
+            if ($batch) {
+                $batch->cancel();
+            }
+            CompilationExport::where('batch_id', $batchId)->delete();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage(), [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine()
+            ]);
+        }
+
+        return Redirect::route('export.index')->with([
+            'exports' => ExportResource::collection(CompilationExport::history()->where('team_id', $request->user()->current_team_id)->paginate(10)),
+            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
+        ]);
+    }
+
+    public function pagination(Request $request)
+    {
+        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
+
+        $data = (new ExportRequest)->rules($request['id'], $imports);
+        $extractedData = [];
+        foreach ($data as $subArray) {
+            foreach ($subArray as $key => $messages) {
+                $extractedData[$key] = array_slice($messages, $request['page'] * 3, 3);
+            }
+        }
+        return [
+            'export' => $extractedData,
         ];
     }
 
@@ -99,31 +175,10 @@ class ExportController extends Controller
                 $extractedData[$key] = array_slice($messages, 0, 3);
             }
         }
+
         return [
             'export' => $extractedData,
             'count' => count($data[0][array_keys($data[0])[0]])
-        ];
-    }
-
-    public function cancel(Request $request){
-        $jobId = $request['id'];
-
-        $queueProgress = QueueProgress::where('job_id', $jobId)->first(); // Use first() to get a single record
-        $queueProgress->status = 'stop';
-        $queueProgress->save();
-    }
-
-    public function pagination(Request $request)
-    {
-        $data = (new ExportRequest)->rules($request['id']);
-        $extractedData = [];
-        foreach ($data as $subArray) {
-            foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, $request['page'] * 3, 3);
-            }
-        }
-        return [
-            'export' => $extractedData,
         ];
     }
 

@@ -23,7 +23,7 @@ defineProps({
     <AppLayout title="Team Settings">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Team Settings
+                {{$t('Team Settings')}}
             </h2>
         </template>
 
@@ -32,11 +32,11 @@ defineProps({
                 <template v-if="team.disabled">
                     <ActionPanel class="mb-10">
                         <template #header>
-                            <p class="flex"><ExclamationTriangleIcon class="w-5 mr-1 text-red-900" />Team is banned</p>
+                            <p class="flex"><ExclamationTriangleIcon class="w-5 mr-1 text-red-900" />{{$t('Team is banned')}}</p>
                         </template>
 
                         <template #body>
-                            <p>Please <a :href="subscriptionContactLink" class="font-medium text-tf-blue-500 hover:text-tf-blue-400"> contact us</a> to find out the reason or switch to another team.</p>
+                            <p>{{$t('Please')}} <a :href="subscriptionContactLink" class="font-medium text-tf-blue-500 hover:text-tf-blue-400"> {{$t('contact us')}}</a> {{$t('to find out the reason or switch to another team.')}}</p>
                         </template>
                     </ActionPanel>
                 </template>

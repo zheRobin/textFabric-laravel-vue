@@ -80,17 +80,19 @@ const showProgress = (id) => {
     generateActive.value = true;
     // Set a new interval
     progressInterval = setInterval(() => {
-        axios.get(`/export/showProgress/${id}`).then((res) => {
+        console.log('interval');
+        axios.get(route('export.showProgress')).then((res) => {
             progress.value = res.data.progress;
             if (progress.value === 100) {
                 generateActive.value = false;
-                clearInterval(progressInterval);
                 generationDone();
                 notify({
                     group: 'success',
                     title: 'Success',
                     text: 'Success!',
                 }, 4000);
+                clearInterval(progressInterval);
+                progress.value = 0;
             }
             if(localStorage.getItem('selected_queue')){
                 activeGenerations.value = dataLabel.find(
@@ -101,8 +103,6 @@ const showProgress = (id) => {
                     label: localStorage.getItem('selected_queue_translation')
                 }
             )
-            console.log(localStorage.getItem('selected_queue'), 'actives')
-
         });
     }, 2000);
 }
@@ -118,6 +118,7 @@ const generate = async () => {
         if (selectedCompilations.value) {
             loading.value = true;
             axios.post(route('export.generate'), {compilations: form.compilations}).then((res) => {
+                console.log(res)
                 activeQueue.value = res.data.id_queue;
                 progress.value = 0;
                 activeGenerations.value = dataLabel.find(
@@ -252,7 +253,7 @@ const activeViewJson = ref(null);
 const showViewModal = (item) => {
     form.value = null;
     form.id = item.id;
-    axios.get(`/export/${item.id}`).then((res) => {
+    axios.get(`/export/getExport/${item.id}`).then((res) => {
         activeViewJson.value = res.data.export;
         countViewPages.value = res.data.count;
         activeViewModal.value = true;
@@ -261,10 +262,10 @@ const showViewModal = (item) => {
 
 const activeDownloadModal = ref(false);
 const activeDownloadName = ref(null);
-const showDownloadModal = (id, name) => {
+const showDownloadModal = (id) => {
     form.id = id;
     activeDownloadModal.value = true;
-    activeDownloadName.value = name;
+    // activeDownloadName.value = name;
 }
 
 const closeDownloadModal = () => {
@@ -335,32 +336,32 @@ const generationDone = (data) => {
                         <label class="mr-2 mt-1 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                         <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
                         <PrimaryButton v-if="!generateActive" class="ml-2 gap-x-1.5" @click="generate">
-                            Generate
+                            {{ $t('Generate') }}
                         </PrimaryButton>
                     </div>
                     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8 mb-8">
-                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">Currently running compilations</h2>
+                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('Currently running compilations')}}</h2>
                             <div class="flex justify-between mt-6" v-if="generateActive">
                                 <div class="my-3">{{activeGenerations.label}}</div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">
-                                        <span class="text-xs font-medium text-gray-500">Loading... {{progress}} %</span>
+                                        <span class="text-xs font-medium text-gray-500">{{ $t('Loading') }}... {{progress}} %</span>
                                     </div>
                                     <div class="mt-2">
                                         <SecondaryButton @click="cancelQueue" class="ml-3">
-                                            Cancel
+                                            {{$t('Cancel')}}
                                         </SecondaryButton>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="mt-6 text-center">Nothing is being generated now</div>
+                            <div v-else class="mt-6 text-center">{{$t('Nothing is being generated now')}}</div>
                         </div>
                         <div class="flex justify-between">
-                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">History of created compilations</h2>
+                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of created compilations')}}</h2>
                             <div>
                                 <div class="relative mt-2 flex items-center">
-                                    <input type="text" @keyup="search" v-model="searchQuery" name="search" placeholder="Search..." id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input type="text" @keyup="search" v-model="searchQuery" name="search" :placeholder="$t('Search')" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                         </div>
@@ -375,24 +376,24 @@ const generationDone = (data) => {
                                     <div class="hidden sm:flex sm:flex-col sm:items-end">
                                         <p class="text-sm leading-6 text-gray-900">
                                             <PrimaryButton @click="showViewModal(item)" class="ml-2 gap-x-1.5">
-                                                View
+                                                {{ $t('View') }}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path d="M6 3a3 3 0 00-3 3v1.5a.75.75 0 001.5 0V6A1.5 1.5 0 016 4.5h1.5a.75.75 0 000-1.5H6zM16.5 3a.75.75 0 000 1.5H18A1.5 1.5 0 0119.5 6v1.5a.75.75 0 001.5 0V6a3 3 0 00-3-3h-1.5zM12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zM4.5 16.5a.75.75 0 00-1.5 0V18a3 3 0 003 3h1.5a.75.75 0 000-1.5H6A1.5 1.5 0 014.5 18v-1.5zM21 16.5a.75.75 0 00-1.5 0V18a1.5 1.5 0 01-1.5 1.5h-1.5a.75.75 0 000 1.5H18a3 3 0 003-3v-1.5z" />
                                                 </svg>
 
                                             </PrimaryButton>
                                             <PrimaryButton @click="showModal(item.id, item.data, item.name)" class="ml-2 gap-x-1.5">
-                                                Translation
+                                                {{$t('Translation')}}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path fill-rule="evenodd" d="M9 2.25a.75.75 0 01.75.75v1.506a49.38 49.38 0 015.343.371.75.75 0 11-.186 1.489c-.66-.083-1.323-.151-1.99-.206a18.67 18.67 0 01-2.969 6.323c.317.384.65.753.998 1.107a.75.75 0 11-1.07 1.052A18.902 18.902 0 019 13.687a18.823 18.823 0 01-5.656 4.482.75.75 0 11-.688-1.333 17.323 17.323 0 005.396-4.353A18.72 18.72 0 015.89 8.598a.75.75 0 011.388-.568A17.21 17.21 0 009 11.224a17.17 17.17 0 002.391-5.165 48.038 48.038 0 00-8.298.307.75.75 0 01-.186-1.489 49.159 49.159 0 015.343-.371V3A.75.75 0 019 2.25zM15.75 9a.75.75 0 01.68.433l5.25 11.25a.75.75 0 01-1.36.634l-1.198-2.567h-6.744l-1.198 2.567a.75.75 0 01-1.36-.634l5.25-11.25A.75.75 0 0115.75 9zm-2.672 8.25h5.344l-2.672-5.726-2.672 5.726z" clip-rule="evenodd" />
                                                 </svg>
                                             </PrimaryButton>
-                                            <PrimaryButton @click="showDownloadModal(item.id, item.name)" class="ml-2 gap-x-1.5">
-                                                Download
+                                            <PrimaryButton @click="showDownloadModal(item.id)" class="ml-2 gap-x-1.5">
+                                                {{ $t('Download') }}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4" id="download"><path fill="white" d="M21,14a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V15a1,1,0,0,0-2,0v4a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V15A1,1,0,0,0,21,14Zm-9.71,1.71a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l4-4a1,1,0,0,0-1.42-1.42L13,12.59V3a1,1,0,0,0-2,0v9.59l-2.29-2.3a1,1,0,1,0-1.42,1.42Z"></path></svg>
                                             </PrimaryButton>
                                             <DangerButton @click="showModalDelete(item.id)" class="ml-2 gap-x-1.5">
-                                                Delete
+                                                {{ $t('Delete') }}
                                                 <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                             </DangerButton>
                                         </p>
@@ -401,7 +402,7 @@ const generationDone = (data) => {
                             </ul>
                             <Pagination :links="exports.links" />
                         </div>
-                        <div v-else class="mt-6 text-center">Not found</div>
+                        <div v-else class="mt-6 text-center">{{$t('Not found')}}</div>
                     </div>
                 </div>
             </div>
@@ -409,7 +410,7 @@ const generationDone = (data) => {
 
         <DialogModal :show="activeModal" @close="closeModal">
             <template #title>
-                Translation
+                {{$t('Translation')}}
             </template>
 
             <template #content>
@@ -430,16 +431,16 @@ const generationDone = (data) => {
 
             <template #footer>
                 <PrimaryButton @click="translation">
-                    Translate
+                    {{ $t('Translate') }}
                 </PrimaryButton>
                 <SecondaryButton class="ml-3" @click="closeModal">
-                    Close
+                    {{$t('Close')}}
                 </SecondaryButton>
             </template>
         </DialogModal>
         <DialogModal :show="activeDownloadModal" @close="closeDownloadModal">
             <template #title>
-                Download
+                {{$t('Download')}}
             </template>
 
             <template #content>
@@ -451,16 +452,16 @@ const generationDone = (data) => {
 
             <template #footer>
                 <PrimaryButton @click="download">
-                    Download
+                    {{$t('Download')}}
                 </PrimaryButton>
                 <SecondaryButton class="ml-3" @click="closeDownloadModal">
-                    Close
+                    {{$t('Close')}}
                 </SecondaryButton>
             </template>
         </DialogModal>
         <ApiModal :show="activeViewModal" @close="closeViewModal">
             <template #title>
-                View
+                {{$t('View')}}
             </template>
 
             <template #content>
@@ -469,30 +470,30 @@ const generationDone = (data) => {
 
             <template #footer>
                 <SecondaryButton @click="activeViewModal = false">
-                    Cancel
+                    {{$t('Cancel')}}
                 </SecondaryButton>
             </template>
         </ApiModal>
 
         <ConfirmationModal :show="confirmingExportDeletion" @close="confirmingExportDeletion = false">
             <template #title>
-                Delete Export
+                {{ $t('Delete Export') }}
             </template>
 
             <template #content>
-                Are you sure you want to delete this export?
+                {{$t('Are you sure you want to delete this export?')}}
             </template>
 
             <template #footer>
                 <SecondaryButton @click="confirmingExportDeletion = false">
-                    Cancel
+                    {{$t('Cancel')}}
                 </SecondaryButton>
 
                 <DangerButton
                     class="ml-3"
                     @click="deleteExport"
                 >
-                    Delete Export
+                    {{ $t('Delete Export') }}
                 </DangerButton>
             </template>
         </ConfirmationModal>

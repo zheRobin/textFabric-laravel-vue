@@ -47,7 +47,7 @@ const deletePreset = () => {
                 class="ml-3"
                 @click="deletePreset"
             >
-                Delete Preset
+                {{$t('Delete Preset')}}
             </DangerButton>
         </template>
     </ConfirmationModal>

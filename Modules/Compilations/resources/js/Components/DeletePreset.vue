@@ -31,23 +31,23 @@ const deletePreset = () => {
 
     <ConfirmationModal :show="confirmingPresetDeletion" @close="confirmingPresetDeletion = false">
         <template #title>
-            Delete Preset
+            {{$t('Delete Preset')}}
         </template>
 
         <template #content>
-            Are you sure you want to delete <span class="font-bold">{{ name }}</span> compilation?
+            {{$t('Are you sure you want to delete ')}}<span class="font-bold">{{ name }}</span> {{$t('compilation?')}}
         </template>
 
         <template #footer>
             <SecondaryButton @click="confirmingPresetDeletion = false">
-                Cancel
+                {{ $t('Cancel') }}
             </SecondaryButton>
 
             <DangerButton
                 class="ml-3"
                 @click="deletePreset"
             >
-                Delete Compilation
+                {{$t('Delete Compilation')}}
             </DangerButton>
         </template>
     </ConfirmationModal>

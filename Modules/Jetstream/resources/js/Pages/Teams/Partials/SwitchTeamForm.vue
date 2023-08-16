@@ -20,11 +20,11 @@ const switchToTeam = (team) => {
 <template>
     <ActionSection>
         <template #title>
-            Switch Team
+           {{$t("Switch Team")}}
         </template>
 
         <template #description>
-            Switch to this team.
+            {{$t("Switch to this team.")}}
         </template>
 
         <template #content>

@@ -27,17 +27,17 @@ const updateCollection = () => {
 <template>
     <FormSection @submitted="updateCollection">
         <template #title>
-            Collection Name
+            {{$t('Collection Name')}}
         </template>
 
         <template #description>
-            The collection's name.
+            {{$t("The collection's name.")}}
         </template>
 
         <template #form>
             <!-- Collection Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Collection Name" />
+                <InputLabel for="name" :value="$t('Collection Name')" />
 
                 <TextInput
                     id="name"
@@ -52,11 +52,11 @@ const updateCollection = () => {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                {{$t('Saved.')}}
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+                {{ $t('Save') }}
             </PrimaryButton>
         </template>
     </FormSection>

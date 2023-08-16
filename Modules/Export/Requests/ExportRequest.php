@@ -11,11 +11,22 @@ class ExportRequest extends FormRequest
     {
         $export = CompilationExport::get()->where('id', $id)->first()->data;
         $result = [];
+
         foreach ($export as $key => $item){
             foreach ($item as $lang => $value){
-                $result[$key.'_'.$lang] = $value;
+                foreach ($value as $newValueKey => $newValue){
+                    $result[$lang . '_' . $newValueKey][] = $value[$newValueKey];
+                }
             }
         }
+
+
+//        foreach ($export as $key => $item){
+//            foreach ($item as $lang => $value){
+//                $result[$key.'_'.$lang] = $value;
+//            }
+//        }
+
         $import = array();
         foreach ($imports as $index => $item){
             foreach (json_decode($item->data) as $key => $value){

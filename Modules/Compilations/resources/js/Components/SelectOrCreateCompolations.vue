@@ -122,9 +122,9 @@ const savePreset = (status) => {
 }
 
 const createPreset = () => {
-    console.log(form.name);
-    // const newPresetIds = [];
-    // from.preset_ids = newPresetIds;
+    console.log(form);
+    const newPresetIds = [];
+    form.preset_ids = newPresetIds;
     form.patch(route('compilations.store'), {
         errorBag: 'errors',
         preserveScroll: true,
@@ -205,7 +205,7 @@ initSelectedCompilation();
         <div class="items-center flex flex-1">
             <template v-if="!complications.length || addingPreset">
                 <template v-if="canManageCompilations">
-                    <label class="mr-2 font-medium">Name:</label>
+                    <label class="mr-2 font-medium">{{$t('Name:')}}</label>
                     <TextInput v-model="form.name" type="text" class="w-60"/>
                     <PrimaryButton @click="savePreset('create')" class="ml-2 gap-x-1.5">
                         {{$t('Save')}}

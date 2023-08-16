@@ -7,7 +7,7 @@ import CreateCollectionForm from "Modules/Collections/resources/js/Pages/Partial
     <AppLayout title="Create Team">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Create Collection
+                {{ $t('Create Collection') }}
             </h2>
         </template>
 

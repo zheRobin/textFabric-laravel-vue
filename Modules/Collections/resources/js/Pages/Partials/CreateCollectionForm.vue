@@ -21,16 +21,16 @@ const createCollection = () => {
 <template>
     <FormSection @submitted="createCollection">
         <template #title>
-            Collection Details
+            {{$t('Collection Details')}}
         </template>
 
         <template #description>
-            Create a new collection to collaborate with others on projects.
+            {{$t('Create a new collection to collaborate with others on projects.')}}
         </template>
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Collection Name" />
+                <InputLabel for="name" :value="$t('Collection Name')" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -44,7 +44,7 @@ const createCollection = () => {
 
         <template #actions>
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Create
+                {{ $t('Create') }}
             </PrimaryButton>
         </template>
     </FormSection>

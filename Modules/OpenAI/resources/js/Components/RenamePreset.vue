@@ -62,14 +62,14 @@ const rename = () => {
 
         <template #footer>
             <SecondaryButton class="" @click="closeModal">
-                Cancel
+                {{$t('Cancel')}}
             </SecondaryButton>
 
             <PrimaryButton
                 class="ml-3"
                 @click="rename"
             >
-                Update
+                {{$t('Update')}}
             </PrimaryButton>
         </template>
     </DialogModal>

@@ -102,7 +102,7 @@ const translateItem = () => {
                             <ChevronLeftIcon class="h-4 w-4" :class="currentPage > 1 ? 'text-black' : ''" aria-hidden="true" />
                         </button>
                         <button type="button" @click="nextItem" :disabled="currentPage === lastPage" :class="currentPage !== lastPage ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
-                            <span class="sr-only">Next</span>
+                            <span class="sr-only">{{$t('Next')}}</span>
                             <ChevronRightIcon class="h-4 w-4" :class="currentPage !== lastPage ? 'text-black' : ''" aria-hidden="true"/>
                         </button>
                     </span>

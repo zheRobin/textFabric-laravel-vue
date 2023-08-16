@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Collections\Models\Collection;
-
+use Illuminate\Database\Eloquent\Builder;
 class CompilationExport extends Model
 {
     use HasFactory;
@@ -24,6 +24,7 @@ class CompilationExport extends Model
         'collection_id',
         'team_id',
         'data',
+        'batch_id'
     ];
 
     /**
@@ -36,7 +37,8 @@ class CompilationExport extends Model
     ];
 
     protected $with = [
-        'compilation',
+        'batch',
+        'compilation'
     ];
 
     /**
@@ -48,10 +50,25 @@ class CompilationExport extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @param Builder $builder
+     * @return Builder
      */
-    public function collection(): BelongsTo
+    public function scopeHistory(Builder $builder): Builder
     {
-        return $this->belongsTo(Collection::class);
+        return $builder->whereNull('batch_id');
+    }
+
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeActive(Builder $builder): Builder
+    {
+        return $builder->whereNotNull('batch_id');
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(JobBatch::class, 'batch_id', 'id');
     }
 }

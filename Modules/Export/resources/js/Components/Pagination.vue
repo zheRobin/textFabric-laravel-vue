@@ -11,8 +11,39 @@
                         <span class="sr-only">{{ $t('Previous') }}</span>
                         <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
                     </button>
-                    <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
-                    <button v-for="(value, index) in links" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">{{ index + 1 }}</button>
+
+                    <div v-if="activeLink < 3">
+                        <button v-for="(value) in links.slice(1, 3)" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                        <button v-for="(value) in links.slice(-3)" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                    </div>
+                    <div v-else-if="activeLink > 3 && activeLink < props.count/3 - 3">
+                        <button v-for="(value) in links.slice(0, 2)" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                        <button v-for="(value) in [activeLink-2, activeLink-1,activeLink]" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+
+                        <button v-for="(value) in links.slice(-3)" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                    </div>
+                    <div v-else-if="activeLink > props.count/3 - 3 && activeLink<props.count/3">
+                        <button v-for="(value) in links.slice(1, 8)" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                        <button v-if="activeLink != props.count/3" v-for="(value) in [activeLink-2, activeLink-1,activeLink]" @click="changePage(value)" :data-id="value" aria-current="page" :class="value === activeLink ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300'" class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                            {{ value }}
+                        </button>
+                    </div>
 <!--                    <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>-->
 <!--                    <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>-->
 <!--                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>-->

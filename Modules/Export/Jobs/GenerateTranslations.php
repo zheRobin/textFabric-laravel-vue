@@ -3,6 +3,7 @@
 namespace Modules\Export\Jobs;
 
 use DeepL\Translator;
+use Illuminate\Bus\Batchable;
 use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
 use Modules\Export\Models\CompilationExport;
 use Modules\Presets\Models\Preset;
@@ -15,61 +16,33 @@ use Modules\Export\Models\QueueProgress;
 
 class GenerateTranslations implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-    protected $value;
     protected $languages;
-    protected $id;
+    protected $text;
+    protected $value;
+    protected $export;
+    protected $textkey;
 
-    public function __construct($value, $languages, $id)
+    public function __construct($languages, $value, $key, $export, $textkey)
     {
-        $this->value = $value;
         $this->languages = $languages;
-        $this->id = $id;
+        $this->value = $value;
+        $this->key = $key;
+        $this->export = $export;
+        $this->textkey = $textkey;
     }
 
     public function handle(Preset $preset): void
     {
-        $queueProgress = new QueueProgress;
-        $queueProgress->job_id = $this->job->getJobId(); // Отримайте id чергового завдання
-        $queueProgress->status = 'pending';
-        $queueProgress->save();
-
-        $result = [];
         $translator = app(Translator::class);
-        $count = 1;
-        foreach ($this->value as $key => $item) {
-            $result[$key][key($item)] = $item[key($item)];
-            foreach ($item as $text) {
-                foreach ($this->languages as $index => $lang) {
-                    $translate = $translator->translateText($text, null, $lang);
-                    $result[$key][$lang] = array_map(fn($el) => $el->text, $translate);
-                }
-
-            }
-
-            if ($this->queueShouldStop($this->job->getJobId())) {
-                return; // Завдання не буде продовжувати виконання
-            }
-
-            $queueProgress->status = 'in_progress';
-            $queueProgress->progress = 100 * ($count++/count($this->value));
-            $queueProgress->save();
+        $result = [];
+        foreach ($this->languages as $index => $lang) {
+            $translate = $translator->translateText($this->value, null, $lang);
+            $result[$this->textkey][$lang] = $translate->text;
         }
 
-        $exports = new CompilationExport();
-
-        $data = $exports->find($this->id);
-        $data->data = $result;
-
-        $data->save();
-
-        event(new GetNotificationWhenQueueEndEvents('The translation was successful!'));
-    }
-
-    public function queueShouldStop($id): bool
-    {
-        return QueueProgress::where('job_id', $id)->first()->status === 'stop';
+        $this->export->data = [...$this->export->data, $result];
+        $this->export->save();
     }
 }

@@ -40,7 +40,9 @@ class ExportController extends Controller
             'complications' => $compilations,
             'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
             'exportCount' => count(CompilationExport::get()),
-            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists())
+            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
+            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
+            'items' =>  $request->user()->currentCollection?->items()->paginate(5)->onEachSide(2)
         ]);
     }
 
@@ -108,18 +110,48 @@ class ExportController extends Controller
 
     public function translation(Request $request, CompilationExport $exports)
     {
-        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
-        $dispatch = Bus::dispatch($job);
+//        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
+//        $dispatch = Bus::dispatch($job);
+//
+//        return [
+//            'id_queue' => $dispatch
+//        ];
+        $result = [];
+        $jobs = [];
+        $export = $exports->find($request['id']);
+
+        $translator = app(Translator::class);
+        $count = 1;
+        foreach ($request['value'] as $key => $item) {
+            $result[$key][key($item)] = $item[key($item)];
+            foreach ($item as $textkey =>$text) {
+                foreach ($text as $lang => $value){
+                    $jobs[] = new GenerateTranslations($request['languages'], $value, $key, $export, $textkey);
+                }
+            }
+        }
+
+        $batch = Bus::batch($jobs)
+            ->then(function (Batch $batch) use ($export) {
+                $export->batch_id = null;
+                $export->save();
+            })
+            ->name('Export Compilation')
+            ->dispatch();
+
+        $export->batch_id = $batch->id;
+        $export->save();
 
         return [
-            'id_queue' => $dispatch
+            'id_queue' => $batch->id
         ];
     }
 
     public function showProgress(Request $request)
     {
-        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first()->batch;
-        $progress = $batch->total_jobs > 0 ? round(($batch->processedJobs() / $batch->total_jobs) * 100) : 0;
+
+        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first();
+        $progress = $batch ? $batch->batch->total_jobs > 0 ? round(($batch->batch->processedJobs() / $batch->batch->total_jobs) * 100) : 0 : 100;
 
         return [
             'progress' => $progress
@@ -172,7 +204,7 @@ class ExportController extends Controller
         $extractedData = [];
         foreach ($data as $subArray) {
             foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, 0, 3);
+                $extractedData[$key] = array_slice($messages, 0, 5);
             }
         }
 

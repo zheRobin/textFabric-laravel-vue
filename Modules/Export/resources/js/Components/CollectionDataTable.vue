@@ -11,7 +11,8 @@ const props = defineProps({
     headers: Array,
     idPage: Number,
     canUpdateCollection: Boolean,
-    count: Number
+    count: Number,
+    itemsPagination: Object
 });
 const items = ref(props.items);
 const loading = ref(false);

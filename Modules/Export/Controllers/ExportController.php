@@ -2,97 +2,78 @@
 
 namespace Modules\Export\Controllers;
 
-use Carbon\Carbon;
-use DeepL\Translator;
-
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Models\Compilations;
+use Modules\Export\Enums\ExportTypeEnum;
 use Modules\Export\Jobs\GenerateTranslations;
-use Modules\Export\Models\CompilationExport;
+use Modules\Export\Models\Export;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
 use Modules\Export\Requests\XLSXRequest;
-use Modules\Presets\Models\Preset;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\Export\Requests\ExportRequest;
 use Modules\Export\Helpers\XmlHelper;
-use Modules\Export\Jobs\ProccesExportJob;
-use Modules\Export\Models\QueueProgress;
-use Modules\Export\Http\Resources\ExportResource;
+use Modules\Export\Jobs\ProcessExportJob;
+
 class ExportController extends Controller
 {
     public function index(Request $request)
     {
-        $compilations = Compilations::where([
-            'owner' => $request->user()->current_team_id,
-            'collection_id' => $request->user()->currentCollection->id,
-        ])->get();
-
         return Inertia::render('Export::Index', [
             'languages' => Language::get()->pluck('name', 'code'),
-            'complications' => $compilations,
-            'exports' => CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10),
-            'exportCount' => count(CompilationExport::get()),
+            'compilations' => $request->user()->currentCollection->compilations ?? [],
+            'activeExport' => $request->user()->currentCollection->exports()->active()->first(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
-            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
-            'items' =>  $request->user()->currentCollection?->items()->paginate(5)->onEachSide(2)
         ]);
     }
 
     public function search(Request $request)
     {
-        $query = $request['query'];
+        $exports = $request->user()->currentCollection
+            ->exports()
+            ->history()
+            ->where('name', 'LIKE', '%'.$request->offsetGet('query').'%')
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
 
-        return CompilationExport::where('name', 'LIKE', "%$query%")->where('collection_id', $request->user()->currentCollection->id)->orderBy('id', 'DESC')->paginate(10);
+        return response()->json([
+            'data' => $exports
+        ]);
     }
 
-    public function generate(Request $request, Preset $preset)
+    public function generate(Request $request, Compilations $compilation)
     {
-        $compilationId = $request->get('compilations');
-        $user = $request->user();
-        $compilationModel = Compilations::where('id', $compilationId)->first();
+        $collectionItems = $request->user()->currentCollection->items()->get();
 
-        $items = $request->user()->currentCollection->items()->get();
-        $teamID = $request->user()->current_team_id;
-        $collection_id = $request->user()->currentCollection->id;
+        $export = Export::create([
+            'collection_id' => $request->user()->currentCollection->id,
+            'name' => Export::buildName($compilation->name),
+            'type' => ExportTypeEnum::COMPILATION,
+        ]);
 
-        $compilationName = $compilationModel->name;
-        $presetIds = $compilationModel->preset_ids;
-        $currentDateTime = Carbon::now();
-        $export = new CompilationExport();
-        $export->compilation_id = $compilationId;
-        $export->team_id = $user->current_team_id;
-        $export->name = $compilationName . '_' . $currentDateTime->format('Y-m-d H:i:s');
-        $export->data = [];
-        $export->collection_id = $collection_id;
-        $export->save();
-
-        $result = [];
-        $count = 1;
         $jobs = [];
-        foreach ($presetIds as $id) {
-            $pres = $preset->where('id', $id)->first();
-            $result[$compilationName . '_' . $pres->name] = [];
-            foreach ($items as $index => $item) {
-                $jobs[] = new ProccesExportJob($user, $pres, $item, $export, $compilationModel->name);
-            }
-        }
+        $collectionItems->each(function ($item) use ($request, $compilation, $export, &$jobs) {
+            $jobs[] = new ProcessExportJob($request->user(), $compilation, $item, $export);
+        });
+
         $batch = Bus::batch($jobs)
             ->then(function (Batch $batch) use ($export) {
-                $export->batch_id = null;
+                $export->job_batch_id = null;
                 $export->save();
+            })
+            ->finally(function (Batch $batch) use ($export) {
+                if ($batch->cancelled()) {
+                    $export->delete();
+                }
             })
             ->name('Export Compilation')
             ->dispatch();
 
-        $export->batch_id = $batch->id;
+        $export->job_batch_id = $batch->id;
         $export->save();
 
         return [
@@ -100,46 +81,39 @@ class ExportController extends Controller
         ];
     }
 
-
-    public function delete(Request $request, CompilationExport $exports)
+    public function delete(Request $request, Export $export)
     {
-        $exports->where('id', $request['id'])->delete();
-
-        return CompilationExport::orderBy('id', 'DESC')->where('collection_id', $request->user()->currentCollection->id)->paginate(10);
+        $export->delete();
     }
 
-    public function translation(Request $request, CompilationExport $exports)
+    public function translate(Request $request, Export $export)
     {
-//        $job = new GenerateTranslations($request['value'], $request['languages'], $request['id']);
-//        $dispatch = Bus::dispatch($job);
-//
-//        return [
-//            'id_queue' => $dispatch
-//        ];
-        $result = [];
-        $jobs = [];
-        $export = $exports->find($request['id']);
+        // store languages into export model
 
-        $translator = app(Translator::class);
-        $count = 1;
-        foreach ($request['value'] as $key => $item) {
-            $result[$key][key($item)] = $item[key($item)];
-            foreach ($item as $textkey =>$text) {
-                foreach ($text as $lang => $value){
-                    $jobs[] = new GenerateTranslations($request['languages'], $value, $key, $export, $textkey);
-                }
-            }
-        }
+        $jobs = [];
+
+        $export->load('items');
+        $export->fill(['type' => ExportTypeEnum::TRANSLATION])->save();
+        $export->items->each(function ($item) use ($request, &$jobs) {
+            $jobs[] = new GenerateTranslations($request->offsetGet('languages'), $item);
+        });
 
         $batch = Bus::batch($jobs)
             ->then(function (Batch $batch) use ($export) {
-                $export->batch_id = null;
+                $export->job_batch_id = null;
                 $export->save();
             })
-            ->name('Export Compilation')
+            ->finally(function (Batch $batch) use ($export) {
+                if ($batch->cancelled()) {
+                    $export->items()->update([
+                        'translations' => null
+                    ]);
+                }
+            })
+            ->name('Translate Export Compilation')
             ->dispatch();
 
-        $export->batch_id = $batch->id;
+        $export->job_batch_id = $batch->id;
         $export->save();
 
         return [
@@ -149,12 +123,14 @@ class ExportController extends Controller
 
     public function showProgress(Request $request)
     {
-
-        $batch = CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get()->first();
-        $progress = $batch ? $batch->batch->total_jobs > 0 ? round(($batch->batch->processedJobs() / $batch->batch->total_jobs) * 100) : 0 : 100;
+        $export = $request->user()->currentCollection->exports()->active()->first();
 
         return [
-            'progress' => $progress
+            'data' => [
+                'progress' => !empty($export->batch) ? $export->batch->progress() : 100,
+                'finished' => !empty($export->batch) ? $export->batch->finished() : true,
+                'type' => !empty($export->type) ? $export->type : null,
+            ],
         ];
     }
 
@@ -166,7 +142,6 @@ class ExportController extends Controller
             if ($batch) {
                 $batch->cancel();
             }
-            CompilationExport::where('batch_id', $batchId)->delete();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), [
                 'file' => $exception->getFile(),
@@ -174,72 +149,31 @@ class ExportController extends Controller
             ]);
         }
 
-        return Redirect::route('export.index')->with([
-            'exports' => ExportResource::collection(CompilationExport::history()->where('team_id', $request->user()->current_team_id)->paginate(10)),
-            'activeExports' => ExportResource::collection(CompilationExport::active()->where('team_id', $request->user()->current_team_id)->get())->collection,
+        return response()->json([
+            'data' => [
+                'exportType' => Export::where('job_batch_id', $batchId)->first()?->type
+            ]
         ]);
     }
 
-    public function pagination(Request $request)
+    public function download(Request $request, Export $export)
     {
-        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
-
-        $data = (new ExportRequest)->rules($request['id'], $imports);
-        $extractedData = [];
-        foreach ($data as $subArray) {
-            foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, $request['page'] * 3, 3);
-            }
-        }
-        return [
-            'export' => $extractedData,
-        ];
-    }
-
-    public function getExport(Request $request)
-    {
-        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
-
-        $data = (new ExportRequest)->rules($request['id'], $imports);
-        $extractedData = [];
-        foreach ($data as $subArray) {
-            foreach ($subArray as $key => $messages) {
-                $extractedData[$key] = array_slice($messages, 0, 5);
-            }
-        }
-
-        return [
-            'export' => $extractedData,
-            'count' => count($data[0][array_keys($data[0])[0]])
-        ];
-    }
-
-    public function download(Request $request)
-    {
-        $imports = DB::table('collection_items')->where('collection_id', $request->user()->currentCollection->id)->get();
-        if($request['format'] === '.xml')
-        {
-            $data = (new JSONRequest)->rules($request['id'], $imports);
+        if ($request['format'] === '.xml') {
+            $data = (new JSONRequest)->rules($export);
             $xmlData = XmlHelper::arrayToXml($data);
 
             return response($xmlData);
-        }
-        else if($request['format'] === '.json')
-        {
-            $data = (new JSONRequest)->rules($request['id'], $imports);
+        } else if ($request['format'] === '.json') {
+            $data = (new JSONRequest)->rules($export);
 
             return response(json_encode($data, JSON_PRETTY_PRINT));
-        }
-        else if($request['format'] === '.csv')
-        {
-            $data = (new JSONRequest)->rules($request['id'], $imports);
+        } else if ($request['format'] === '.csv') {
+            $data = (new JSONRequest)->rules($export);
             $refactor = (new CSVRequest)->rules($data);
 
             return response($refactor);
-        }
-        else if($request['format'] === '.xlsx' || $request['format'] === '.xls')
-        {
-            $data = (new JSONRequest)->rules($request['id'], $imports);
+        } else if ($request['format'] === '.xlsx' || $request['format'] === '.xls') {
+            $data = (new JSONRequest)->rules($export);
             $refactor = (new XLSXRequest)->convertJsonToXlsx($data);
 
             return response()->download($refactor);

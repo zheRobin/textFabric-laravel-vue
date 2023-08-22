@@ -8,8 +8,7 @@ use Modules\OpenAI\Actions\BuildPrompt;
 use Modules\Export\Contracts\BuildsPrompt;
 use Modules\Export\Actions\CompleteCollectionItem;
 use Modules\Export\Contracts\CompletesCollectionItem;
-use Illuminate\Queue\Events\JobProcessed;
-use Modules\Export\Listeners\AfterJobProcessedListener;
+
 class ExportProvider extends ServiceProvider
 {
 
@@ -36,6 +35,7 @@ class ExportProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRoutes();
+        $this->registerMigrations();
     }
 
     /**
@@ -47,5 +47,13 @@ class ExportProvider extends ServiceProvider
             ->group(function () {
                 $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
             });
+    }
+
+    /**
+     * Configure publishing.
+     */
+    protected function registerMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 }

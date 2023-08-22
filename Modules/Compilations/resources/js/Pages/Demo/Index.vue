@@ -35,13 +35,13 @@ const compilationOptions = () => {
             <div class="flex border-b border-gray-200 pb-8 items-center">
                 <div class="items-center flex flex-1">
                     <label class="mr-2 font-medium dark:text-white">{{$t('Compilations')}}:</label>
-                    <SelectMenu class="w-60" v-model="selectedCompilation" :options="compilationOptions()" placeholder="Select" />
+                    <SelectMenu class="w-60" v-model="selectedCompilation" :options="compilationOptions()" :placeholder="$t('Select')" />
                 </div>
             </div>
 
             <div v-if="!selectedCompilation" class="text-center mt-5 text-gray-700">
                 <span>
-                    Select or create a new compilation...
+                    {{ $t('Select or create a new compilation...') }}
                 </span>
             </div>
 

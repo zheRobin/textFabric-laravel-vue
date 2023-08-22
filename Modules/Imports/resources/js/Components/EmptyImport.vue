@@ -6,8 +6,8 @@ import { DocumentPlusIcon } from '@heroicons/vue/20/solid';
 </script>
 
 <template>
-    <EmptyState :title="$t('collection-items.empty.title')"
-                :description="$t('collection-items.empty.description')"
+    <EmptyState :title="$t('No imported data')"
+                :description="$t('Get started by importing a data.')"
     >
         <template #icon>
             <DocumentPlusIcon />

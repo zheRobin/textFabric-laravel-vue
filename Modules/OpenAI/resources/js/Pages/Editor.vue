@@ -85,7 +85,7 @@ const presetOptions = () => {
     const presets = [];
 
     props.presets.forEach((el) => {
-        presets.push({value: el.id,label: el.name});
+        presets.push({value: el.id,label: el.name + ' - ID:' + el.id});
     })
 
     return presets;

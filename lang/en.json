@@ -257,5 +257,17 @@
     "Main App Logo": "Main App Logo",
     "Update the main logo.": "Update the main logo.",
     "Select A New Logo": "Select A New Logo",
-    "Select or create a new preset...": "Select or create a new preset..."
+    "Select or create a new preset...": "Select or create a new preset...",
+
+    "Select or create a new compilation...": "Select or create a new compilation...",
+    "Enable Team": "Enable Team",
+    "Disable Team": "Disable Team",
+    "Enable this team.": "Enable this team.",
+    "Disable this team.": "Disable this team.",
+    "Once a team is enabled, all of its resources and data will be enabled also. Access will be granted again.": "Once a team is enabled, all of its resources and data will be enabled also. Access will be granted again.",
+    "Once a team is disabled, all of its resources and data will be disabled also. Access will be restricted.": "Once a team is disabled, all of its resources and data will be disabled also. Access will be restricted.",
+    "Changed.": "Changed.",
+
+    "No imported data": "No imported data",
+    "Get started by importing a data.": "Get started by importing a data."
 }

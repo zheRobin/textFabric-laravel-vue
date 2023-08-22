@@ -10,6 +10,7 @@ use Modules\Collections\Models\Collection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Jetstream\Enums\AppSettingEnum;
 use Modules\Jetstream\Services\AppSettings;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 
 class HandleInertiaRequests extends Middleware
 {

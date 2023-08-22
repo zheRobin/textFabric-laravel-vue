@@ -9,6 +9,7 @@ import DarggableList from "Modules/Compilations/resources/js/Components/Darggabl
 const props = defineProps({
     presets: Array,
     previewItem: Object,
+    previewItemLength: Number,
     complications: Array,
     languages: Array,
     hasItems: Boolean,
@@ -57,7 +58,7 @@ const selectedPresetData = async (data) => {
                             <div class="dark:text-gray-400">Select or create a new compilation</div>
                         </div>
                         <div class="flex gap-10" v-else>
-                            <DarggableList :canEdit="permissions.canManageCompilations" :presets="presets" :previewItem="previewItem" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
+                            <DarggableList :canEdit="permissions.canManageCompilations" :presets="presets" :previewItem="previewItem" :previewItemLength="previewItemLength" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
                         </div>
                     </template>
                 </div>

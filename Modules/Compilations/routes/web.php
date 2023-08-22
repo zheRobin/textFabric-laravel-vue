@@ -20,6 +20,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
             Route::patch('/compilations/store', [CompilationsController::class, 'store'])->name('compilations.store');
 
             Route::delete('/compilations/delete', [CompilationsController::class, 'delete'])->name('compilations.delete');
+            Route::get('/compilations/get-item/{id}', [CompilationsController::class, 'getItem'])->name('compilations.get-item');
     });
 
     Route::middleware(['guest'])->group(function () {

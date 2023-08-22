@@ -9,7 +9,6 @@ import {getActiveLanguage} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 
-const selectedCompilation = ref(null);
 
 const compilationOptions = () => {
     return [
@@ -19,6 +18,7 @@ const compilationOptions = () => {
         }
     ];
 }
+const selectedCompilation = ref(compilationOptions()[0].value);
 </script>
 
 <template>
@@ -46,7 +46,7 @@ const compilationOptions = () => {
             </div>
 
             <div class="flex gap-10" v-if="selectedCompilation">
-                <DraggableList :canEdit="true" :presets="presets" />
+                <DraggableList :canEdit="true" :presets="presets" :demo="true" />
             </div>
         </DashboardPanel>
     </GuestLayout>

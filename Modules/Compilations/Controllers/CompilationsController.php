@@ -19,7 +19,8 @@ class CompilationsController extends Controller
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection?->presets,
-            'previewItem' => $request->user()->currentCollection?->items()->get(),
+            'previewItem' => $request->user()->currentCollection?->items()->get()[0],
+            'previewItemLength' => count($request->user()->currentCollection?->items()->get()),
             'complications' => $compilations,
             'languages' => Language::all(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
@@ -27,6 +28,13 @@ class CompilationsController extends Controller
                 'canManageCompilations' => Gate::check('manage', Compilations::class)
             ]
         ]);
+    }
+
+    public function getItem(Request $request): array
+    {
+        return [
+            'item' => $request->user()->currentCollection?->items()->get()[(int)$request['id']]
+        ];
     }
 
     public function store(Request $request)

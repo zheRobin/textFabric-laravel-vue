@@ -15,9 +15,7 @@ setupItems();
 
 const presets = getPresets(getActiveLanguage());
 
-const availablePresets = ref(presets);
 
-const presetsToComplete = ref([]);
 
 const currentPage = ref(0);
 
@@ -54,7 +52,11 @@ const previousButtonDisabled = computed(() => {
 
 const props = defineProps({
     canEdit: Boolean,
+    demo: Boolean
 });
+
+const availablePresets = ref(props.demo ? null : presets);
+const presetsToComplete = ref(props.demo ? presets : []);
 
 function deleteItemById(array, id) {
     const index = array.findIndex(item => item.slug === id);

@@ -10,16 +10,18 @@ const emit = defineEmits(['idItemsPage']);
 const props = defineProps({
     presets: Array,
     previewItem: Object,
+    previewItemLength: Number,
     compilation: Object,
     languages: Array,
     canEdit: Boolean,
 });
 console.log(props, 'props')
-const {presets, previewItem, compilation} = props;
+const {presets, previewItem, compilation, previewItemLength} = props;
 const loading = ref(false);
 const idItems = ref(0);
-const activeItem = ref(previewItem[idItems.value]);
-const lastElementNumber = previewItem.length;
+const activeItem = ref(previewItem);
+
+const lastElementNumber = previewItemLength;
 
 const form = useForm({
     id: props.compilation.id,
@@ -46,17 +48,21 @@ console.log(items.value, 'itemsRight')
 const generatedText = ref();
 
 const nextPrevElements = (item) => {
-    if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
+    if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
         loading.value = true;
 
         setTimeout(() => {
-            if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItem.length - 1) {
+            if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1) {
                 idItems.value += 1;
-                activeItem.value = previewItem[idItems.value];
+                axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
+                    activeItem.value = res.data.item;
+                })
                 loading.value = false;
             } else if (itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
                 idItems.value -= 1;
-                activeItem.value = previewItem[idItems.value];
+                axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
+                    activeItem.value = res.data.item;
+                })
                 loading.value = false;
             }
             loading.value = false;

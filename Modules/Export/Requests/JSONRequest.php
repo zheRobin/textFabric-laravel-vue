@@ -2,50 +2,18 @@
 
 namespace Modules\Export\Requests;
 
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Export\Models\CompilationExport;
+use Modules\Export\Models\Export;
+use Modules\Export\Models\ExportCollectionItem;
 
 class JSONRequest extends FormRequest
 {
-
-    public function rules($id, $imports)
+    public function rules(Export $export)
     {
-        $export = CompilationExport::get()->where('id', $id)->first()->data;
+        $export->load('items');
 
-        $result = array();
-
-        foreach ($export as $key => $item){
-            foreach ($item as $lang => $value){
-                foreach ($value as $newValueKey => $newValue){
-                    $result[$lang . '_' . $newValueKey][] = $value[$newValueKey];
-                }
-            }
-        }
-
-//        dd($result);
-//        foreach ($export as $key => $item){
-//            foreach ($item as $lang => $value){
-//                $result[$key . '_' . $lang] = $value;
-////                dd($value);
-//            }
-//        }
-
-        $output = [];
-        foreach ($result as $key => $values) {
-            foreach ($values as $index => $content) {
-                $output[$index][str_replace('_def', '', $key)] = $content;
-            }
-        }
-
-        $import = array();
-        foreach ($imports as $index => $item){
-            foreach (json_decode($item->data) as $key => $value){
-                $import[$index][$value->header] = $value->value;
-            }
-            $import[$index] = [...$import[$index], ...$output[$index]];
-        }
-
-        return $import;
+        return $export->items->map(function (ExportCollectionItem $item) {
+            return $item->dataToExport();
+        })->toArray();
     }
 }

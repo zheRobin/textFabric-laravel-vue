@@ -117,4 +117,17 @@ trait HasCell
     {
         return "{$this->collection->importFileDirectory()}/images";
     }
+
+    /**
+     * @return array
+     */
+    public function getCells(): array
+    {
+        return array_map(function ($cell) {
+            return [
+                'header' => $cell['header'],
+                'value' => $cell['value'] ?? null,
+            ];
+        }, $this->data);
+    }
 }

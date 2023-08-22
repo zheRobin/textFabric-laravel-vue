@@ -34,27 +34,27 @@ const updateTeam = () => {
 <template>
     <ActionSection>
         <template #title>
-            {{ $t('actionSection.' + (team.disabled ? 'enableTitle' : 'disableTitle')) }}
+            {{ team.disabled ? $t('Enable Team') : $t('Disable Team') }}
         </template>
 
         <template #description>
-            {{ $t('actionSection.' + (team.disabled ? 'enableDescription' : 'disableDescription')) }}
+            {{ $t(team.disabled ? 'Enable this team.' : 'Disable this team.') }}
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
-                {{ $t('actionSection.' + (team.disabled ? 'enableContent' : 'disableContent')) }}
+                {{ $t(team.disabled ? 'Once a team is enabled, all of its resources and data will be enabled also. Access will be granted again.' : 'Once a team is disabled, all of its resources and data will be disabled also. Access will be restricted.') }}
             </div>
 
             <div class="mt-5 flex items-center">
                 <PrimaryButton v-if="team.disabled" @click="enableTeam" class="px-4">
-                    {{ $t('actionSection.enableButton') }}
+                    {{ $t('Enable Team') }}
                 </PrimaryButton>
                 <DangerSecondaryButton v-else @click="disableTeam" class="px-4">
-                    {{ $t('actionSection.disableButton') }}
+                    {{ $t('Disable Team') }}
                 </DangerSecondaryButton>
                 <ActionMessage :on="form.recentlySuccessful" class="ml-3">
-                    {{ $t('actionSection.changedMessage') }}
+                    {{ $t('Changed.') }}
                 </ActionMessage>
             </div>
         </template>

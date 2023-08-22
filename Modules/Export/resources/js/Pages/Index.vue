@@ -7,46 +7,52 @@ import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import DialogModal from "Jetstream/Components/DialogModal.vue";
 import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
-import CollectionDataTable from "Modules/Export/resources/js/Components/CollectionDataTable.vue";
 import axios from "axios";
 import {notify} from "notiwind";
-import { ref, watch } from "vue"
+import { ref } from "vue"
 import {useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
-import Pagination from "Modules/Jetstream/resources/js/Components/Pagination.vue";
-import {MinusCircleIcon, EyeIcon} from "@heroicons/vue/20/solid";
+import Pagination from "Jetstream/Components/Pagination.vue";
+import {MinusCircleIcon} from "@heroicons/vue/20/solid";
+import {DocumentTextIcon, DocumentArrowDownIcon} from "@heroicons/vue/24/outline";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
+import ExportDataTable from "Modules/Export/resources/js/Components/ExportDataTable.vue";
 
 const props = defineProps({
     languages: Array,
-    complications: Array,
-    exports: Array,
-    exportCount: Number,
+    compilations: Array,
     active: Array,
     hasItems: Boolean,
-    activeExports: Array,
+    activeExport: Object,
     items: Object
 });
+
+const translationType = 'translation';
+const compilationType = 'compilation';
 
 const activeLanguages = ref([]);
 const activeModal = ref(false);
 const selectedCompilations = ref(null);
+const cancelling = ref(false);
 
-const dataLabel = props.complications.map(item => {
+const dataLabel = props.compilations.map(item => {
     return {
         value: item.id,
         label: item.name
     }
 });
+
 let data = {
     value: 0,
     label: ''
 };
+
 const activeGenerations = ref(data);
 const loading = ref(false);
+
 const form = useForm({
     id: null,
     compilations: null,
@@ -55,16 +61,16 @@ const form = useForm({
 })
 
 const searchQuery = ref("");
-const progress = ref(0);
+const progress = ref(false);
 const page = usePage();
-const exports = ref(props.exports);
+const exports = ref(null);
 
 async function fetchProgress() {
     try {
         const response = await axios.get('/get-progress');
         progress.value = response.data.progress;
     } catch (error) {
-        console.error('Error fetching progress:', error);
+        // console.error('Error fetching progress:', error);
     }
 }
 
@@ -73,51 +79,55 @@ const generateActive = ref(false);
 let progressInterval;
 const showProgress = (id) => {
     clearInterval(progressInterval);
-    if(localStorage.getItem('selected_queue_translation'))(
+    if (localStorage.getItem('selected_queue_translation')) {
         activeGenerations.value = {
             label: localStorage.getItem('selected_queue_translation')
         }
-    )
-    // Clear the previous interval if it exists
+    }
+
     generateActive.value = true;
+    progressInterval = setInterval(() => {
+        if (id) {
+            axios.get(route('export.showProgress')).then((res) => {
+                progress.value = res.data.data.progress;
 
-        // Set a new interval
-        progressInterval = setInterval(() => {
-            if(id){
-                axios.get(route('export.showProgress')).then((res) => {
-                    progress.value = res.data.progress;
-                    if (progress.value === 100) {
-                        generateActive.value = false;
-                        generationDone();
-                        notify({
-                            group: 'success',
-                            title: 'Success',
-                            text: 'Success!',
-                        }, 4000);
-                        clearInterval(progressInterval);
-                        progress.value = 0;
+                if (res.data.data.finished) {
+                    cancelling.value = true;
+                }
+
+                if (progress.value === 100) {
+                    generateActive.value = false;
+                    cancelling.value = false;
+                    generationDone();
+                    notify({
+                        group: 'success',
+                        title: 'Success!',
+                        text: 'The compilation was generated successfully!',
+                    }, 4000);
+                    clearInterval(progressInterval);
+                    progress.value = 0;
+                }
+                if (localStorage.getItem('selected_queue')) {
+                    activeGenerations.value = dataLabel.find(
+                        (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
+                    );
+                } else if (localStorage.getItem('selected_queue_translation')) (
+                    activeGenerations.value = {
+                        label: localStorage.getItem('selected_queue_translation')
                     }
-                    if(localStorage.getItem('selected_queue')){
-                        activeGenerations.value = dataLabel.find(
-                            (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
-                        );
-                    }else if(localStorage.getItem('selected_queue_translation'))(
-                        activeGenerations.value = {
-                            label: localStorage.getItem('selected_queue_translation')
-                        }
-                    )
-                });
-            }else{
-                clearInterval(progressInterval);
-            }
-        }, 2000);
-
-
+                )
+            });
+        } else {
+            clearInterval(progressInterval);
+        }
+    }, 2000);
 }
 
-if(props.activeExports.length > 0){
-    if(props.activeExports.length > 0){
-        showProgress(props.activeExports[0].batch_id);
+if (props.activeExport &&
+    props.activeExport.batch) {
+    if (!(props.activeExport.type === compilationType &&
+        props.activeExport.batch.cancelled_at)) {
+        showProgress(props.activeExport.job_batch_id);
     }
 }
 
@@ -127,20 +137,21 @@ const generate = async () => {
     if (!loading.value) {
         if (selectedCompilations.value) {
             loading.value = true;
-            axios.post(route('export.generate'), {compilations: form.compilations}).then((res) => {
-                console.log(res)
-                activeQueue.value = res.data.id_queue;
-                progress.value = 0;
-                activeGenerations.value = dataLabel.find(
-                    (item) => item.value === selectedCompilations.value
-                );
-                localStorage.setItem('id_queue', res.data.id_queue);
-                localStorage.setItem('selected_queue', selectedCompilations.value);
-                showProgress(activeQueue.value);
+            axios.post(route('export.generate', form.compilations))
+                .then((res) => {
+                    activeQueue.value = res.data.id_queue;
+                    progress.value = 0;
+                    activeGenerations.value = dataLabel.find(
+                        (item) => item.value === selectedCompilations.value
+                    );
+                    localStorage.setItem('id_queue', res.data.id_queue);
+                    localStorage.setItem('selected_queue', selectedCompilations.value);
+                    showProgress(activeQueue.value);
             });
         }
     }
 };
+
 const changePreset = (value) => {
     localStorage.setItem('selectedCompilations', value)
     selectedCompilations.value = value;
@@ -166,12 +177,14 @@ const showModalDelete = (id) => {
 
 const deleteExport = () => {
     confirmingExportDeletion.value = true;
-    axios.post(route('export.delete'), {id: form.id}).then((res) => {
+    axios.post(route('export.delete', form.id)).then((res) => {
         activeGenerations.value = null;
         loading.value = false;
         confirmingExportDeletion.value = false;
         form.id = null;
         exports.value = res.data;
+
+        search();
 
         notify({
             group: "success",
@@ -181,8 +194,11 @@ const deleteExport = () => {
     });
 }
 const translation = () => {
-    axios.post(route('export.translation'), {id: form.id, value: form.value, languages: form.languages}).then((res) => {
-        // activeGenerations.value = null;
+    axios.post(route('export.translation', form.id), {
+        value: form.value,
+        languages: form.languages,
+    }).then((res) => {
+        search();
         loading.value = false;
         activeModal.value = false;
         activeQueue.value = res.data.id_queue;
@@ -190,8 +206,8 @@ const translation = () => {
         localStorage.setItem('selected_queue_translation', form.name);
         progress.value = 0;
         showProgress(activeQueue.value);
-
     });
+
     progress.value = 0;
     localStorage.setItem('progress', 0);
     generateActive.value = true;
@@ -210,12 +226,11 @@ const download = () => {
         }
     };
 
-    axios.post(route('export.download'), {id: form.id, format: selectedDownloadFormat.value}, config)
+    axios.post(route('export.download', form.id), {format: selectedDownloadFormat.value}, config)
         .then(response => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            console.log(activeDownloadName.value);
             if (selectedDownloadFormat.value === '.xml') {
                 link.setAttribute('download', `${activeDownloadName.value}.xml`);
             } else if (selectedDownloadFormat.value === '.json') {
@@ -233,7 +248,7 @@ const download = () => {
             activeDownloadModal.value = false;
         })
         .catch(error => {
-            console.log(error);
+            // console.log(error);
         });
 }
 
@@ -263,9 +278,11 @@ const activeViewJson = ref(null);
 const showViewModal = (item) => {
     form.value = null;
     form.id = item.id;
-    axios.get(`/export/getExport/${item.id}`).then((res) => {
-        activeViewJson.value = res.data.export;
-        countViewPages.value = res.data.count;
+
+    axios.get(route('export.items.index', item), {}).then((response) => {
+        const item = response.data.data;
+
+        activeViewJson.value = item;
         activeViewModal.value = true;
     });
 }
@@ -297,24 +314,25 @@ const search = (event) => {
     axios
         .post(route('export.search'), {query: searchQuery.value})
         .then((response) => {
-            exports.value = response.data;
+            exports.value = response.data.data;
         })
         .catch((error) => {
-            console.error(error);
+            // console.error(error);
         });
 }
 
 const cancelQueue = () => {
     const id = localStorage.getItem('id_queue');
     axios.get(`/export/cancel/${id}`).then((res) => {
-        generationDone();
-        clearInterval(progressInterval);
+        if (translationType !== res.data.data.exportType) {
+            generationDone();
+            clearInterval(progressInterval);
+        }
     })
 }
 
 const generationDone = (data) => {
     loading.value = false;
-    form.compilations = null;
     activeGenerations.value = null;
     searchQuery.value = '';
     search();
@@ -324,11 +342,12 @@ const generationDone = (data) => {
     generateActive.value = false;
     progress.value = 0;
 }
+
+search();
 </script>
 
 <template>
     <AppLayout title="Export">
-
         <template #header>
             <div class="flex">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -341,11 +360,12 @@ const generationDone = (data) => {
                 <EmptyCollection class="mx-auto px-6 py-6" v-if="!$page.props.auth.user.current_collection" />
 
                 <EmptyImport class="mx-auto px-6 py-6" v-else-if="!hasItems" />
+
                 <div v-else class="mx-auto px-6 py-6">
                     <div class="flex border-b border-gray-200 pb-8 items-center">
-                        <label class="mr-2 mt-1 font-medium dark:text-white">{{$t('Compilation')}}:</label>
+                        <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                         <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
-                        <PrimaryButton v-if="!generateActive" class="ml-2 gap-x-1.5" @click="generate">
+                        <PrimaryButton v-if="!generateActive && selectedCompilations" class="ml-2 gap-x-1.5" @click="generate">
                             {{ $t('Generate') }}
                         </PrimaryButton>
                     </div>
@@ -353,10 +373,18 @@ const generationDone = (data) => {
                         <div class="border-b border-gray-200 pb-8 mb-8">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('Currently running compilations')}}</h2>
                             <div class="flex justify-between mt-6" v-if="generateActive">
-                                <div class="my-3">{{activeGenerations.label}}</div>
+                                <div class="my-3 font-medium text-sm items-center flex">
+                                    <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                    {{activeGenerations.label}}
+                                    {{'...'}}
+                                </div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">
-                                        <span class="text-xs font-medium text-gray-500">{{ $t('Loading') }}... {{progress}} %</span>
+                                        <span class="text-xs font-medium text-gray-500">
+                                            {{ cancelling ? $t('Cancelling') : $t('Loading') }}
+                                            {{ '...' }}
+                                            {{ progress ? `${progress} %` : '' }}
+                                        </span>
                                     </div>
                                     <div class="mt-2">
                                         <SecondaryButton @click="cancelQueue" class="ml-3">
@@ -365,22 +393,26 @@ const generationDone = (data) => {
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="mt-6 text-center">{{$t('Nothing is being generated now')}}</div>
+                            <div v-else class="text-center mt-6 text-gray-700">{{$t('Nothing is being generated now')}}</div>
                         </div>
                         <div class="flex justify-between">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of created compilations')}}</h2>
                             <div>
                                 <div class="relative mt-2 flex items-center">
-                                    <input type="text" @keyup="search" v-model="searchQuery" name="search" :placeholder="$t('Search')" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input type="text" @keyup="search" v-model="searchQuery" name="search" :placeholder="`${$t('Search')}...`" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                         </div>
-                        <div v-if="exports.data.length>0">
+                        <div v-if="exports">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
-                                <li v-for="item in exports.data" class="flex justify-between gap-x-6 py-5">
+                                <li v-for="item in exports.data" class="flex justify-between flex items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">
                                         <div class="min-w-0 flex-auto">
-                                            <p class="text-sm font-semibold leading-6 text-gray-900">{{ item.name }}</p>
+                                            <div class="flex items-center text-sm font-semibold leading-6 text-gray-900">
+                                                <DocumentTextIcon class="mr-1 w-5" />
+                                                {{ item.name }}
+                                            </div>
+
                                         </div>
                                     </div>
                                     <div class="hidden sm:flex sm:flex-col sm:items-end">
@@ -390,18 +422,20 @@ const generationDone = (data) => {
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path d="M6 3a3 3 0 00-3 3v1.5a.75.75 0 001.5 0V6A1.5 1.5 0 016 4.5h1.5a.75.75 0 000-1.5H6zM16.5 3a.75.75 0 000 1.5H18A1.5 1.5 0 0119.5 6v1.5a.75.75 0 001.5 0V6a3 3 0 00-3-3h-1.5zM12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zM4.5 16.5a.75.75 0 00-1.5 0V18a3 3 0 003 3h1.5a.75.75 0 000-1.5H6A1.5 1.5 0 014.5 18v-1.5zM21 16.5a.75.75 0 00-1.5 0V18a1.5 1.5 0 01-1.5 1.5h-1.5a.75.75 0 000 1.5H18a3 3 0 003-3v-1.5z" />
                                                 </svg>
-
                                             </PrimaryButton>
-                                            <PrimaryButton @click="showModal(item.id, item.data, item.name)" class="ml-2 gap-x-1.5">
+
+                                            <PrimaryButton :disabled="generateActive" @click="showModal(item.id, item.data, item.name)" class="ml-2 gap-x-1.5">
                                                 {{$t('Translation')}}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                     <path fill-rule="evenodd" d="M9 2.25a.75.75 0 01.75.75v1.506a49.38 49.38 0 015.343.371.75.75 0 11-.186 1.489c-.66-.083-1.323-.151-1.99-.206a18.67 18.67 0 01-2.969 6.323c.317.384.65.753.998 1.107a.75.75 0 11-1.07 1.052A18.902 18.902 0 019 13.687a18.823 18.823 0 01-5.656 4.482.75.75 0 11-.688-1.333 17.323 17.323 0 005.396-4.353A18.72 18.72 0 015.89 8.598a.75.75 0 011.388-.568A17.21 17.21 0 009 11.224a17.17 17.17 0 002.391-5.165 48.038 48.038 0 00-8.298.307.75.75 0 01-.186-1.489 49.159 49.159 0 015.343-.371V3A.75.75 0 019 2.25zM15.75 9a.75.75 0 01.68.433l5.25 11.25a.75.75 0 01-1.36.634l-1.198-2.567h-6.744l-1.198 2.567a.75.75 0 01-1.36-.634l5.25-11.25A.75.75 0 0115.75 9zm-2.672 8.25h5.344l-2.672-5.726-2.672 5.726z" clip-rule="evenodd" />
                                                 </svg>
                                             </PrimaryButton>
+
                                             <PrimaryButton @click="showDownloadModal(item.id, item.name)" class="ml-2 gap-x-1.5">
                                                 {{ $t('Download') }}
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4" id="download"><path fill="white" d="M21,14a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V15a1,1,0,0,0-2,0v4a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V15A1,1,0,0,0,21,14Zm-9.71,1.71a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l4-4a1,1,0,0,0-1.42-1.42L13,12.59V3a1,1,0,0,0-2,0v9.59l-2.29-2.3a1,1,0,1,0-1.42,1.42Z"></path></svg>
                                             </PrimaryButton>
+
                                             <DangerButton @click="showModalDelete(item.id)" class="ml-2 gap-x-1.5">
                                                 {{ $t('Delete') }}
                                                 <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
@@ -410,9 +444,11 @@ const generationDone = (data) => {
                                     </div>
                                 </li>
                             </ul>
+
                             <Pagination :links="exports.links" />
                         </div>
-                        <div v-else class="mt-6 text-center">{{$t('Not found')}}</div>
+
+                        <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
                     </div>
                 </div>
             </div>
@@ -448,6 +484,7 @@ const generationDone = (data) => {
                 </SecondaryButton>
             </template>
         </DialogModal>
+
         <DialogModal :show="activeDownloadModal" @close="closeDownloadModal">
             <template #title>
                 {{$t('Download')}}
@@ -469,13 +506,14 @@ const generationDone = (data) => {
                 </SecondaryButton>
             </template>
         </DialogModal>
+
         <ApiModal :show="activeViewModal" @close="closeViewModal">
             <template #title>
                 {{$t('View')}}
             </template>
 
             <template #content>
-                <CollectionDataTable :items="activeViewJson" :count="countViewPages" :idPage="form.id" :headers="$page.props.auth.user.current_collection.headers" :itemsPagination="props.items" class="" />
+                <ExportDataTable :items="activeViewJson" :count="countViewPages" :idPage="form.id" :headers="$page.props.auth.user.current_collection.headers" />
             </template>
 
             <template #footer>

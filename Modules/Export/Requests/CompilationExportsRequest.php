@@ -3,7 +3,6 @@
 namespace Modules\Export\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Export\Models\Exports;
 
 class CompilationExportsRequest extends FormRequest
 {

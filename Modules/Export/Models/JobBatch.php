@@ -11,7 +11,6 @@ class JobBatch extends Model
 
     protected $keyType = 'string';
 
-
     public function processedJobs(): int
     {
         return $this->total_jobs - $this->pending_jobs;
@@ -20,5 +19,10 @@ class JobBatch extends Model
     public function progress(): int
     {
         return $this->total_jobs > 0 ? round(($this->processedJobs() / $this->total_jobs) * 100) : 0;
+    }
+
+    public function finished(): bool
+    {
+        return ! is_null($this->finished_at);
     }
 }

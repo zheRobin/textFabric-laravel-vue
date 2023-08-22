@@ -16,10 +16,14 @@ class RestApiController extends Controller
     {
         $completer = app(CompletesCollectionItem::class);
 
+        if(!isset($preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first()->name)){
+            return 'Such a preset does not exist';
+        }
+
         $response = $completer->complete(
             $request->user(),
-            $preset->get()->where('id', $request['preset-id'])->first(),
-            $item->get()->first(),
+            $preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first(),
+            $item->get()->where('collection_id', $request->user()->currentCollection->id)->first(),
             $request['translate-target-list'],
             $request['source-list']
         );

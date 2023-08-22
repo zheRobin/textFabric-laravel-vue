@@ -22,11 +22,10 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
         $promptService = app(PromptService::class);
         $promptData = $promptService->getData($collectionItem);
-
         // translate input
         if ($preset->translateInput()) {
             $arrayTranslator = app(TranslatesData::class);
-            $promptData = $arrayTranslator->translate($promptData, $preset->inputLanguage);
+            $promptData = $arrayTranslator->translate($promptData, 6);
         }
 
         // build prompt
@@ -39,17 +38,14 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
         $params = $preset->getChatParams($systemMessage, $userMessage);
         $completion = OpenAI::chat()->create($params);
-
         $formattedResponse = $this->formatResponse($completion);
-        $result = [];
-        // translate output
-        if ($preset->translateOutput()) {
-            $translator = app(Translator::class);
-            foreach ($translate as $lang) {
-                $translatedText = $translator->translateText($formattedResponse, null, $lang);
-                $result[$lang] = $translatedText->text;
-            }
 
+        $result = [];
+
+        $translator = app(Translator::class);
+        foreach ($translate as $lang) {
+            $translatedText = $translator->translateText($formattedResponse, null, $lang);
+            $result[$lang] = $translatedText->text;
         }
 
         return $result;

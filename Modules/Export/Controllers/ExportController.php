@@ -135,6 +135,7 @@ class ExportController extends Controller
             'data' => [
                 'progress' => !empty($export->batch) ? $export->batch->progress() : 100,
                 'finished' => !empty($export->batch) ? $export->batch->finished() : true,
+                'cancelled' => !empty($export->batch) ? $export->batch->cancelled() : false,
                 'type' => !empty($export->type) ? $export->type : null,
             ],
         ];

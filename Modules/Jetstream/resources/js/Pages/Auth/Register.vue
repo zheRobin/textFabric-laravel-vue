@@ -77,10 +77,14 @@ let currentComponent = shallowRef(PersonalInfoStep);
 let totalSteps = ref(steps.length);
 
 const nextStep = () => {
-    if (currentIndex.value + 1 === totalSteps.value) {
-        reCaptcha();
-    } else {
-        switchStep(currentIndex.value + 1);
+    if(currentIndex.value === 1 && !form.employees){
+        form.errors.employees = 'The employees field is required.';
+    }else{
+        if (currentIndex.value + 1 === totalSteps.value) {
+            reCaptcha();
+        } else {
+            switchStep(currentIndex.value + 1);
+        }
     }
 }
 

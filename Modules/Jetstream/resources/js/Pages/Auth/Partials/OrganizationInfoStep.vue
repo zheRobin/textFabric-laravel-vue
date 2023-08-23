@@ -28,8 +28,8 @@ const props = defineProps({
 
         <div class="space-y-1">
             <InputLabel for="employees" :value="$t('Employees')" />
-            <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" class="mt-2" />
-            <InputError class="mt-2" :message="form.errors.employees" />
+            <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" class="mt-2"/>
+            <InputError class="mt-2" :message="form.errors.employees"/>
         </div>
 
         <div class="space-y-1">

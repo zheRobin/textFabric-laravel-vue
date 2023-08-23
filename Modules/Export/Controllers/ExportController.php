@@ -24,7 +24,7 @@ class ExportController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Export::Index', [
-            'languages' => Language::get()->pluck('name', 'code'),
+            'languages' => Language::get()->where('target', '1')->pluck('name', 'code'),
             'compilations' => $request->user()->currentCollection->compilations ?? [],
             'activeExport' => $request->user()->currentCollection->exports()->active()->first(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),

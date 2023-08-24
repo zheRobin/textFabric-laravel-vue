@@ -62,12 +62,15 @@ class ExportController extends Controller
 
         $batch = Bus::batch($jobs)
             ->then(function (Batch $batch) use ($export) {
-                $export->job_batch_id = null;
-                $export->save();
+                //
             })
             ->finally(function (Batch $batch) use ($export) {
-                if ($batch->cancelled()) {
+                if ($batch->cancelled() || $batch->hasFailures()) {
                     $export->delete();
+                }
+                if ($batch->finished()) {
+                    $export->job_batch_id = null;
+                    $export->save();
                 }
             })
             ->name('Export Compilation')
@@ -100,14 +103,17 @@ class ExportController extends Controller
 
         $batch = Bus::batch($jobs)
             ->then(function (Batch $batch) use ($export) {
-                $export->job_batch_id = null;
-                $export->save();
+                //
             })
             ->finally(function (Batch $batch) use ($export) {
-                if ($batch->cancelled()) {
+                if ($batch->cancelled() || $batch->hasFailures()) {
                     $export->items()->update([
                         'translations' => null
                     ]);
+                }
+                if ($batch->finished()) {
+                    $export->job_batch_id = null;
+                    $export->save();
                 }
             })
             ->name('Translate Export Compilation')
@@ -129,6 +135,7 @@ class ExportController extends Controller
             'data' => [
                 'progress' => !empty($export->batch) ? $export->batch->progress() : 100,
                 'finished' => !empty($export->batch) ? $export->batch->finished() : true,
+                'cancelled' => !empty($export->batch) ? $export->batch->cancelled() : false,
                 'type' => !empty($export->type) ? $export->type : null,
             ],
         ];

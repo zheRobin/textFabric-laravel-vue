@@ -25,4 +25,9 @@ class JobBatch extends Model
     {
         return ! is_null($this->finished_at);
     }
+
+    public function cancelled(): bool
+    {
+        return ! is_null($this->cancelled_at);
+    }
 }

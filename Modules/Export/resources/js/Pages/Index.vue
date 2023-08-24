@@ -91,11 +91,11 @@ const showProgress = (id) => {
             axios.get(route('export.showProgress')).then((res) => {
                 progress.value = res.data.data.progress;
 
-                if (res.data.data.finished) {
+                if (res.data.data.cancelled) {
                     cancelling.value = true;
                 }
 
-                if (progress.value === 100) {
+                if (progress.value === 100 || res.data.data.finished) {
                     generateActive.value = false;
                     cancelling.value = false;
                     generationDone();
@@ -125,10 +125,7 @@ const showProgress = (id) => {
 
 if (props.activeExport &&
     props.activeExport.batch) {
-    if (!(props.activeExport.type === compilationType &&
-        props.activeExport.batch.cancelled_at)) {
-        showProgress(props.activeExport.job_batch_id);
-    }
+    showProgress(props.activeExport.job_batch_id);
 }
 
 const activeQueue = ref(null);

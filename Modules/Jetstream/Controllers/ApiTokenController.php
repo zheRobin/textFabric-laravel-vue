@@ -8,6 +8,7 @@ use Laravel\Jetstream\Jetstream;
 use Modules\RestApi\Requests\GenerateRequest;
 use Modules\RestApi\Requests\TranslateRequest;
 use App\Models\Dashboard;
+use Illuminate\Validation\Rule;
 class ApiTokenController extends Controller
 {
     /**
@@ -39,8 +40,17 @@ class ApiTokenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('personal_access_tokens', 'name')->where(function ($query) use ($request) {
+                return $query->where('tokenable_id', $request->user()->id);
+            })],
         ]);
+
+        // Перевірка на існуючий токен з таким ім'ям
+        foreach ($request->user()->tokens as $value){
+            if($value->name === $request->name){
+                // Обробка ситуації, коли ім'я вже використовується
+            }
+        }
 
         $token = $request->user()->createToken(
             $request->name,
@@ -51,6 +61,7 @@ class ApiTokenController extends Controller
             'token' => explode('|', $token->plainTextToken, 2)[1],
         ]);
     }
+
 
     /**
      * Update the given API token's permissions.

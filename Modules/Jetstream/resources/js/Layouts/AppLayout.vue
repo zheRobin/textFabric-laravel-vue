@@ -291,10 +291,38 @@ const logout = () => {
                             {{ $t('Import') }}
                         </ResponsiveNavLink>
                     </div>
+                    <div v-show="$page.props.auth.user.is_admin" class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('teams.index')" :active="route().current('teams.index')">
+                            {{$t('Teams')}}
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <NavLink :href="route('import.index')" :class="route().current('import.index') ? 'dark:text-white' : ''" :active="route().current('import.index')">
+                            {{$t('Import')}}
+                        </NavLink>
+                    </div>
 
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('teams.index')" :active="route().current('teams.index')">
-                            {{ $t('Teams') }}
+                        <ResponsiveNavLink :href="route('editor.index')" :active="route().current('editor.index')">
+                            {{$t('Editor')}}
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('compilations.index')" :class="route().current('compilations.index') ? 'dark:text-white' : ''" :active="route().current('compilations.index')">
+                            {{$t('Compilations')}}
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                            API
+                        </ResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('export.index')" :active="route().current('export.index')">
+                            {{$t('Export')}}
                         </ResponsiveNavLink>
                     </div>
 
@@ -318,10 +346,6 @@ const logout = () => {
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
                                 {{ $t('Profile') }}
-                            </ResponsiveNavLink>
-
-                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                {{ $t('API Tokens') }}
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink v-if="$page.props.auth.user.is_admin" :href="route('app.settings.index')" :active="route().current('app.settings.index')">

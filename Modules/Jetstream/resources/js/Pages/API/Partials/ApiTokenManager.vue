@@ -15,6 +15,7 @@ import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
+import {InformationCircleIcon} from "@heroicons/vue/24/outline";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 
@@ -34,13 +35,13 @@ const exampleRequest = {
         "text":"Text for translation",
         "translate-target-list": [
             "UK",
-            "en-US",
+            "EN-US",
             "FR"
         ]
     },
     translateResponse:{
         "UK": "Текст для перекладу",
-        "en-US": "Text for translation",
+        "EN-US": "Text for translation",
         "FR": "Texte à traduire"
     },
     generate: {
@@ -116,6 +117,7 @@ const documentation = id => {
     if(id === 1){
         documentsationSelect.value = props.apiDocumentations.generate;
         selectExampleRequest.value = exampleRequest.generate;
+        console.log(selectExampleRequest.value);
         responseExample.value = exampleRequest.generateResponse;
     }else{
         documentsationSelect.value = props.apiDocumentations.translate;
@@ -149,6 +151,7 @@ const deleteApiToken = () => {
         onSuccess: () => (apiTokenBeingDeleted.value = null),
     });
 };
+const test = {...props.apiDocumentations.generate};
 </script>
 
 <template>
@@ -261,7 +264,7 @@ const deleteApiToken = () => {
                         <div class="mt-2 flex" v-for="item in names">
                             <div>{{item.url}}</div>
                             <button @click="documentation(item.id)" class="w-5 inline-flex items-center justify-center">
-                                <svg class="MuiSvgIcon-root jss187" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                                <InformationCircleIcon />
                             </button>
                         </div>
                     </div>
@@ -299,11 +302,11 @@ const deleteApiToken = () => {
             </template>
 
             <template #content>
-                <vue-json-pretty class="mb-4" :data="{documentsationSelect}" />
+                <vue-json-pretty class="mb-4" :data="documentsationSelect" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example JSON</h3>
-                <vue-json-pretty class="mt-4 mb-4" :data="{selectExampleRequest}" />
+                <vue-json-pretty class="mt-4 mb-4" :data="selectExampleRequest" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example Response</h3>
-                <vue-json-pretty class="mt-4" :data="{responseExample}" />
+                <vue-json-pretty class="mt-4" :data="responseExample" />
             </template>
 
             <template #footer>

@@ -64,8 +64,10 @@ const props = defineProps({
     languages: Array,
 });
 
-console.log(props.activeItem, 'active')
-console.log(props.item.output_language_id)
+const stopGeneration = () => {
+    currentEventSource.value.close()
+}
+
 const refreshApi = async () => {
     currentEventSource.value.close()
     generatedContent.value = '';
@@ -77,7 +79,6 @@ const copy = () => {
     copyStatus.value = false;
     navigator.clipboard.writeText(generatedContent.value)
         .then(() => {
-            console.log('Text copied to clipboard!');
             copyStatus.value = true;
             setTimeout(() => {
                 copyStatus.value = false;

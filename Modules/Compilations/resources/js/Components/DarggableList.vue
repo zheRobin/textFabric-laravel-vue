@@ -45,7 +45,6 @@ const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
 console.log(items.value, 'itemsRight')
 
-const generatedText = ref();
 
 const nextPrevElements = (item) => {
     if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {

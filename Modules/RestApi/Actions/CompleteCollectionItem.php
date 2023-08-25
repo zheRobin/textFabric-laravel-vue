@@ -20,9 +20,11 @@ class CompleteCollectionItem implements CompletesCollectionItem
     {$systemMessage = $preset->system_prompt;
         $userMessage = $preset->user_prompt;
 
-        foreach ($sourceList as $key => $value) {
-            $systemMessage = str_replace($key, $value, $systemMessage);
-            $userMessage = str_replace($key, $value, $userMessage);
+        if($sourceList !== null){
+            foreach ($sourceList as $key => $value) {
+                $systemMessage = str_replace($key, $value, $systemMessage);
+                $userMessage = str_replace($key, $value, $userMessage);
+            }
         }
 
         $params = $preset->getChatParams($systemMessage, $userMessage);

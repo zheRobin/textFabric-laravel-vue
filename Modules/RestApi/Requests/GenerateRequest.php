@@ -13,17 +13,21 @@ class GenerateRequest extends FormRequest
         $langCodes = Language::where('target', 1)->pluck('code');
         return [
             "generate" => [
+                'headers'                 => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+                'method'                  => 'POST',
                 'preset-id'               => ['required', 'numeric', 'exists:presets,id'],
                 'source-list'             => ["user_prompt" => ["@name" => "string"], "system_prompt" => ["@name" => "string"] ],
-                'translate-target-list'   => ['required', 'array'],
+                'translate-target-list'   => ['array'],
                 'translate-target-list.*' => [
                     (string) Rule::in($langCodes),
                 ],
             ],
             "translate" => [
-                'text' => ['required', 'string'],
-                'translate-target-list'   => ['required', 'array'],
-                'translate-target-list.*' => [
+                'headers'                  => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+                'method'                   => 'POST',
+                'text'                     => ['required', 'string'],
+                'translate-target-list'    => ['required', 'array'],
+                'translate-target-list.*'  => [
                     (string) Rule::in($langCodes),
                     ],
                 ]

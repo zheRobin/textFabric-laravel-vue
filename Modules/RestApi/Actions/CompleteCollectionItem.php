@@ -17,35 +17,26 @@ use Modules\Translations\Models\Language;
 class CompleteCollectionItem implements CompletesCollectionItem
 {
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
-    {
-        // authorize
+    {$systemMessage = $preset->system_prompt;
+        $userMessage = $preset->user_prompt;
 
-        $promptService = app(PromptService::class);
-        $promptData = $promptService->getData($collectionItem);
-        // translate input
-        if ($preset->translateInput()) {
-            $arrayTranslator = app(TranslatesData::class);
-            $promptData = $arrayTranslator->translate($promptData, 6);
+        foreach ($sourceList as $key => $value) {
+            $systemMessage = str_replace($key, $value, $systemMessage);
+            $userMessage = str_replace($key, $value, $userMessage);
         }
-
-        // build prompt
-        $builder = app(BuildsPrompt::class);
-        $system_prompt = strtr($preset->system_prompt, $sourceList['system_prompt']);
-        $user_prompt = strtr($preset->user_prompt, $sourceList['user_prompt']);
-
-        $systemMessage = $builder->build($promptData, $system_prompt);
-        $userMessage = $builder->build($promptData, $user_prompt);
 
         $params = $preset->getChatParams($systemMessage, $userMessage);
         $completion = OpenAI::chat()->create($params);
         $formattedResponse = $this->formatResponse($completion);
 
-        $result = [];
+        $result['output'] = $formattedResponse;
 
         $translator = app(Translator::class);
-        foreach ($translate as $lang) {
-            $translatedText = $translator->translateText($formattedResponse, null, $lang);
-            $result[$lang] = $translatedText->text;
+        if(count($translate) > 0){
+            foreach ($translate as $lang) {
+                $translatedText = $translator->translateText($formattedResponse, null, $lang);
+                $result[$lang] = $translatedText->text;
+            }
         }
 
         return $result;

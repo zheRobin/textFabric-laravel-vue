@@ -45,13 +45,6 @@ class ApiTokenController extends Controller
             })],
         ]);
 
-        // Перевірка на існуючий токен з таким ім'ям
-        foreach ($request->user()->tokens as $value){
-            if($value->name === $request->name){
-                // Обробка ситуації, коли ім'я вже використовується
-            }
-        }
-
         $token = $request->user()->createToken(
             $request->name,
             Jetstream::validPermissions($request->input('permissions', []))

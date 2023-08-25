@@ -48,16 +48,8 @@ const exampleRequest = {
         "preset-id": 5,
         "source-list":
             {
-                "user_prompt":
-                    {
-                        "@name": "test",
-                        "@feature_1": "test"
-                    },
-                "system_prompt":
-                    {
-                        "@name": " test",
-                        "@feature_1": "test"
-                    }
+                "@test1": 'test',
+                "@test2": 'test'
             },
         "translate-target-list": [
             "UK",

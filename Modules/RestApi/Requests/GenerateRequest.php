@@ -16,7 +16,7 @@ class GenerateRequest extends FormRequest
                 'headers'                 => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
                 'method'                  => 'POST',
                 'preset-id'               => ['required', 'numeric', 'exists:presets,id'],
-                'source-list'             => ["user_prompt" => ["@name" => "string"], "system_prompt" => ["@name" => "string"] ],
+                'source-list'             => ['array', "string"],
                 'translate-target-list'   => ['array'],
                 'translate-target-list.*' => [
                     (string) Rule::in($langCodes),

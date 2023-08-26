@@ -52,21 +52,21 @@
 
 <script setup>
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
+import { defineEmits, onUnmounted, watch, ref} from 'vue';
 
-import {ref, watch} from "vue";
 const loading = ref(true);
 const currentLanguage = ref(null);
-
 const props = defineProps({
     id: Number,
     activeItem: Object,
     item: Object,
-    languages: Array,
+    languages: Array
 });
-
-const stopGeneration = () => {
+const cancelTokenSource = axios.CancelToken.source();
+onUnmounted(() => {
     currentEventSource.value.close()
-}
+    cancelTokenSource.cancel('Component unmounted');
+});
 
 const refreshApi = async () => {
     currentEventSource.value.close()
@@ -100,7 +100,7 @@ const triggerLoading = (value) => {
     loading.value = value;
 }
 
-const setupStream = () => {
+const setupStream = async () => {
     generatingContent.value = true;
     triggerLoading(true);
     console.log(props.activeItem, 'props');

@@ -1,6 +1,6 @@
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { ref } from 'vue';
+import {onUnmounted, ref} from 'vue';
 import { notify } from "notiwind";
 import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
@@ -43,14 +43,12 @@ const sortedPresets = existingPresets.sort((a, b) => {
 
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
-console.log(items.value, 'itemsRight')
 
-
+let interval;
 const nextPrevElements = (item) => {
     if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
         loading.value = true;
-
-        setTimeout(() => {
+        interval = setTimeout(() => {
             if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1) {
                 idItems.value += 1;
                 axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
@@ -68,6 +66,10 @@ const nextPrevElements = (item) => {
         }, 100)
     }
 }
+
+onUnmounted(() => {
+    clearInterval(interval);
+})
 function onDragStart(e, item, start) {
     e.dataTransfer.dropEffect = 'move'
     e.dataTransfer.effectAllowed = 'move'
@@ -124,7 +126,7 @@ function onDrop(e, id) {
         })
     }
 }
-
+const updateGenerate = ref(false);
 function onDropOurColumn (e, arr, column) {
     const itemId = parseInt(e.dataTransfer.getData('itemId'))
     const dragStart = parseInt(e.dataTransfer.getData('dragStartColumn'))

@@ -97,7 +97,6 @@ const changePreset = (value) => {
     addingPreset.value = false;
     const preset = getPreset(value);
     emit('selectedPreset', selectedPreset.value);
-    console.log(selectedPreset.value, 'sele');
     if (preset) {
         fillPresetForm(preset);
     }
@@ -122,7 +121,7 @@ const savePreset = (status) => {
 }
 
 const createPreset = () => {
-    console.log(form);
+    console.log(emit(''));
     const newPresetIds = [];
     form.preset_ids = newPresetIds;
     form.patch(route('compilations.store'), {

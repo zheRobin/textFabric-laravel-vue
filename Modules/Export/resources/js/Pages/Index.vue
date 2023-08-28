@@ -515,7 +515,7 @@ search();
 
             <template #footer>
                 <SecondaryButton @click="activeViewModal = false">
-                    {{$t('Cancel')}}
+                    {{$t('Close')}}
                 </SecondaryButton>
             </template>
         </ApiModal>

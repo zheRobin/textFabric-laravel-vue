@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import ApplicationLogo from 'Jetstream/Components/ApplicationLogo.vue';
 import LanguageSelector from "Jetstream/Components/LanguageSelector.vue";
 defineProps({
@@ -19,7 +19,10 @@ defineProps({
                 </div>
                 <div>
                     <div class="flex justify-between">
-                        <ApplicationLogo class="block h-12 w-auto" />
+                        <Link :href="route('dashboard')">
+                            <ApplicationLogo class="block h-12 w-auto" />
+                        </Link>
+
                         <LanguageSelector />
                     </div>
                     <slot name="header" />

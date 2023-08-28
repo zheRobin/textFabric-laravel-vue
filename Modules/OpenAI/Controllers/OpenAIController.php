@@ -20,7 +20,9 @@ class OpenAIController extends Controller
             'selectedPreset' => session('preset'),
             'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
-            'languages' => Language::where('target', '1')->get(),
+            'languages' => Language::where('target', '1')
+                                    ->orderBy('name', 'asc')
+                                    ->get(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManagePresets' => Gate::check('manage', Preset::class),

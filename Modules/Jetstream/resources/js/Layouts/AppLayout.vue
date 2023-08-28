@@ -315,17 +315,18 @@ const logout = () => {
                         </ResponsiveNavLink>
                     </div>
 
-                    <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                            API
-                        </ResponsiveNavLink>
-                    </div>
+
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('export.index')" :active="route().current('export.index')">
                             {{$t('Export')}}
                         </ResponsiveNavLink>
                     </div>
 
+                    <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                            API
+                        </ResponsiveNavLink>
+                    </div>
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="flex items-center px-4">

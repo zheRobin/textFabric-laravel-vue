@@ -95,17 +95,17 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
-                            <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                    API
-                                </NavLink>
-                            </div>
+
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('export.index')" :class="route().current('export.index') ? 'dark:text-white' : ''" :active="route().current('export.index')">
                                     {{$t('Export')}}
                                 </NavLink>
                             </div>
-
+                            <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                                    API
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -327,6 +327,7 @@ const logout = () => {
                             API
                         </ResponsiveNavLink>
                     </div>
+
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="flex items-center px-4">

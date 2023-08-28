@@ -9,6 +9,7 @@ import {reactive, ref, shallowRef} from "vue";
 import UserInfoStep from "Jetstream/Pages/Auth/Partials/UserInfoStep.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import StepBullets from "Jetstream/Components/StepBullets.vue";
+import ApplicationLogo from "Jetstream/Components/ApplicationLogo.vue";
 
 const form = useForm({
     first_name: '',
@@ -113,9 +114,11 @@ const firstErrorStep = () => {
 
 <template>
     <AuthLayout title="Sign up">
-        <template #logo>
-            <img class="h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-        </template>
+<!--        <template #logo>-->
+<!--            <Link :href="route('dashboard')">-->
+<!--                <ApplicationLogo class="block h-9 w-auto" />-->
+<!--            </Link>-->
+<!--        </template>-->
 
         <template #header>
             <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">{{ $t('Create your account') }}</h2>

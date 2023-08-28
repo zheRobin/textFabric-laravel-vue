@@ -5,6 +5,7 @@ import {useForm} from "@inertiajs/vue3";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import {trans} from "laravel-vue-i18n";
+import {PlusCircleIcon} from "@heroicons/vue/20/solid";
 
 const props = defineProps({
     hasItems: Boolean,
@@ -20,6 +21,10 @@ const form = useForm({
 });
 
 const uploadingError = ref(null);
+
+const supportedExtensions = computed(() => {
+    return ['.xls', '.xlsx', '.csv', '.json', '.xml'].join(', ');
+});
 
 const canUpload = computed(() => {
     return !!(form.upload && !uploadingError.value);
@@ -108,11 +113,12 @@ const clearFileInput = () => {
                 id="upload-file"
                 type="file"
                 class="absolute top-0 left-0 right-0 bottom-0 w-full block"
+                :accept="`${supportedExtensions}`"
                 multiple
                 @change="handleUpload"
             />
 
-            <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
+            <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full flex-col block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
                 <div class="text-center">
                     <!-- TODO: pass formats as parameters to translation method -->
                     <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
@@ -121,9 +127,16 @@ const clearFileInput = () => {
                     </small>
                     <!-- TODO: fix validation message for images -->
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                    <div v-if="canUpload" class="block mt-2 pointer-events-auto">
-                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
-                    </div>
+<!--                    <div v-if="canUpload" class="block mt-2 pointer-events-auto">-->
+<!--                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>-->
+<!--                    </div>-->
+
+                </div>
+                <div>
+                   <PrimaryButton class="ml-2 mt-4 gap-x-1.5">
+                        {{ $t('Add file') }}
+                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                    </PrimaryButton>
                 </div>
             </span>
         </label>

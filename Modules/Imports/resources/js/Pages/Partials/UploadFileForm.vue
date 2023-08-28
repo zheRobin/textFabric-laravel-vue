@@ -2,10 +2,11 @@
 import {computed, ref} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {useForm} from "@inertiajs/vue3";
-import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
+import ConfirmationModal from "Modules/Imports/resources/js/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import {trans} from "laravel-vue-i18n";
 import {PlusCircleIcon} from "@heroicons/vue/20/solid";
+import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
 const props = defineProps({
     hasItems: Boolean,
@@ -103,6 +104,10 @@ const clearFileInput = () => {
         fileInput.value.value = null;
     }
 }
+
+const closeModal = () => {
+    confirmingAppending.value = false
+}
 </script>
 
 <template>
@@ -127,13 +132,13 @@ const clearFileInput = () => {
                     </small>
                     <!-- TODO: fix validation message for images -->
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-<!--                    <div v-if="canUpload" class="block mt-2 pointer-events-auto">-->
-<!--                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>-->
-<!--                    </div>-->
+                    <div v-if="canUpload" class="block mt-2 pointer-events-auto">
+                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
+                    </div>
 
                 </div>
                 <div>
-                   <PrimaryButton class="ml-2 mt-4 gap-x-1.5">
+                   <PrimaryButton v-if="!canUpload" class="ml-2 mt-4 gap-x-1.5">
                         {{ $t('Add file') }}
                         <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                     </PrimaryButton>
@@ -151,23 +156,28 @@ const clearFileInput = () => {
             </template>
 
             <template #footer>
-                <PrimaryButton
-                    class="ml-3"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    @click="upload(true)"
-                >
-                    {{ $t('Append') }}
-                </PrimaryButton>
+                <SecondaryButton class="ml-3" @click="closeModal">
+                    {{$t('Cancel')}}
+                </SecondaryButton>
+                <div class="text-right">
+                    <PrimaryButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="upload(true)"
+                    >
+                        {{ $t('Append') }}
+                    </PrimaryButton>
 
-                <DangerButton
-                    class="ml-3"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    @click="upload()"
-                >
-                    {{ $t('Replace') }}
-                </DangerButton>
+                    <DangerButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="upload()"
+                    >
+                        {{ $t('Replace') }}
+                    </DangerButton>
+                </div>
             </template>
         </ConfirmationModal>
     </div>

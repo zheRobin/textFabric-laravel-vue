@@ -50,19 +50,21 @@ const nextPrevElements = (item) => {
         loading.value = true;
         interval = setTimeout(() => {
             if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1) {
+                console.log(idItems.value);
                 idItems.value += 1;
+                console.log(idItems.value);
                 axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
                     activeItem.value = res.data.item;
+                    loading.value = false;
+
                 })
-                loading.value = false;
             } else if (itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
                 idItems.value -= 1;
                 axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
                     activeItem.value = res.data.item;
+                    loading.value = false;
                 })
-                loading.value = false;
             }
-            loading.value = false;
         }, 100)
     }
 }

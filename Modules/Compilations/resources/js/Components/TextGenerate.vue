@@ -100,7 +100,8 @@ const triggerLoading = (value) => {
     loading.value = value;
 }
 
-const setupStream = async () => {
+const setupStream = () => {
+    console.log(props.activeItem);
     generatingContent.value = true;
     triggerLoading(true);
     console.log(props.activeItem, 'props');

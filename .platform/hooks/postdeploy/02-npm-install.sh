@@ -3,10 +3,10 @@ echo "Installing NPM Packages.."
 
 # Install NPM Packages
 cd /var/app/current
-# npm install
+npm install
 
 echo "NPM Packages Installed.."
 
 # Run NPM Build
-# echo "Building Assets.."
-# npm run build
+echo "Building Assets.."
+npm run build

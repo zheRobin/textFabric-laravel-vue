@@ -7,9 +7,6 @@ export const defaultHeaders = {
             name: 'Product'
         },
         {
-            name: 'Headline'
-        },
-        {
             name: 'Feature 1'
         },
         {
@@ -31,9 +28,6 @@ export const defaultHeaders = {
         },
         {
             name: 'Produkt'
-        },
-        {
-            name: 'Headline'
         },
         {
             name: 'Merkmal 1'
@@ -63,10 +57,6 @@ export const defaultItems = {
             {
                 value: 'Cordless drill driver X234-1',
                 header: 'Product',
-            },
-            {
-                value: 'Cordless drill screwdriver for use in construction, furniture assembly and metal processing',
-                header: 'Headline',
             },
             {
                 value: 'high quality and robustness',
@@ -99,10 +89,6 @@ export const defaultItems = {
                 header: 'Product',
             },
             {
-                value: 'Optimum drying results thanks to AutoOpen drying',
-                header: 'Headline',
-            },
-            {
                 value: 'Best results in less than one hour',
                 header: 'Feature 1',
             },
@@ -131,10 +117,6 @@ export const defaultItems = {
             {
                 value: 'SuperSpray 45',
                 header: 'Product',
-            },
-            {
-                value: 'Paint sprayer for airless beginners',
-                header: 'Headline',
             },
             {
                 value: 'Professional, practical and lightweight',
@@ -169,10 +151,6 @@ export const defaultItems = {
                 header: 'Produkt',
             },
             {
-                value: 'Akkubohrschrauber zum Einsatz im Bauwesen, bei der Möbelmontage und in der Metallverarbeitung',
-                header: 'Headline',
-            },
-            {
                 value: 'hohe Qualität und Robustheit',
                 header: 'Merkmal 1',
             },
@@ -203,10 +181,6 @@ export const defaultItems = {
                 header: 'Produkt',
             },
             {
-                value: 'Optimale Trocknungsergebnisse dank AutoOpen-Trocknung',
-                header: 'Headline',
-            },
-            {
                 value: 'Beste Ergebnisse in weniger als einer Stunde',
                 header: 'Merkmal 1',
             },
@@ -235,10 +209,6 @@ export const defaultItems = {
             {
                 value: 'Farbsprühsystem SuperSpray 45',
                 header: 'Produkt',
-            },
-            {
-                value: 'Farbspritzgerät für Airless-Einsteiger',
-                header: 'Headline',
             },
             {
                 value: 'Professionell, praktisch und leicht',

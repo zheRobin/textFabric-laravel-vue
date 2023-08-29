@@ -18,7 +18,8 @@ use Modules\Translations\Models\Language;
 class CompleteCollectionItem implements CompletesCollectionItem
 {
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
-    {$systemMessage = $preset->system_prompt;
+    {
+        $systemMessage = $preset->system_prompt;
         $userMessage = $preset->user_prompt;
 
         if($sourceList !== null){

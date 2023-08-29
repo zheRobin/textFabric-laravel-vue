@@ -46,9 +46,6 @@ class CompleteItemStreamed implements CompletesItemStreamed
         echo str_pad('-', 4096)."\n";
         ob_flush();
         flush();
-
-        $user->currentTeam->planSubscription
-            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
     }
 
     protected function formatResponse(CreateStreamedResponse $response): array

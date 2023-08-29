@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use Modules\Collections\Actions\CreateDemoCollection;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Modules\Subscriptions\Models\Plan;
 use Illuminate\Support\Facades\Mail;
@@ -91,8 +92,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => explode(' ', $user->company, 2)[0]."'s Team",
             'personal_team' => true,
         ]), function (Team $team) use ($locale, $user) {
-            $this->createPlanSubscription($team);
-
+            $this->createPlanSubscription($team, $user);
             $demoCollectionCreator = app(CreateDemoCollection::class);
             $demoCollectionCreator->create($user, $team, $locale);
         });
@@ -102,12 +102,15 @@ class CreateNewUser implements CreatesNewUsers
      * @param Team $team
      * @return void
      */
-    protected function createPlanSubscription(Team $team): void
+    protected function createPlanSubscription(Team $team, User $user): void
     {
         $plan = Plan::query()
             ->where('slug', SubscriptionPlanEnum::BASE->slug())
             ->firstOrFail();
 
         $team->newPlanSubscription($plan);
+
+        $user->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::COLLECTIONS_LIMIT);
     }
 }

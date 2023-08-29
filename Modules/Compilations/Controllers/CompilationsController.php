@@ -20,7 +20,7 @@ class CompilationsController extends Controller
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection?->presets,
             'previewItem' => boolval($request->user()?->currentCollection?->items()->exists()) ? $request->user()->currentCollection?->items()->get()[0] : null,
-            'previewItemLength' => count($request->user()->currentCollection?->items()->get()),
+            'previewItemLength' => $request->user()?->currentCollection?->items()->exists() ? count($request->user()->currentCollection?->items()->get()) : null,
             'complications' => $compilations,
             'languages' => Language::all(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),

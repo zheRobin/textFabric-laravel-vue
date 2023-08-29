@@ -52,7 +52,6 @@ const exampleRequest = {
                 "@test2": 'test'
             },
         "translate-target-list": [
-            "UK",
             "EN-US",
             "FR",
             "ES"

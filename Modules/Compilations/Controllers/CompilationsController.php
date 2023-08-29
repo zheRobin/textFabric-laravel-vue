@@ -19,7 +19,7 @@ class CompilationsController extends Controller
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection?->presets,
-            'previewItem' => $request->user()->currentCollection?->items()->get()[0],
+            'previewItem' => boolval($request->user()?->currentCollection?->items()->exists()) ? $request->user()->currentCollection?->items()->get()[0] : null,
             'previewItemLength' => count($request->user()->currentCollection?->items()->get()),
             'complications' => $compilations,
             'languages' => Language::all(),

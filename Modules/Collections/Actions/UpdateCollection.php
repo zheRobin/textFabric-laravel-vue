@@ -21,7 +21,7 @@ class UpdateCollection implements UpdatesCollection
         Gate::forUser($user)->authorize('update', $collection);
 
         Validator::make($input, [
-            'name' => ['required', 'string']
+            'name' => ['required', 'string', 'unique:collections']
         ])->validateWithBag('updateCollection');
 
         $collection->fill([

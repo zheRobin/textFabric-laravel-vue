@@ -19,7 +19,7 @@ class CreateCollection implements CreatesCollection
 
         // validation
         Validator::make($input, [
-            'name' => ['required', 'string']
+            'name' => ['required', 'string', 'unique:collections'] // Добавляем правило unique
         ])->validateWithBag('createCollection');
 
         return DB::transaction(function () use ($user, $input) {
@@ -36,4 +36,6 @@ class CreateCollection implements CreatesCollection
             return $collection;
         });
     }
+
+
 }

@@ -114,12 +114,6 @@ const firstErrorStep = () => {
 
 <template>
     <AuthLayout title="Sign up">
-<!--        <template #logo>-->
-<!--            <Link :href="route('dashboard')">-->
-<!--                <ApplicationLogo class="block h-9 w-auto" />-->
-<!--            </Link>-->
-<!--        </template>-->
-
         <template #header>
             <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">{{ $t('Create your account') }}</h2>
             <p class="mt-2 text-gray-600">

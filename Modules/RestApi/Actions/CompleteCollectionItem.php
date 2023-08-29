@@ -9,6 +9,7 @@ use Modules\OpenAI\Contracts\BuildsPrompt;
 use Modules\RestApi\Contracts\CompletesCollectionItem;
 use Modules\OpenAI\Services\PromptService;
 use Modules\Presets\Models\Preset;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Contracts\TranslatesData;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateResponse;
@@ -40,6 +41,9 @@ class CompleteCollectionItem implements CompletesCollectionItem
                 $result[$lang] = $translatedText->text;
             }
         }
+
+        $user->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
 
         return $result;
     }

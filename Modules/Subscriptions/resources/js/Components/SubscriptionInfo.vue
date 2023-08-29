@@ -5,10 +5,6 @@ import InputLabel from "Jetstream/Components/InputLabel.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 
-// defineProps({
-//     'planSubscription': Object,
-// })
-
 const props = defineProps({
     planSubscription: Object
 })
@@ -47,8 +43,8 @@ const getFeatureUsage = (feature) => {
                 <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
                 <span>{{ feature.description }}</span>
                 {{ ' ' }}
-                <span class="font-semibold text-gray-500">
-                                {{ `(used: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
+                <span v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" class="font-semibold text-gray-500">
+                    {{ `(used: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
                 </span>
             </li>
         </ul>

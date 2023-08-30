@@ -342,7 +342,7 @@ const promptHasWrongAttribute = (prompt) => {
                                         <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </DangerButton>
                                 </DeletePreset>
-                                <div class="ml-5 text-gray-500">
+                                <div class="ml-5 text-gray-500" v-if="selectedPresetId">
                                     ID: {{selectedPresetId}}
                                 </div>
                             </template>

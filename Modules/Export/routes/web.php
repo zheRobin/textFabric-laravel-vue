@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Export\Controllers\ExportCollectionItemController;
 use Modules\Export\Controllers\ExportController;
+
 $authMiddleware = array_filter([
     'auth:sanctum',
     config('jetstream.auth_session'),

@@ -23,7 +23,7 @@ const form = useForm({
     google_recaptcha: '',
     terms: false,
     // TODO: refactor (remove from form and make auto detection of current lang)
-    locale: localStorage.getItem('locale')
+    locale: localStorage.getItem('locale') ?? 'en',
 });
 
 const recaptchaSiteKey = usePage().props.googleRecaptchaSiteKey;

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Translations\Controllers\CollectionItemTranslationController;
 use Modules\Translations\Controllers\TextTranslationController;
 

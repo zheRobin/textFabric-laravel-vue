@@ -270,5 +270,23 @@
 
     "Copied!": "Kopiert!",
     "Click to copy": "Hier klicken zum Kopieren",
-    "re-generate": "Neu generieren"
+    "re-generate": "Neu generieren",
+
+    "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.": "Durchsuchen Sie die hochzuladende Datei. Wir unterstützen .xls, .xlsx, .csv, .json, .xml.",
+    "System": "System",
+    "User": "Benutzer",
+    "Language": "Sprache",
+    "Attributes": "Attribute",
+    "Email": "Email",
+    "Current Password": "Aktuelles Passwort",
+    "New Password": "Neues Passwort",
+    "Confirm Password": "Passwort bestätigen",
+
+    "Status": "Status",
+    "Plan Type": "Plantyp",
+    "Trial": "Testversion",
+    "Plan Features": "Planfunktionen",
+    "used": "gebraucht",
+    "Ends at": "Endet um",
+    "Ended at": "Ended at"
 }

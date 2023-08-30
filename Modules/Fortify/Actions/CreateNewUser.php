@@ -16,6 +16,7 @@ use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Modules\Subscriptions\Models\Plan;
 use Illuminate\Support\Facades\Mail;
 use Modules\Fortify\Mail\RegistrationEmail;
+use App\Jobs\SendNewTeamAccountEmail;
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
@@ -49,22 +50,22 @@ class CreateNewUser implements CreatesNewUsers
             'employees' => $input['employees'],
         ];
 
-//        $content = "
-//        First Name: {$data['first_name']}
-//        Last Name: {$data['last_name']}
-//        Position: {$data['position']}
-//        Email: {$data['email']}
-//        Company: {$data['company']}
-//        Employees: {$data['employees']}
-//    ";
-//        $recipientEmail = 'raif@kp.technology';
-//
-//        $subject = 'New Team Account Created';
-//
-//         Mail::raw($content, function ($message) use ($recipientEmail, $subject) {
-//             $message->to($recipientEmail);
-//             $message->subject($subject);
-//         });
+        $content = "
+        First Name: {$data['first_name']}
+        Last Name: {$data['last_name']}
+        Position: {$data['position']}
+        Email: {$data['email']}
+        Company: {$data['company']}
+        Employees: {$data['employees']}
+    ";
+
+        $recipientEmail = explode(';', config('app')['mail_to']);
+        $subject = 'New Team Account Created';
+
+        foreach ($recipientEmail as $mail) {
+            SendNewTeamAccountEmail::dispatch($mail, $subject, $content);
+        }
+
 
         return DB::transaction(function () use ($input) {
             return tap(User::create([

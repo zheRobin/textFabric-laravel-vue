@@ -149,7 +149,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Last Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="last_name" value="Last Name" />
+                <InputLabel for="last_name" :value="$t('Last Name')" />
                 <TextInput
                     id="last_name"
                     v-model="form.last_name"
@@ -162,7 +162,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Position -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="position" value="Position" />
+                <InputLabel for="position" :value="$t('Position')" />
                 <TextInput
                     id="position"
                     v-model="form.position"
@@ -175,7 +175,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Company -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="company" value="Company" />
+                <InputLabel for="company" :value="$t('Company')" />
                 <TextInput
                     id="company"
                     v-model="form.company"
@@ -188,14 +188,14 @@ const clearPhotoFileInput = () => {
 
             <!-- Employees -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="employees" value="Employees" />
+                <InputLabel for="employees" :value="$t('Employees')" />
                 <SelectMenu v-model="form.employees" :options="companyOptions" id="employees" class="mt-1" />
                 <InputError :message="form.errors.employees" class="mt-2" />
             </div>
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('Email')" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -228,7 +228,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Phone Number -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="phone_number" value="Phone Number" />
+                <InputLabel for="phone_number" :value="$t('Phone Number')" />
                 <TextInput
                     id="phone_number"
                     v-model="form.phone_number"

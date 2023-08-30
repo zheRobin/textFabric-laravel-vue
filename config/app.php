@@ -71,6 +71,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'mail_to' => env('MAIL_TO'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

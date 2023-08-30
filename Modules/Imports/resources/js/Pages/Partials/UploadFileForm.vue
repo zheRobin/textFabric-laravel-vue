@@ -29,10 +29,6 @@ const supportedExtensions = computed(() => {
 
 const canUploadRef = ref(!!(form.upload && !uploadingError.value));
 
-// const canUpload = computed(() => {
-//     canUploadRef.value = !!(form.upload && !uploadingError.value);
-// });
-
 const uploadInfo = computed(() => {
     if (Array.isArray(form.upload)) {
         return form.upload.length === 1

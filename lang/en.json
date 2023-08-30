@@ -273,5 +273,23 @@
 
     "Copied!": "Copied!",
     "Click to copy": "Click to copy",
-    "re-generate": "re-generate"
+    "re-generate": "re-generate",
+
+    "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.": "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.",
+    "System": "System",
+    "User": "User",
+    "Language": "Language",
+    "Attributes": "Attributes",
+    "Email": "Email",
+    "Current Password": "Current Password",
+    "New Password": "New Password",
+    "Confirm Password": "Confirm Password",
+
+    "Status": "Status",
+    "Plan Type": "Plan Type",
+    "Trial": "Trial",
+    "Plan Features": "Plan Features",
+    "used": "used",
+    "Ends at": "Ends at",
+    "Ended at": "Ended at"
 }

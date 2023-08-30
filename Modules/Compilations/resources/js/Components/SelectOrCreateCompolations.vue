@@ -219,7 +219,7 @@ initSelectedCompilation();
 
             <template v-else>
                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                <SelectMenu @update:modelValue="changePreset" class="w-60" v-model="selectedPreset" :options="presetOptions()" placeholder="Select" />
+                <SelectMenu @update:modelValue="changePreset" class="w-60" v-model="selectedPreset" :options="presetOptions()" :placeholder="$t('Select')" />
                 <template v-if="canManageCompilations">
                     <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
                         {{$t('Add')}}

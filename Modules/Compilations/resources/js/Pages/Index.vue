@@ -55,7 +55,7 @@ const selectedPresetData = async (data) => {
                     <template v-else>
                         <SelectOrCreateCompolations :canManageCompilations="permissions.canManageCompilations" :complications="complications" @selectedPreset="selectedPresetData"  :positions="dataRight" @onDelete="onDelete"/>
                         <div class="text-center mt-5" v-if="loader || !activeCompilations">
-                            <div class="dark:text-gray-400">Select or create a new compilation</div>
+                            <div class="dark:text-gray-400">{{$t('Select or create a new compilation')}}</div>
                         </div>
                         <div class="flex gap-10" v-else>
                             <DarggableList :canEdit="permissions.canManageCompilations" :presets="presets" :previewItem="previewItem" :previewItemLength="previewItemLength" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />

@@ -398,11 +398,11 @@ const promptHasWrongAttribute = (prompt) => {
                     <!-- Prompt fields -->
                     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 pt-8">
                         <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                            <PromptEditor :canEdit="permissions.canManagePresets" title="System" v-model="form.system_prompt" :attributes="attributes" />
+                            <PromptEditor :canEdit="permissions.canManagePresets" :title="$t('System')" v-model="form.system_prompt" :attributes="attributes" />
                         </div>
 
                         <div class="mt-6 lg:mt-0 bg-gray-50 rounded p-4">
-                            <PromptEditor :canEdit="permissions.canManagePresets" title="User" v-model="form.user_prompt" :attributes="attributes" />
+                            <PromptEditor :canEdit="permissions.canManagePresets" :title="$t('User')" v-model="form.user_prompt" :attributes="attributes" />
                         </div>
                     </div>
 

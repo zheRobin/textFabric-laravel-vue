@@ -4,7 +4,7 @@ use App\Http\Controllers\LocalizationController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\CurrentTeamController;
 use Modules\Jetstream\Controllers\ApiTokenController;
-use Laravel\Jetstream\Http\Controllers\Inertia\CurrentUserController;
+use Modules\Jetstream\Controllers\CurrentUserController;
 use Laravel\Jetstream\Http\Controllers\Inertia\OtherBrowserSessionsController;
 use Laravel\Jetstream\Http\Controllers\Inertia\PrivacyPolicyController;
 use Laravel\Jetstream\Http\Controllers\Inertia\ProfilePhotoController;

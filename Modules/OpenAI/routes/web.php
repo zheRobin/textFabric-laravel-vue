@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\OpenAI\Controllers\CollectionItemCompletionController;
 use Modules\OpenAI\Controllers\DemoItemCompletionController;
 use Modules\OpenAI\Controllers\OpenAIController;

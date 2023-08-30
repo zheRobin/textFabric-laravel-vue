@@ -6,7 +6,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from './inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import { i18nVue } from 'laravel-vue-i18n'
+import { getActiveLanguage, i18nVue } from 'laravel-vue-i18n';
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -20,6 +20,10 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 
 /* add all solid icons to the library */
 library.add(fas);
+
+if (!localStorage.getItem('locale')) {
+    localStorage.setItem('locale', getActiveLanguage());
+}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

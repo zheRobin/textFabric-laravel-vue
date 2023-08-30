@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Compilations\Controllers\CompilationsController;
-use Modules\Compilations\Providers\LocalizationProvider;
-use App\Services\GetLocaleService;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Modules\Compilations\Controllers\CompilationsController;
 
 
 Route::group(['prefix' => LaravelLocalization::setLocale()], function () {

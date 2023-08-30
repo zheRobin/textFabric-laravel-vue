@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Imports\Controllers\CollectionHeaderController;
 use Modules\Imports\Controllers\CollectionItemController;
 use Modules\Imports\Controllers\ImportController;

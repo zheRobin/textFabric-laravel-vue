@@ -266,5 +266,9 @@
     "Disable this team.": "Deaktiviere dieses Team.",
     "Once a team is enabled, all of its resources and data will be enabled also. Access will be granted again.": "Sobald ein Team aktiviert ist, werden auch alle Ressourcen und Daten aktiviert. Der Zugriff wird wieder gewährt.",
     "Once a team is disabled, all of its resources and data will be disabled also. Access will be restricted.": "Sobald ein Team deaktiviert ist, werden auch alle Ressourcen und Daten deaktiviert. Der Zugriff wird eingeschränkt.",
-    "Changed.": "Geändert."
+    "Changed.": "Geändert.",
+
+    "Copied!": "Kopiert!",
+    "Click to copy": "Hier klicken zum Kopieren",
+    "re-generate": "Neu generieren"
 }

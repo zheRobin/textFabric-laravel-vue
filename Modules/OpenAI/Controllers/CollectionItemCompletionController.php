@@ -8,6 +8,7 @@ use Modules\Imports\Models\CollectionItem;
 use Modules\OpenAI\Contracts\BuildsParams;
 use Modules\OpenAI\Contracts\CompletesItemStreamed;
 use Modules\Presets\Models\Preset;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 
 class CollectionItemCompletionController extends Controller
 {
@@ -17,6 +18,9 @@ class CollectionItemCompletionController extends Controller
         $completer = app(CompletesItemStreamed::class);
 
         $params = $builder->build($request->user(), $preset, $item);
+
+        $request->user()->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
 
         return response()->stream(function () use ($completer, $params, $request) {
             $completer->complete($request->user(), $params);

@@ -4,6 +4,8 @@ namespace Modules\Presets\Actions;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Modules\Collections\Models\Collection;
 use Modules\Presets\Contracts\UpdatesPreset;
 use Modules\Presets\Data\PresetInput;
@@ -17,6 +19,14 @@ class UpdatePreset implements UpdatesPreset
 
         Gate::forUser($user)->authorize('update', $collection);
 
+        Validator::make($presetInput->all(), [
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('presets')->where('collection_id', $presetInput->collection_id)
+            ]
+        ])->validate();
+        
         $preset->update($presetInput->all());
     }
 }

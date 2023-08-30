@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Row;
 use Modules\Collections\Models\Collection;
 use Modules\Imports\Models\CollectionItem;
 use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
+use Illuminate\Http\Request;
 
 class ImportOnEachRow implements OnEachRow, WithHeadingRow, WithEvents
 {
@@ -21,7 +22,7 @@ class ImportOnEachRow implements OnEachRow, WithHeadingRow, WithEvents
     public function __construct(
         protected User $user,
         protected array $columns,
-        protected Collection $collection,
+        protected Collection $collection
     ) {
     }
 
@@ -58,8 +59,7 @@ class ImportOnEachRow implements OnEachRow, WithHeadingRow, WithEvents
     {
         return [
             BeforeImport::class => function(BeforeImport $event) {
-                $totalItems = $event->getReader()->getActiveSheet()->getHighestRow() - 1;
-
+                $totalItems = $event->getReader()->getActiveSheet()->getHighestRow() + count($this->user->currentCollection?->items()->get()) - 1;
                 $planSubscription = $this->user->currentTeam->planSubscription;
 
                 if (!$planSubscription->featureAllowsValue(

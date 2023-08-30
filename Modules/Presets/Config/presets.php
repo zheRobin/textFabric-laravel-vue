@@ -5,7 +5,7 @@ return [
         'en' => [
             [
                 'name' => 'Headline',
-                'system_prompt' => 'Write a one-line headline about the following product.',
+                'system_prompt' => 'Write a one-line title about the following product.',
                 'user_prompt' => '@Product group',
                 'model' => 'gpt-3.5-turbo',
                 'temperature' => 1,
@@ -25,10 +25,9 @@ return [
             ],
             [
                 'name' => 'Bulletpoints',
-                'system_prompt' => 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics. Start with an appropriate headline followed by the bullet points.',
+                'system_prompt' => 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics.',
                 'user_prompt' => '@Product group
 @Product
-@Headline
 @Feature 1
 @Feature 2
 @Feature 3
@@ -42,10 +41,9 @@ return [
             ],
             [
                 'name' => 'Content',
-                'system_prompt' => 'Write a marketing text with 3 paragraphs about the mentioned product.',
+                'system_prompt' => 'Write a copy with 3 paragraphs about the mentioned product.',
                 'user_prompt' => '@Product group
 @Product
-@Headline
 @Feature 1
 @Feature 2
 @Feature 3
@@ -61,7 +59,7 @@ return [
         'de' => [
             [
                 'name' => 'Headline',
-                'system_prompt' => 'Schreibe eine einzeilige Headline zu folgendem Produkt.',
+                'system_prompt' => 'Schreibe einen einzeiligen Titel zu folgendem Produkt.',
                 'user_prompt' => '@Produktgruppe',
                 'model' => 'gpt-3.5-turbo',
                 'temperature' => 1,
@@ -81,10 +79,9 @@ return [
             ],
             [
                 'name' => 'Bulletpoints',
-                'system_prompt' => 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften. Beginne mit einer passenden Überschrift gefolgt von den Bulletpoints.',
+                'system_prompt' => 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften.',
                 'user_prompt' => '@Produktgruppe
 @Produkt
-@Headline
 @Merkmal 1
 @Merkmal 2
 @Merkmal 3
@@ -101,7 +98,6 @@ return [
                 'system_prompt' => 'Schreibe einen Marketingtext mit 3 Absätzen zu dem genannten Produkt.',
                 'user_prompt' => '@Produktgruppe
 @Produkt
-@Headline
 @Merkmal 1
 @Merkmal 2
 @Merkmal 3

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Modules\Collections\Contracts\CreatesCollection;
 use Modules\Collections\Models\Collection;
 use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
@@ -19,7 +20,11 @@ class CreateCollection implements CreatesCollection
 
         // validation
         Validator::make($input, [
-            'name' => ['required', 'string']
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('collections')->where('team_id', $user->currentTeam->id)
+            ]
         ])->validateWithBag('createCollection');
 
         return DB::transaction(function () use ($user, $input) {

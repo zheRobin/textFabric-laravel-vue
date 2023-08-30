@@ -269,5 +269,9 @@
     "Changed.": "Changed.",
 
     "No imported data": "No imported data",
-    "Get started by importing a data.": "Get started by importing a data."
+    "Get started by importing a data.": "Get started by importing a data.",
+
+    "Copied!": "Copied!",
+    "Click to copy": "Click to copy",
+    "re-generate": "re-generate"
 }

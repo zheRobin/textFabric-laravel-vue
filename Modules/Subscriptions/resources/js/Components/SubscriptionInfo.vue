@@ -5,9 +5,23 @@ import InputLabel from "Jetstream/Components/InputLabel.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 
-defineProps({
-    'planSubscription': Object,
+const props = defineProps({
+    planSubscription: Object
 })
+
+const getUsage = (feature) => {
+    return props.planSubscription.usage.find((el) => el.feature_id === feature.id);
+}
+
+const getFeatureUsage = (feature) => {
+    const usage = getUsage(feature);
+
+    if (getUsage(feature)) {
+        return usage.used;
+    }
+
+    return false;
+}
 </script>
 
 <template>
@@ -27,7 +41,11 @@ defineProps({
         <ul role="list" class="mt-1 space-y-3 text-sm leading-6 text-gray-600">
             <li v-for="(feature, key) in planSubscription.plan.features" class="flex gap-x-3">
                 <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
-                {{ feature.description }}
+                <span>{{ feature.description }}</span>
+                {{ ' ' }}
+                <span v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" class="font-semibold text-gray-500">
+                    {{ `(used: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
+                </span>
             </li>
         </ul>
 

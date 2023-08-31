@@ -40,7 +40,6 @@ const form = useForm(
         preset_ids: [],
     }
 )
-console.log('selceted', localStorage.getItem('selected-compilations'))
 const selectedPreset = ref(null);
 const addingPreset = ref(!props.complications.length);
 

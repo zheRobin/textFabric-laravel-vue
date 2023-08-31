@@ -25,7 +25,7 @@ class ProcessExportJob implements ShouldQueue
     public int $tries = 3; // The number of times the job may be attempted.
     public bool $failOnTimeout = true; // Indicate if the job should be marked as failed on timeout.
     public int $timeout = 60; // The number of seconds the job can run before timing out.
-    public int $backoff = 3; // The number of seconds to wait before retrying the job.
+    public array $backoff = [3, 5, 10]; // The number of seconds to wait before retrying the job.
 
     /**
      * Create a new job instance.
@@ -70,7 +70,8 @@ class ProcessExportJob implements ShouldQueue
             'completions' => $completions,
         ]);
 
-        if ($this->export->batch?->finished() || $this->export->batch?->pendingJobs === 0) {
+        if ($this->export->batch?->pendingJobs === 0 && count($this->export->batch?->failedJobIds) === 0) {
+            info("Inside Job: Batch {$this->export->batch?->id} is complete");
             $this->export->job_batch_id = null;
             $this->export->save();
         }

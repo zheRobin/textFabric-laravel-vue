@@ -23,10 +23,10 @@ class UpdatePreset implements UpdatesPreset
             'name' => [
                 'required',
                 'string',
-                Rule::unique('presets')->where('collection_id', $presetInput->collection_id)
+                Rule::unique('presets', 'name')->where('collection_id', $presetInput->collection_id)->whereNot('id', $preset->id)
             ]
         ])->validate();
-        
+
         $preset->update($presetInput->all());
     }
 }

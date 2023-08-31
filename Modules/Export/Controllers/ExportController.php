@@ -5,6 +5,7 @@ namespace Modules\Export\Controllers;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Compilations;
@@ -69,12 +70,15 @@ class ExportController extends Controller
             })
             ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
-                    $export->delete();
+                    DB::transaction(function () use ($export) {
+                        $export->items()->delete();
+                        $export->delete();
+                    });
                 }
                 if ($batch->hasFailures()) {
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
-                if ($batch->finished()) {
+                if ($batch->finished() || $batch->pendingJobs === 0) {
                     $export->job_batch_id = null;
                     $export->save();
                 }

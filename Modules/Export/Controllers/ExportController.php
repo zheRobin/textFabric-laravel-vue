@@ -3,6 +3,7 @@
 namespace Modules\Export\Controllers;
 
 use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -67,8 +68,11 @@ class ExportController extends Controller
                 //
             })
             ->finally(function (Batch $batch) use ($export) {
-                if ($batch->cancelled() || $batch->hasFailures()) {
+                if ($batch->cancelled()) {
                     $export->delete();
+                }
+                if ($batch->hasFailures()) {
+                    Artisan::call("queue:retry-batch {$batch->id}");
                 }
                 if ($batch->finished()) {
                     $export->job_batch_id = null;
@@ -76,6 +80,7 @@ class ExportController extends Controller
                 }
             })
             ->name('Export Compilation')
+            ->allowFailures()
             ->dispatch();
 
         $export->job_batch_id = $batch->id;

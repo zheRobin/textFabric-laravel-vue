@@ -291,5 +291,8 @@
     "Plan Features": "Plan Features",
     "used": "used",
     "Ends at": "Ends at",
-    "Ended at": "Ended at"
+    "Ended at": "Ended at",
+    "You need to remove all users from the team first": "You need to remove all users from the team first",
+    "The password is incorrect.": "The password is incorrect."
+
 }

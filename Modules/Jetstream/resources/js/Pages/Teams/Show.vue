@@ -10,6 +10,7 @@ import {subscriptionContactLink} from "Modules/Subscriptions/resources/js/subscr
 import {ExclamationTriangleIcon} from "@heroicons/vue/24/outline";
 import UpdateSubscriptionForm from "Jetstream/Pages/Teams/Partials/UpdateSubscriptionForm.vue";
 import SwitchTeamForm from "Jetstream/Pages/Teams/Partials/SwitchTeamForm.vue";
+import ShowSubscriptionInfo from "Jetstream/Pages/Profile/Partials/ShowSubscriptionInfo.vue";
 
 defineProps({
     team: Object,
@@ -28,7 +29,13 @@ defineProps({
         </template>
 
         <div>
+
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <template v-if="$page.props.planSubscription">
+                    <ShowSubscriptionInfo :planSubscription="$page.props.planSubscription" />
+
+                    <SectionBorder />
+                </template>
                 <template v-if="team.disabled">
                     <ActionPanel class="mb-10">
                         <template #header>
@@ -49,6 +56,8 @@ defineProps({
                     :available-roles="availableRoles"
                     :user-permissions="permissions"
                 />
+
+
 
                 <template v-if="$page.props.auth.user.is_admin && team.plan_subscription">
                     <SectionBorder />

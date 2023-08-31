@@ -67,7 +67,7 @@ paginate();
                 </div>
 
                 <div v-if="!loading" class="grid" :class="gridColsCount" v-for="indexNumber in gridRowsCount" :key="`grid-row-${indexNumber}`">
-                    <div class="truncate border p-2 font-medium bg-gray-200" :title="items.data[0].data[indexNumber-1].header">
+                    <div class="truncate border p-2 font-medium bg-gray-200 whitespace-normal" :title="items.data[0].data[indexNumber-1].header">
                         {{ items.data[0].data[indexNumber-1].header }}
                     </div>
                     <div v-for="(item, index) in items.data" :key="`grid-cell-${indexNumber}-${index}`" class="flex flex-col flex-auto h-auto border p-2">

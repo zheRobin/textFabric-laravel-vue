@@ -61,7 +61,7 @@ const form = useForm({
 })
 
 const searchQuery = ref("");
-const progress = ref(false);
+const progress = ref(0);
 const page = usePage();
 const exports = ref(null);
 
@@ -402,14 +402,13 @@ search();
                         </div>
                         <div v-if="exports">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
-                                <li v-for="item in exports.data" class="flex justify-between flex items-center gap-x-6 py-5">
+                                <li v-for="item in exports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">
                                         <div class="min-w-0 flex-auto">
                                             <div class="flex items-center text-sm font-semibold leading-6 text-gray-900">
                                                 <DocumentTextIcon class="mr-1 w-5" />
                                                 {{ item.name }}
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="hidden sm:flex sm:flex-col sm:items-end">

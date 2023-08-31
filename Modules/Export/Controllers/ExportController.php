@@ -58,9 +58,8 @@ class ExportController extends Controller
             'type' => ExportTypeEnum::COMPILATION,
         ]);
 
-        $jobs = [];
-        $collectionItems->each(function ($item) use ($request, $compilation, $export, &$jobs) {
-            $jobs[] = new ProcessExportJob($request->user(), $compilation, $item, $export);
+        $jobs = $collectionItems->map(function ($item) use ($request, $compilation, $export) {
+            return new ProcessExportJob($request->user(), $compilation, $item, $export);
         });
 
         $batch = Bus::batch($jobs)

@@ -22,9 +22,9 @@ class ProcessExportJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 5; // The number of times the job may be attempted.
+    public int $tries = 3; // The number of times the job may be attempted.
     public bool $failOnTimeout = true; // Indicate if the job should be marked as failed on timeout.
-    public int $timeout = 600; // The number of seconds the job can run before timing out.
+    public int $timeout = 60; // The number of seconds the job can run before timing out.
     public int $backoff = 3; // The number of seconds to wait before retrying the job.
 
     /**
@@ -69,6 +69,11 @@ class ProcessExportJob implements ShouldQueue
             'data' => $this->collectionItem->getCells(),
             'completions' => $completions,
         ]);
+
+        if ($this->export->batch?->finished() || $this->export->batch?->pendingJobs === 0) {
+            $this->export->job_batch_id = null;
+            $this->export->save();
+        }
     }
 
     /**

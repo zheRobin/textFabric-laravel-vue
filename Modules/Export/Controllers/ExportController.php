@@ -104,12 +104,11 @@ class ExportController extends Controller
     {
         // store languages into export model
 
-        $jobs = [];
-
         $export->load('items');
         $export->fill(['type' => ExportTypeEnum::TRANSLATION])->save();
-        $export->items->each(function ($item) use ($request, &$jobs) {
-            $jobs[] = new GenerateTranslations($request->offsetGet('languages'), $item);
+
+        $jobs = $export->items->map(function ($item) use ($request) {
+            return new GenerateTranslations($request->offsetGet('languages'), $item);
         });
 
         $batch = Bus::batch($jobs)
@@ -117,17 +116,21 @@ class ExportController extends Controller
                 //
             })
             ->finally(function (Batch $batch) use ($export) {
-                if ($batch->cancelled() || $batch->hasFailures()) {
+                if ($batch->cancelled()) {
                     $export->items()->update([
                         'translations' => null
                     ]);
                 }
-                if ($batch->finished()) {
+                if ($batch->hasFailures()) {
+                    Artisan::call("queue:retry-batch {$batch->id}");
+                }
+                if ($batch->finished() || $batch->pendingJobs === 0) {
                     $export->job_batch_id = null;
                     $export->save();
                 }
             })
             ->name('Translate Export Compilation')
+            ->allowFailures()
             ->dispatch();
 
         $export->job_batch_id = $batch->id;
@@ -157,9 +160,7 @@ class ExportController extends Controller
 
         try {
             $batch = Bus::findBatch($batchId);
-            if ($batch) {
-                $batch->cancel();
-            }
+            $batch?->cancel();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), [
                 'file' => $exception->getFile(),

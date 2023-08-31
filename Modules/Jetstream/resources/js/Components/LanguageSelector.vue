@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Dropdown from 'Jetstream/Components/Dropdown.vue';
+import Dropdown from 'Jetstream/Components/DropdownForLanguage.vue';
 import DropdownLink from 'Jetstream/Components/DropdownLink.vue';
 import axios from "axios";
 export default {

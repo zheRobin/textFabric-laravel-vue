@@ -67,14 +67,14 @@ class PlanSeeder extends Seeder
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),
                 'name' => 'Collection Items',
-                'description' => 'up to 100 items per collection',
-                'value' => 200
+                'description' => 'up to 300 items per collection',
+                'value' => 300
             ]),
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
                 'name' => 'OpenAI requests',
-                'description' => 'up to 20000 request per month',
-                'value' => 20000,
+                'description' => 'up to 30000 request per month',
+                'value' => 30000,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -99,14 +99,14 @@ class PlanSeeder extends Seeder
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),
                 'name' => 'Collection Items',
-                'description' => 'up to 100 items per collection',
+                'description' => 'up to 1000 items per collection',
                 'value' => 1000
             ]),
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
                 'name' => 'OpenAI requests',
-                'description' => 'up to 50000 request per month',
-                'value' => 50000,
+                'description' => 'up to 100000 request per month',
+                'value' => 100000,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),

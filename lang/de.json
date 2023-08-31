@@ -288,5 +288,10 @@
     "Plan Features": "Planfunktionen",
     "used": "gebraucht",
     "Ends at": "Endet um",
-    "Ended at": "Ended at"
+    "Ended at": "Ended at",
+
+    "You need to remove all users from the team first": "Sie müssen zuerst alle Benutzer aus dem Team entfernen",
+    "The password is incorrect.": "Das Passwort ist inkorrekt."
+
+
 }

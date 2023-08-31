@@ -74,7 +74,7 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
-                if ($batch->finished()) {
+                if ($batch->finished() || $batch->pendingJobs === 0) {
                     $export->job_batch_id = null;
                     $export->save();
                 }

@@ -150,7 +150,7 @@ const generate = async () => {
 };
 
 const changePreset = (value) => {
-    localStorage.setItem('selectedCompilations', value)
+    localStorage.setItem('selected-compilations', value)
     selectedCompilations.value = value;
 }
 

@@ -22,7 +22,7 @@ class CurrentUserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, StatefulGuard $guard)
-    {;
+    {
         $teams = Team::where('id', $request->user()->currentTeam->id)->first()->users()->get();
         $confirmed = app(ConfirmPassword::class)(
             $guard, $request->user(), $request->password

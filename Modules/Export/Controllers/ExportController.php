@@ -160,9 +160,7 @@ class ExportController extends Controller
 
         try {
             $batch = Bus::findBatch($batchId);
-            if ($batch) {
-                $batch->cancel();
-            }
+            $batch?->cancel();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), [
                 'file' => $exception->getFile(),

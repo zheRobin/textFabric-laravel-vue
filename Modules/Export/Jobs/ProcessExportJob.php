@@ -69,6 +69,11 @@ class ProcessExportJob implements ShouldQueue
             'data' => $this->collectionItem->getCells(),
             'completions' => $completions,
         ]);
+
+        if ($this->export->batch?->finished() || $this->export->batch?->pendingJobs === 0) {
+            $this->export->job_batch_id = null;
+            $this->export->save();
+        }
     }
 
     /**

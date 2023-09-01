@@ -71,7 +71,7 @@ class ExportController extends Controller
             ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is cancelled", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'generate', $batch->id));
                     DB::transaction(function () use ($export) {
                         $export->items()->delete();
                         $export->delete();
@@ -79,12 +79,12 @@ class ExportController extends Controller
                 }
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s has failed jobs", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'generate', $batch->id));
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is complete", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s is complete", get_called_class(), 'generate', $batch->id));
                     $export->job_batch_id = null;
                     $export->save();
                 }
@@ -124,19 +124,19 @@ class ExportController extends Controller
             ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is cancelled", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'translate', $batch->id));
                     $export->items()->update([
                         'translations' => null
                     ]);
                 }
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s has failed jobs", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'translate', $batch->id));
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is complete", __CLASS__, __METHOD__, $batch->id));
+                    info(sprintf("[%s@%s] Batch %s is complete", get_called_class(), 'translate', $batch->id));
                     $export->job_batch_id = null;
                     $export->save();
                 }

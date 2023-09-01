@@ -52,7 +52,7 @@
 
 <script setup>
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
-import { defineEmits, onUnmounted, watch, ref} from 'vue';
+import {onUnmounted, ref} from 'vue';
 
 const loading = ref(true);
 const currentLanguage = ref(null);

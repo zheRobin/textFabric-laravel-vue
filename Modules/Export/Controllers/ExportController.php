@@ -79,7 +79,8 @@ class ExportController extends Controller
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
-                    info("Inside Batch: Batch {$batch->id} is complete");
+                    // TODO: remove debug message
+                    info("Inside Generate Batch: Batch {$batch->id} is complete");
                     $export->job_batch_id = null;
                     $export->save();
                 }
@@ -126,7 +127,8 @@ class ExportController extends Controller
                     Artisan::call("queue:retry-batch {$batch->id}");
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
-                    info("Inside Batch: Batch {$batch->id} is complete");
+                    // TODO: remove debug message
+                    info("Inside Translate Batch: Batch {$batch->id} is complete");
                     $export->job_batch_id = null;
                     $export->save();
                 }

@@ -69,12 +69,6 @@ class ProcessExportJob implements ShouldQueue
             'data' => $this->collectionItem->getCells(),
             'completions' => $completions,
         ]);
-
-        if ($this->export->batch?->pendingJobs === 0 && count($this->export->batch?->failedJobIds) === 0) {
-            info("Inside Job: Batch {$this->export->batch?->id} is complete");
-            $this->export->job_batch_id = null;
-            $this->export->save();
-        }
     }
 
     /**

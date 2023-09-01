@@ -88,7 +88,7 @@ class Export extends Model
     public function scopeActive(Builder $builder): Builder
     {
         return $builder->whereHas('batch', function (Builder $query) {
-            $query->whereNull('cancelled_at');
+            $query->whereNull('finished_at');
         });
     }
 }

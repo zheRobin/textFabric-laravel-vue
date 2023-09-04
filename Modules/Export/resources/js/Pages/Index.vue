@@ -10,7 +10,7 @@ import InputLabel from "Jetstream/Components/InputLabel.vue";
 import axios from "axios";
 import {notify} from "notiwind";
 import { ref } from "vue"
-import {useForm, usePage} from "@inertiajs/vue3";
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
@@ -27,7 +27,8 @@ const props = defineProps({
     active: Array,
     hasItems: Boolean,
     activeExport: Object,
-    items: Object
+    items: Object,
+    teamRunningCompilations: Array,
 });
 
 const translationType = 'translation';
@@ -107,6 +108,8 @@ const showProgress = (id) => {
                     }, 4000);
                     clearInterval(progressInterval);
                     progress.value = 0;
+
+                    router.reload({ only: ['teamRunningCompilations'] });
                 }
                 if (localStorage.getItem('selected_queue')) {
                     activeGenerations.value = dataLabel.find(
@@ -135,16 +138,21 @@ const generate = async () => {
     if (!loading.value) {
         if (selectedCompilations.value) {
             loading.value = true;
-            axios.post(route('export.generate', form.compilations))
-                .then((res) => {
-                    activeQueue.value = res.data.id_queue;
-                    progress.value = 0;
-                    activeGenerations.value = dataLabel.find(
-                        (item) => item.value === selectedCompilations.value
-                    );
-                    localStorage.setItem('id_queue', res.data.id_queue);
-                    localStorage.setItem('selected_queue', selectedCompilations.value);
-                    showProgress(activeQueue.value);
+            axios.post(route('export.generate', form.compilations)).then((res) => {
+                activeQueue.value = res.data.id_queue;
+                progress.value = 0;
+                activeGenerations.value = dataLabel.find(
+                    (item) => item.value === selectedCompilations.value
+                );
+                localStorage.setItem('id_queue', res.data.id_queue);
+                localStorage.setItem('selected_queue', selectedCompilations.value);
+                showProgress(activeQueue.value);
+            }).catch(error => {
+                notify({
+                    group: 'error',
+                    title: 'Error!',
+                    text: error.response.data?.message || 'Error generating compilation',
+                }, 4000);
             });
         }
     }
@@ -375,12 +383,24 @@ fetchCancelledExports();
                 <EmptyImport class="mx-auto px-6 py-6" v-else-if="!hasItems" />
 
                 <div v-else class="mx-auto px-6 py-6">
-                    <div class="flex border-b border-gray-200 pb-8 items-center">
-                        <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                        <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
-                        <PrimaryButton v-if="!generateActive && selectedCompilations" class="ml-2 gap-x-1.5" @click="generate">
-                            {{ $t('Generate') }}
-                        </PrimaryButton>
+                    <div class="max-w-7xl mx-auto pt-10 sm:px-6 lg:px-8">
+                        <div class="border-b border-gray-200 pb-8">
+                            <div class="flex items-center">
+                                <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
+                                <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
+                                <PrimaryButton v-if="!generateActive && selectedCompilations && teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
+                                    {{ $t('Generate') }}
+                                </PrimaryButton>
+                            </div>
+                            <div v-if="!generateActive && teamRunningCompilations.length !== 0" class="mt-8 text-sm">{{ $t('Team has running compilations') }}
+                                <ul style="margin: revert;">
+                                    <li v-for="teamRunningCompilation in teamRunningCompilations" class="my-3 font-medium text-sm items-center flex">
+                                      <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                      {{ teamRunningCompilation?.name }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8 mb-8">

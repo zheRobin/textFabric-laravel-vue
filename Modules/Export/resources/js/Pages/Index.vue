@@ -462,7 +462,7 @@ fetchCancelledExports();
                         <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
 
                         <div class="flex justify-between">
-                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled compilations')}}</h2>
+                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled and failed compilations')}}</h2>
                         </div>
                         <div v-if="cancelledExports">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">

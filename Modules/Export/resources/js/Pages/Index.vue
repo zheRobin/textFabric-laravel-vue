@@ -416,7 +416,7 @@ fetchCancelledExports();
                                 </div>
                             </div>
                         </div>
-                        <div v-if="exports" class="border-b border-gray-200 mb-8 pb-8">
+                        <div v-if="exports?.data?.length" class="border-b border-gray-200 mb-8 pb-8">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
                                 <li v-for="item in exports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">
@@ -464,7 +464,7 @@ fetchCancelledExports();
                         <div class="flex justify-between">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled and failed compilations')}}</h2>
                         </div>
-                        <div v-if="cancelledExports">
+                        <div v-if="cancelledExports?.data?.length">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
                                 <li v-for="item in cancelledExports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">

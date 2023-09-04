@@ -15,6 +15,7 @@ use Modules\Export\Models\Export;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
 use Modules\Export\Requests\XLSXRequest;
+use Modules\Export\Services\RunningCompilationService;
 use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
@@ -24,7 +25,7 @@ use Modules\Export\Jobs\ProcessExportJob;
 
 class ExportController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, RunningCompilationService $runningCompilationService)
     {
         return Inertia::render('Export::Index', [
             'languages' => Language::where('target', '1')
@@ -34,6 +35,7 @@ class ExportController extends Controller
             'compilations' => $request->user()->currentCollection->compilations ?? [],
             'activeExport' => $request->user()->currentCollection->exports()->active()->first(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
+            'teamRunningCompilations' => $runningCompilationService->get(),
         ]);
     }
 
@@ -42,7 +44,7 @@ class ExportController extends Controller
         $exports = $request->user()->currentCollection
             ->exports()
             ->history()
-            ->where('name', 'LIKE', '%'.$request->offsetGet('query').'%')
+            ->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%')
             ->orderBy('id', 'DESC')
             ->paginate(10);
 
@@ -64,8 +66,10 @@ class ExportController extends Controller
         ]);
     }
 
-    public function generate(Request $request, Compilations $compilation)
+    public function generate(Request $request, Compilations $compilation, RunningCompilationService $runningCompilationService)
     {
+        abort_if($runningCompilationService->get()->count() > 0, 403, __('Team has running compilations'));
+
         $collectionItems = $request->user()->currentCollection->items()->get();
 
         $export = Export::create([
@@ -184,7 +188,8 @@ class ExportController extends Controller
         ];
     }
 
-    public function cancel(Request $request){
+    public function cancel(Request $request)
+    {
         $batchId = $request['id'];
 
         try {

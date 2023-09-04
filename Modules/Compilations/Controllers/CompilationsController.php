@@ -14,7 +14,7 @@ class CompilationsController extends Controller
     public function index(Request $request)
     {
         $compilations = Compilations::where('owner', $request->user()->current_team_id)
-//            ->where('collection_id', $request->user()->currentCollection?->id)
+            ->where('collection_id', $request->user()->currentCollection?->id)
             ->get();
 
 //        dd($compilations);

@@ -64,6 +64,7 @@ const searchQuery = ref("");
 const progress = ref(0);
 const page = usePage();
 const exports = ref(null);
+const cancelledExports = ref(null);
 
 async function fetchProgress() {
     try {
@@ -182,6 +183,7 @@ const deleteExport = () => {
         exports.value = res.data;
 
         search();
+        fetchCancelledExports();
 
         notify({
             group: "success",
@@ -196,6 +198,7 @@ const translation = () => {
         languages: form.languages,
     }).then((res) => {
         search();
+        fetchCancelledExports();
         loading.value = false;
         activeModal.value = false;
         activeQueue.value = res.data.id_queue;
@@ -318,6 +321,17 @@ const search = (event) => {
         });
 }
 
+const fetchCancelledExports = (event) => {
+    axios
+        .post(route('export.cancelled'))
+        .then((response) => {
+            cancelledExports.value = response.data.data;
+        })
+        .catch((error) => {
+            // console.error(error);
+        });
+}
+
 const cancelQueue = () => {
     const id = localStorage.getItem('id_queue');
     axios.get(`/export/cancel/${id}`).then((res) => {
@@ -333,6 +347,7 @@ const generationDone = (data) => {
     activeGenerations.value = null;
     searchQuery.value = '';
     search();
+    fetchCancelledExports();
     localStorage.removeItem('selected_queue_translation');
     localStorage.removeItem('id_queue');
     localStorage.removeItem('selected_queue');
@@ -341,6 +356,7 @@ const generationDone = (data) => {
 }
 
 search();
+fetchCancelledExports();
 </script>
 
 <template>
@@ -400,7 +416,7 @@ search();
                                 </div>
                             </div>
                         </div>
-                        <div v-if="exports">
+                        <div v-if="exports" class="border-b border-gray-200 mb-8 pb-8">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
                                 <li v-for="item in exports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">
@@ -443,7 +459,35 @@ search();
 
                             <Pagination :links="exports.links" />
                         </div>
+                        <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
 
+                        <div class="flex justify-between">
+                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled compilations')}}</h2>
+                        </div>
+                        <div v-if="cancelledExports">
+                            <ul role="list" class="divide-y divide-gray-100 mt-5">
+                                <li v-for="item in cancelledExports.data" class="flex justify-between items-center gap-x-6 py-5">
+                                    <div class="flex gap-x-4">
+                                        <div class="min-w-0 flex-auto">
+                                            <div class="flex items-center text-sm font-semibold leading-6 text-gray-900">
+                                                <DocumentTextIcon class="mr-1 w-5" />
+                                                {{ item.name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hidden sm:flex sm:flex-col sm:items-end">
+                                        <p class="text-sm leading-6 text-gray-900">
+                                            <DangerButton @click="showModalDelete(item.id)" class="ml-2 gap-x-1.5">
+                                                {{ $t('Delete') }}
+                                                <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                            </DangerButton>
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <Pagination :links="cancelledExports.links" />
+                        </div>
                         <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
                     </div>
                 </div>

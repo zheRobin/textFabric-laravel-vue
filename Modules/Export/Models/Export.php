@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Modules\Export\Enums\ExportTypeEnum;
 
+/**
+ * @mixin Builder
+ */
 class Export extends Model
 {
     use HasFactory;
@@ -78,7 +81,9 @@ class Export extends Model
      */
     public function scopeHistory(Builder $builder): Builder
     {
-        return $builder->whereNull('job_batch_id');
+        return $builder
+            ->whereNull('job_batch_id')
+            ->whereHas('items');
     }
 
     /**
@@ -90,5 +95,16 @@ class Export extends Model
         return $builder->whereHas('batch', function (Builder $query) {
             $query->whereNull('finished_at');
         });
+    }
+
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeCancelled(Builder $builder): Builder
+    {
+        return $builder
+            ->whereNotNull('job_batch_id')
+            ->orWhereDoesntHave('items');
     }
 }

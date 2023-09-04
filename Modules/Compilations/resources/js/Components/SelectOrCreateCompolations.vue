@@ -168,13 +168,11 @@ const deletePreset = () => {
 }
 
 const updatePreset = () => {
-    console.log(props.positions)
     const newPresetIds = [];
     if(props.positions){
         props.positions.map(item => newPresetIds.push(item.id))
         form.preset_ids = newPresetIds;
     }
-    console.log(form.preset_ids);
     form.patch(route('compilations.update'), {
         errorBag: 'errors',
         preserveScroll: true,

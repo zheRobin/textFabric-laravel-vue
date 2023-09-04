@@ -5,6 +5,8 @@ namespace Modules\Compilations\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\Compilations;
 use Modules\Translations\Models\Language;
@@ -42,7 +44,7 @@ class CompilationsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            "name" => ["required", "string", "min:3", "max:60"],
+            "name" => ["required", "string", "min:3", "max:60", Rule::unique('compilations')->where('collection_id', $request->user()->currentCollection->id)],
             "preset_ids" => ["array"],
         ]);
 
@@ -73,15 +75,27 @@ class CompilationsController extends Controller
             return redirect()->back()->withErrors('Compilation not found.');
         }
 
-        $compilation->name = $data['name'];
+        if (isset($data['name']) && $data['name'] !== $compilation->name) {
+            $request->validate([
+                'name' => [
+                    'string',
+                    'min:3',
+                    'max:60',
+                    Rule::unique('compilations')
+                        ->where('collection_id', $request->user()->currentCollection->id),
+                ],
+            ]);
+            $compilation->name = $data['name'];
+        }
+
         $compilation->owner = $data['owner'];
         $compilation->preset_ids = $data['preset_ids'];
 
         $compilation->save();
 
-        // Optionally, you can redirect back or perform other actions after saving
         return redirect()->back()->with('success', 'Data saved successfully.');
     }
+
 
     public function delete(Request $request)
     {

@@ -15,6 +15,7 @@ use Modules\Export\Models\Export;
 use Modules\Export\Requests\CSVRequest;
 use Modules\Export\Requests\JSONRequest;
 use Modules\Export\Requests\XLSXRequest;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Models\Language;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -121,7 +122,7 @@ class ExportController extends Controller
             ->then(function (Batch $batch) use ($export) {
                 //
             })
-            ->finally(function (Batch $batch) use ($export) {
+            ->finally(function (Batch $batch) use ($export, $request) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'translate', $batch->id));
@@ -140,6 +141,9 @@ class ExportController extends Controller
                     $export->job_batch_id = null;
                     $export->save();
                 }
+
+                $request->user()->currentTeam->planSubscription
+                    ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
             })
             ->name('Translate Export Compilation')
             ->allowFailures()

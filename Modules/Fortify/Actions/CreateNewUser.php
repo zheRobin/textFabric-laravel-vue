@@ -38,7 +38,6 @@ class CreateNewUser implements CreatesNewUsers
             'phone_number' => ['required', 'string', 'max:20'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-            'google_recaptcha' => ['required', new GoogleRecaptcha]
         ])->validate();
 
         $data = [

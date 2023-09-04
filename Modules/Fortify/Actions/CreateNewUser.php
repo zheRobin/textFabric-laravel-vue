@@ -48,6 +48,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'company' => $input['company'],
             'employees' => $input['employees'],
+            'phone_number' => $input['phone_number']
         ];
 
         $content = "
@@ -57,6 +58,7 @@ class CreateNewUser implements CreatesNewUsers
         Email: {$data['email']}
         Company: {$data['company']}
         Employees: {$data['employees']}
+        Phone number: {$data['phone_number']}
     ";
 
         $recipientEmail = explode(';', config('app')['mail_to']);

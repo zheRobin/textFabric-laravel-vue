@@ -51,6 +51,19 @@ class ExportController extends Controller
         ]);
     }
 
+    public function cancelled(Request $request)
+    {
+        $exports = $request->user()->currentCollection
+            ->exports()
+            ->cancelled()
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        return response()->json([
+            'data' => $exports
+        ]);
+    }
+
     public function generate(Request $request, Compilations $compilation)
     {
         $collectionItems = $request->user()->currentCollection->items()->get();

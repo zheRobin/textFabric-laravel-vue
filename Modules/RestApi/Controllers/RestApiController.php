@@ -3,11 +3,13 @@
 namespace Modules\RestApi\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use DeepL\Translator;
 use Illuminate\Support\Facades\Auth;
 use Modules\Imports\Models\CollectionItem;
 use Modules\RestApi\Contracts\CompletesCollectionItem;
 use Modules\Presets\Models\Preset;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,7 +39,7 @@ class RestApiController extends Controller
         if (!isset($preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first()->name)) {
             $response = [
                 "message" => "Access denied",
-                "timestamp" => now() // Поточний час
+                "timestamp" => now()
             ];
 
             return new JsonResponse($response, 403);
@@ -58,6 +60,16 @@ class RestApiController extends Controller
 
     public function translate(Request $request)
     {
+        $planSubscription = $request->user()->currentTeam->planSubscription;
+
+        if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS)) {
+            $response = [
+                "message" => "Plan limit exceeded",
+                "timestamp" => now()
+            ];
+            return new JsonResponse($response, 429);
+        }
+
         $validator = Validator::make($request->all(), [
             'translate-target-list' => ['array'],
         ]);
@@ -79,6 +91,9 @@ class RestApiController extends Controller
         foreach ($request['translate-target-list'] as $lang) {
             $translatedText = $translator->translateText($request['text'], null, $lang);
             $result[$lang] = $translatedText->text;
+
+            $request->user()->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
         }
 
         return $result;

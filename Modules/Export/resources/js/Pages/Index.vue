@@ -9,7 +9,7 @@ import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import axios from "axios";
 import {notify} from "notiwind";
-import { ref } from "vue"
+import {computed, ref} from "vue"
 import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
@@ -42,24 +42,26 @@ const cancelling = ref(false);
 const dataLabel = props.compilations.map(item => {
     return {
         value: item.id,
-        label: item.name
+        label: item.name,
     }
 });
 
 let data = {
     value: 0,
-    label: ''
+    label: '',
 };
 
 const activeGenerations = ref(data);
 const loading = ref(false);
+const runningCompilations = ref({pending: 0, total: 0});
+const anyTeamHasRunningCompilations = computed(() => runningCompilations.value.pending !== 0 && runningCompilations.value.pending !== runningCompilations.value.total);
 
 const form = useForm({
     id: null,
     compilations: null,
     languages: [],
     value: null,
-})
+});
 
 const searchQuery = ref("");
 const progress = ref(0);
@@ -82,9 +84,7 @@ let progressInterval;
 const showProgress = (id) => {
     clearInterval(progressInterval);
     if (localStorage.getItem('selected_queue_translation')) {
-        activeGenerations.value = {
-            label: localStorage.getItem('selected_queue_translation')
-        }
+        activeGenerations.value.label = localStorage.getItem('selected_queue_translation');
     }
 
     generateActive.value = true;
@@ -92,6 +92,7 @@ const showProgress = (id) => {
         if (id) {
             axios.get(route('export.showProgress')).then((res) => {
                 progress.value = res.data.data.progress;
+                runningCompilations.value = res.data.data.compilations;
 
                 if (res.data.data.cancelled) {
                     cancelling.value = true;
@@ -109,17 +110,18 @@ const showProgress = (id) => {
                     clearInterval(progressInterval);
                     progress.value = 0;
 
-                    router.reload({ only: ['teamRunningCompilations'] });
+                    router.reload({ only: ['compilations', 'teamRunningCompilations'] });
                 }
-                if (localStorage.getItem('selected_queue')) {
+
+                if (res.data.data.name) {
+                    activeGenerations.value.label = res.data.data.name;
+                } else if (localStorage.getItem('selected_queue')) {
                     activeGenerations.value = dataLabel.find(
                         (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
                     );
-                } else if (localStorage.getItem('selected_queue_translation')) (
-                    activeGenerations.value = {
-                        label: localStorage.getItem('selected_queue_translation')
-                    }
-                )
+                } else if (localStorage.getItem('selected_queue_translation')) {
+                    activeGenerations.value.label = localStorage.getItem('selected_queue_translation');
+                }
             });
         } else {
             clearInterval(progressInterval);
@@ -376,7 +378,18 @@ fetchCancelledExports();
                 </h2>
             </div>
         </template>
-        <div class="max-w-7xl mx-auto my-auto py-10 sm:px-6 lg:px-8">
+
+        <div class="max-w-7xl mx-auto mt-8 mb-8 sm:px-6 lg:px-8">
+            <div v-if="generateActive && (anyTeamHasRunningCompilations || progress === 0)" class="flex items-center mb-6 text-sm bg-yellow-200 text-yellow-900 border-l-4 border-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-4 h-4 m-4 text-yellow-500">
+                  <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                </svg>
+                <span v-if="anyTeamHasRunningCompilations">{{ $t('There is :count job in the queue in front of you before we can start your processing.', {'count': runningCompilations.pending.toString()}) }}</span>
+                <span v-else-if="progress === 0">{{ $t('Waiting for background workers to start processing.', {'count': runningCompilations.pending.toString()}) }}</span>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto mt-8 mb-8 sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
                 <EmptyCollection class="mx-auto px-6 py-6" v-if="!$page.props.auth.user.current_collection" />
 
@@ -385,20 +398,22 @@ fetchCancelledExports();
                 <div v-else class="mx-auto px-6 py-6">
                     <div class="max-w-7xl mx-auto pt-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8">
+                            <div v-if="!generateActive && teamRunningCompilations.length !== 0" class="flex items-center mb-6 text-sm bg-yellow-200 text-yellow-900 border-l-4 border-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-4 h-4 m-4 text-yellow-500">
+                                    <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                </svg>
+                                <span>{{ $t('Team has running compilations') }}</span>
+                                <span v-for="teamRunningCompilation in teamRunningCompilations" class="flex items-center font-medium text-sm ml-3">
+                                    <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                    {{ teamRunningCompilation?.name }}
+                                </span>
+                            </div>
                             <div class="flex items-center">
                                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
                                 <PrimaryButton v-if="!generateActive && selectedCompilations && teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
                                     {{ $t('Generate') }}
                                 </PrimaryButton>
-                            </div>
-                            <div v-if="!generateActive && teamRunningCompilations.length !== 0" class="mt-8 text-sm">{{ $t('Team has running compilations') }}
-                                <ul style="margin: revert;">
-                                    <li v-for="teamRunningCompilation in teamRunningCompilations" class="my-3 font-medium text-sm items-center flex">
-                                      <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                      {{ teamRunningCompilation?.name }}
-                                    </li>
-                                </ul>
                             </div>
                         </div>
                     </div>
@@ -408,8 +423,7 @@ fetchCancelledExports();
                             <div class="flex justify-between mt-6" v-if="generateActive">
                                 <div class="my-3 font-medium text-sm items-center flex">
                                     <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                    {{activeGenerations.label}}
-                                    {{'...'}}
+                                    {{activeGenerations.label ?? '...'}}
                                 </div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">

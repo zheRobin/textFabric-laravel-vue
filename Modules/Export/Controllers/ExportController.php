@@ -35,7 +35,7 @@ class ExportController extends Controller
             'compilations' => $request->user()->currentCollection->compilations ?? [],
             'activeExport' => $request->user()->currentCollection->exports()->active()->first(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
-            'teamRunningCompilations' => $runningCompilationService->get(),
+            'teamRunningCompilations' => $runningCompilationService->inPersonalTeam(),
         ]);
     }
 
@@ -68,7 +68,7 @@ class ExportController extends Controller
 
     public function generate(Request $request, Compilations $compilation, RunningCompilationService $runningCompilationService)
     {
-        abort_if($runningCompilationService->get()->count() > 0, 403, __('Team has running compilations'));
+        abort_if($runningCompilationService->inPersonalTeam()->count() > 0, 403, __('Team has running compilations'));
 
         $collectionItems = $request->user()->currentCollection->items()->get();
 
@@ -174,16 +174,18 @@ class ExportController extends Controller
         ];
     }
 
-    public function showProgress(Request $request)
+    public function showProgress(Request $request, RunningCompilationService $runningCompilationService)
     {
         $export = $request->user()->currentCollection->exports()->active()->first();
 
         return [
             'data' => [
-                'progress' => !empty($export->batch) ? $export->batch->progress() : 100,
-                'finished' => !empty($export->batch) ? $export->batch->finished() : true,
-                'cancelled' => !empty($export->batch) ? $export->batch->cancelled() : false,
-                'type' => !empty($export->type) ? $export->type : null,
+                'progress' => $export?->batch->progress() ?? 100,
+                'finished' => $export?->batch->finished() ?? true,
+                'cancelled' => $export?->batch->cancelled() ?? false,
+                'name' => $export?->name,
+                'type' => $export?->type,
+                'compilations' => $runningCompilationService->inAnyTeam(),
             ],
         ];
     }

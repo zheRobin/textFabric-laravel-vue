@@ -24,7 +24,6 @@ class SimpleExcelImporter implements Importer
         $importer = new ImportOnEachRow($user, $this->getHeaders($collection), $collection);
 
         $importer->import($collection->importFilePath());
-
     }
 
     public function getHeaders(Collection $collection): array

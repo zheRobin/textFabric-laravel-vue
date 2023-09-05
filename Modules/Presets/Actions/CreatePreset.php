@@ -17,15 +17,28 @@ class CreatePreset implements CreatesPreset
     {
         $collection = Collection::find($presetInput->collection_id);
         Gate::forUser($user)->authorize('create', [Preset::class, $collection]);
+
+        $existingPresetsCount = Preset::where('collection_id', $presetInput->collection_id)->count();
+
+
+        Validator::extend('max_presets', function ($attribute, $value, $parameters, $validator) {
+            $collectionId = $parameters[0];
+            $existingPresetsCount = Preset::where('collection_id', $collectionId)->count();
+            return $existingPresetsCount < 5;
+        }, 'The maximum number of presets for this collection has been reached.');
+
         Validator::make($presetInput->all(), [
             'name' => [
                 'required',
                 'string',
-                Rule::unique('presets')->where('collection_id', $presetInput->collection_id)
+                Rule::unique('presets')->where('collection_id', $presetInput->collection_id),
+                'max_presets:' . $presetInput->collection_id,
             ]
         ])->validate();
+
         return Preset::create($presetInput->all());
     }
+
 
     public function redirectTo(): string
     {

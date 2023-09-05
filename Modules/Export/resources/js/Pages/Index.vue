@@ -9,8 +9,8 @@ import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import axios from "axios";
 import {notify} from "notiwind";
-import { ref } from "vue"
-import {useForm, usePage} from "@inertiajs/vue3";
+import {ref} from "vue"
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
@@ -27,7 +27,8 @@ const props = defineProps({
     active: Array,
     hasItems: Boolean,
     activeExport: Object,
-    items: Object
+    items: Object,
+    teamRunningCompilations: Array,
 });
 
 const translationType = 'translation';
@@ -107,6 +108,8 @@ const showProgress = (id) => {
                     }, 4000);
                     clearInterval(progressInterval);
                     progress.value = 0;
+
+                    router.reload({ only: ['teamRunningCompilations'] });
                 }
                 if (localStorage.getItem('selected_queue')) {
                     activeGenerations.value = dataLabel.find(
@@ -135,16 +138,21 @@ const generate = async () => {
     if (!loading.value) {
         if (selectedCompilations.value) {
             loading.value = true;
-            axios.post(route('export.generate', form.compilations))
-                .then((res) => {
-                    activeQueue.value = res.data.id_queue;
-                    progress.value = 0;
-                    activeGenerations.value = dataLabel.find(
-                        (item) => item.value === selectedCompilations.value
-                    );
-                    localStorage.setItem('id_queue', res.data.id_queue);
-                    localStorage.setItem('selected_queue', selectedCompilations.value);
-                    showProgress(activeQueue.value);
+            axios.post(route('export.generate', form.compilations)).then((res) => {
+                activeQueue.value = res.data.id_queue;
+                progress.value = 0;
+                activeGenerations.value = dataLabel.find(
+                    (item) => item.value === selectedCompilations.value
+                );
+                localStorage.setItem('id_queue', res.data.id_queue);
+                localStorage.setItem('selected_queue', selectedCompilations.value);
+                showProgress(activeQueue.value);
+            }).catch(error => {
+                notify({
+                    group: 'error',
+                    title: 'Error!',
+                    text: error.response.data?.message || 'Error generating compilation',
+                }, 4000);
             });
         }
     }
@@ -375,12 +383,26 @@ fetchCancelledExports();
                 <EmptyImport class="mx-auto px-6 py-6" v-else-if="!hasItems" />
 
                 <div v-else class="mx-auto px-6 py-6">
-                    <div class="flex border-b border-gray-200 pb-8 items-center">
-                        <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                        <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
-                        <PrimaryButton v-if="!generateActive && selectedCompilations" class="ml-2 gap-x-1.5" @click="generate">
-                            {{ $t('Generate') }}
-                        </PrimaryButton>
+                    <div class="max-w-7xl mx-auto pt-10 sm:px-6 lg:px-8">
+                        <div class="border-b border-gray-200 pb-8">
+                            <div v-if="!generateActive && teamRunningCompilations.length !== 0" class="flex items-center mb-6 text-sm bg-yellow-200 text-yellow-900 border-l-4 border-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-4 h-4 m-4 text-yellow-500">
+                                    <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                </svg>
+                                <span>{{ $t('Team has running compilations') }}</span>
+                                <span v-for="teamRunningCompilation in teamRunningCompilations" class="flex items-center font-medium text-sm ml-3">
+                                    <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                    {{ teamRunningCompilation?.name }}
+                                </span>
+                            </div>
+                            <div class="flex items-center">
+                                <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
+                                <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
+                                <PrimaryButton v-if="!generateActive && selectedCompilations && teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
+                                    {{ $t('Generate') }}
+                                </PrimaryButton>
+                            </div>
+                        </div>
                     </div>
                     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8 mb-8">
@@ -416,7 +438,7 @@ fetchCancelledExports();
                                 </div>
                             </div>
                         </div>
-                        <div v-if="exports" class="border-b border-gray-200 mb-8 pb-8">
+                        <div v-if="exports?.data?.length" class="border-b border-gray-200 mb-8 pb-8">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
                                 <li v-for="item in exports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">
@@ -462,9 +484,9 @@ fetchCancelledExports();
                         <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
 
                         <div class="flex justify-between">
-                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled compilations')}}</h2>
+                            <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled and failed compilations')}}</h2>
                         </div>
-                        <div v-if="cancelledExports">
+                        <div v-if="cancelledExports?.data?.length">
                             <ul role="list" class="divide-y divide-gray-100 mt-5">
                                 <li v-for="item in cancelledExports.data" class="flex justify-between items-center gap-x-6 py-5">
                                     <div class="flex gap-x-4">

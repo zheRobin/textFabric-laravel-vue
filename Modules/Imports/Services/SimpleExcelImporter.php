@@ -20,7 +20,6 @@ class SimpleExcelImporter implements Importer
             $collection->addHeader($header, HeaderTypeEnum::TEXT);
         }
 
-        // TODO: get headers from collection
         $importer = new ImportOnEachRow($user, $this->getHeaders($collection), $collection);
 
         $importer->import($collection->importFilePath());

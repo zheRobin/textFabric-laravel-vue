@@ -423,7 +423,7 @@ fetchCancelledExports();
                             <div class="flex justify-between mt-6" v-if="generateActive">
                                 <div class="my-3 font-medium text-sm items-center flex">
                                     <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                    {{activeGenerations.label ?? '...'}}
+                                    {{activeGenerations.label || '...'}}
                                 </div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">

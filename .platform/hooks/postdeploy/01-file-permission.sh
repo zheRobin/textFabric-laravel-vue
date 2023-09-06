@@ -9,5 +9,12 @@ if [ ! -f /var/app/current/storage/logs/laravel.log ]; then
     chmod 644 /var/app/current/storage/logs/laravel.log
 fi 
 
-sudo chown webapp:webapp /var/app/current/storage/worker.log
-sudo chmod 644 /var/app/current/storage/worker.log
+if [ ! -f /var/app/current/storage/logs/laravel.log ]; then
+    echo "Creating /storage/logs/laravel.log..."
+    touch /var/app/current/storage/logs/laravel.log
+    chown webapp:webapp /var/app/current/storage/logs/laravel.log
+    chmod 644 /var/app/current/storage/logs/laravel.log
+fi 
+
+sudo chown webapp:webapp /var/app/current/storage/logs/worker.log
+sudo chmod 644 /var/app/current/storage/logs/worker.log

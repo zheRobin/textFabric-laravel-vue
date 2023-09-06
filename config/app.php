@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE'),
+    'timezone' => env('APP_TIMEZONE', 'Europe/Berlin'),
 
     'mail_to' => env('MAIL_TO'),
 

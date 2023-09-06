@@ -4,6 +4,7 @@ namespace Modules\RestApi\Actions;
 
 use App\Models\User;
 use DeepL\Translator;
+use Illuminate\Http\JsonResponse;
 use Modules\Imports\Models\CollectionItem;
 use Modules\OpenAI\Contracts\BuildsPrompt;
 use Modules\RestApi\Contracts\CompletesCollectionItem;
@@ -14,39 +15,51 @@ use Modules\Translations\Contracts\TranslatesData;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateResponse;
 use Modules\Translations\Models\Language;
-
 class CompleteCollectionItem implements CompletesCollectionItem
 {
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
-        $systemMessage = $preset->system_prompt;
-        $userMessage = $preset->user_prompt;
-
-        if($sourceList !== null){
-            foreach ($sourceList as $key => $value) {
-                $systemMessage = str_replace($key, $value, $systemMessage);
-                $userMessage = str_replace($key, $value, $userMessage);
+            if (!$this->validate($user)) {
+                $response = [
+                    "message" => "Plan limit exceeded",
+                    "timestamp" => now()
+                ];
+                return new JsonResponse($response, 429);
             }
-        }
 
-        $params = $preset->getChatParams($systemMessage, $userMessage);
-        $completion = OpenAI::chat()->create($params);
-        $formattedResponse = $this->formatResponse($completion);
+            $systemMessage = $preset->system_prompt;
+            $userMessage = $preset->user_prompt;
 
-        $result['output'] = $formattedResponse;
-
-        $translator = app(Translator::class);
-        if(count($translate) > 0){
-            foreach ($translate as $lang) {
-                $translatedText = $translator->translateText($formattedResponse, null, $lang);
-                $result[$lang] = $translatedText->text;
+            if ($sourceList !== null) {
+                foreach ($sourceList as $key => $value) {
+                    $systemMessage = str_replace($key, $value, $systemMessage);
+                    $userMessage = str_replace($key, $value, $userMessage);
+                }
             }
-        }
 
-        $user->currentTeam->planSubscription
-            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+            $params = $preset->getChatParams($systemMessage, $userMessage);
 
-        return $result;
+            // Handle OpenAI chat request
+            $completion = OpenAI::chat()->create($params);
+            $formattedResponse = $this->formatResponse($completion);
+
+            $result['output'] = $formattedResponse;
+
+            $translator = app(Translator::class);
+            if (count($translate) > 0) {
+                    foreach ($translate as $lang) {
+                        $translatedText = $translator->translateText($formattedResponse, null, $lang);
+                        $result[$lang] = $translatedText->text;
+
+                        $user->currentTeam->planSubscription
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+                    }
+            }
+
+            $user->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+
+            return $result;
     }
 
     protected function formatResponse(CreateResponse $response): string
@@ -58,6 +71,13 @@ class CompleteCollectionItem implements CompletesCollectionItem
         }
 
         return implode("\r\n----\r\n", $contents);
+    }
+
+    protected function validate(User $user)
+    {
+        $planSubscription = $user->currentTeam->planSubscription;
+
+        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS);
     }
 
 }

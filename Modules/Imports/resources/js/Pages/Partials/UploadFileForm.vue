@@ -78,12 +78,12 @@ const confirmUploading = () => {
     } else {
         upload();
     }
-
 }
 
 const upload = (append = false) => {
     form.append = append;
     confirmingAppending.value = false;
+
     if (Array.isArray(form.upload)) {
         form.post(route('import.images'), {
             errorBag: 'importFile',
@@ -103,11 +103,14 @@ const clearFileInput = () => {
     if (fileInput.value?.value) {
         fileInput.value.value = null;
     }
+    canUploadRef.value = false;
+
 }
 
 const closeModal = () => {
     confirmingAppending.value = false
 }
+
 </script>
 
 <template>
@@ -135,7 +138,7 @@ const closeModal = () => {
                         <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
                     </div>
                     <div>
-                   <PrimaryButton v-if="!canUploadRef" class="ml-2 mt-4 gap-x-1.5">
+                   <PrimaryButton v-if="!canUploadRef" class="ml-2 mt-2 gap-x-1.5">
                         {{ $t('Add file') }}
                         <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                     </PrimaryButton>

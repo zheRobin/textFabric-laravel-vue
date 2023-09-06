@@ -7,6 +7,7 @@ import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.
 import {notify} from "notiwind";
 import {trans} from "laravel-vue-i18n";
 import CopyToClipboard from "Jetstream/Components/CopyToClipboard.vue";
+import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
 const props = defineProps({
     item: Object,
@@ -105,6 +106,8 @@ const purgeStream = async () => {
         await currentEventSource.value.close();
     }
 
+    generatingContent.value = false;
+    loading.value = false;
     clearOutput();
 }
 
@@ -146,9 +149,12 @@ const translateContent = () => {
             <div class="flex items-center">
                 <CopyToClipboard v-if="!generatingContent && generatedContent" :content="generatedContent" class="mr-2" />
 
-                <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
+                <PrimaryButton @click="generate" v-if="!generatingContent" :class="{ 'opacity-50': generatingContent }">
                     {{ generationText }}
                 </PrimaryButton>
+                <SecondaryButton @click="purgeStream" v-else>
+                    {{ $t('Cancel') }}
+                </SecondaryButton>
             </div>
         </div>
 

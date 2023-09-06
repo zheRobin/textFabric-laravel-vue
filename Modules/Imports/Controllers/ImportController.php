@@ -14,6 +14,7 @@ class ImportController extends Controller
 {
     public function index(Request $request)
     {
+//        dd($request->user()->currentCollection->importFilePath());
         return Inertia::render('Imports::Index', [
 //            'headers' => $request->user()->currentCollection->headers,
             'items' =>  $request->user()->currentCollection?->items()->paginate(5)->onEachSide(2),
@@ -33,7 +34,6 @@ class ImportController extends Controller
         $importer = (new ImporterFactory)->getImporter(
             $request->user()->currentCollection->importFileExtension()
         );
-
         // TODO: refactor, move into separate service
         if (!boolval($request->offsetGet('append'))) {
             $request->user()->currentCollection->purgeItems();

@@ -105,6 +105,8 @@ const purgeStream = async () => {
         await currentEventSource.value.close();
     }
 
+    generatingContent.value = false;
+    loading.value = false;
     clearOutput();
 }
 
@@ -146,8 +148,11 @@ const translateContent = () => {
             <div class="flex items-center">
                 <CopyToClipboard v-if="!generatingContent && generatedContent" :content="generatedContent" class="mr-2" />
 
-                <PrimaryButton @click="generate" :disabled="generatingContent" :class="{ 'opacity-50': generatingContent }">
+                <PrimaryButton @click="generate" v-if="!generatingContent" :class="{ 'opacity-50': generatingContent }">
                     {{ generationText }}
+                </PrimaryButton>
+                <PrimaryButton @click="purgeStream" v-else>
+                    {{ $t('Cancel') }}
                 </PrimaryButton>
             </div>
         </div>

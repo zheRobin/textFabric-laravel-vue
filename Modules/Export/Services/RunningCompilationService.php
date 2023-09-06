@@ -40,7 +40,11 @@ class RunningCompilationService
             return collect(['pending' => 0, 'total' => 0]);
         }
 
-        $exports = Export::whereNotNull('job_batch_id')->orderBy('id')->get();
+        $exports = Export::select('id', 'collection_id', 'job_batch_id')
+            ->with('batch:id,total_jobs,pending_jobs')
+            ->whereNotNull('job_batch_id')
+            ->orderBy('id')
+            ->get();
 
         // no running compilation
         if ($exports->count() === 0) {
@@ -55,9 +59,13 @@ class RunningCompilationService
         $ourCollectionIds = $collections->pluck('id')->all();
         $pending = $exports->count();
 
-        foreach($exports as $index => $export) {
+        foreach ($exports as $index => $export) {
+            // condition to handle the case of single queue worker
             if (in_array($export->collection_id, $ourCollectionIds) && intval($export->collection_id) === intval($currentCollectionId)) {
-                $pending = $index;
+                // additional condition to handle the case of multiple queue workers
+                if ($export->batch->pending_jobs === $export->batch->total_jobs) {
+                    $pending = $index;
+                }
                 break;
             }
         }

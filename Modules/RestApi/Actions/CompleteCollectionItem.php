@@ -19,7 +19,6 @@ class CompleteCollectionItem implements CompletesCollectionItem
 {
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
-        try {
             if (!$this->validate($user)) {
                 $response = [
                     "message" => "Plan limit exceeded",
@@ -48,23 +47,19 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
             $translator = app(Translator::class);
             if (count($translate) > 0) {
-                foreach ($translate as $lang) {
-                    $translatedText = $translator->translateText($formattedResponse, null, $lang);
-                    $result[$lang] = $translatedText->text;
+                    foreach ($translate as $lang) {
+                        $translatedText = $translator->translateText($formattedResponse, null, $lang);
+                        $result[$lang] = $translatedText->text;
 
-                    $user->currentTeam->planSubscription
-                        ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
-                }
+                        $user->currentTeam->planSubscription
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+                    }
             }
 
             $user->currentTeam->planSubscription
                 ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
 
             return $result;
-        } catch (\Exception $e) {
-            // Handle other exceptions
-            return new JsonResponse(["message" => $e->getMessage()], 500);
-        }
     }
 
     protected function formatResponse(CreateResponse $response): string

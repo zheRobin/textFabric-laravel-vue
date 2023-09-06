@@ -7,6 +7,7 @@ import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.
 import {notify} from "notiwind";
 import {trans} from "laravel-vue-i18n";
 import CopyToClipboard from "Jetstream/Components/CopyToClipboard.vue";
+import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
 const props = defineProps({
     item: Object,
@@ -151,9 +152,9 @@ const translateContent = () => {
                 <PrimaryButton @click="generate" v-if="!generatingContent" :class="{ 'opacity-50': generatingContent }">
                     {{ generationText }}
                 </PrimaryButton>
-                <PrimaryButton @click="purgeStream" v-else>
+                <SecondaryButton @click="purgeStream" v-else>
                     {{ $t('Cancel') }}
-                </PrimaryButton>
+                </SecondaryButton>
             </div>
         </div>
 

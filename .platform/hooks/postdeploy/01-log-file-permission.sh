@@ -8,3 +8,6 @@ if [ ! -f /var/app/current/storage/logs/laravel.log ]; then
     chown webapp:webapp /var/app/current/storage/logs/laravel.log
     chmod 644 /var/app/current/storage/logs/laravel.log
 fi 
+
+chown webapp:webapp /var/app/current/storage/worker.log
+chmod 644 /var/app/current/storage/worker.log

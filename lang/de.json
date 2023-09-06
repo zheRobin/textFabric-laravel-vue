@@ -128,6 +128,10 @@
 
     "Currently running compilations": "Aktuell laufende Kompilationen",
     "Team has running compilations": "Team hat laufende Kompilationen",
+    "is": "is",
+    "are": "are",
+    "Other jobs are in front of this job": "There :isSingular :count job in the queue in front of you before we can start your processing.",
+    "Waiting for background workers to start processing.": "Waiting for background workers to start processing.",
     "Loading": "Wird geladen",
     "Nothing is being generated now": "Es wird gerade nichts generiert",
     "History of created compilations": "Verlauf der erstellten Kompilationen",

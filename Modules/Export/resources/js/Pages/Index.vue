@@ -108,9 +108,7 @@ const showProgress = (id) => {
                 if (res.data.data.name) {
                     activeGenerations.value.label = res.data.data.name;
                 } else if (localStorage.getItem('selected_queue')) {
-                    activeGenerations.value = dataLabel.find(
-                        (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
-                    );
+                    activeGenerations.value = offlineCompilationName(parseInt(localStorage.getItem('selected_queue')));
                 } else if (localStorage.getItem('selected_queue_translation')) {
                     activeGenerations.value.label = localStorage.getItem('selected_queue_translation');
                 }
@@ -128,6 +126,25 @@ if (props.activeExport && props.activeExport.batch) {
 }
 
 const activeQueue = ref(null);
+
+const pad = (n) => n < 10 ? '0' + n : n;
+
+const offlineCompilationName = (compilation) => {
+    let selectedCompilation = dataLabel.find((item) => item.value === compilation);
+
+    const now = Date();
+    const localDateTime = now.getFullYear() + "-" +
+        pad(now.getMonth() + 1) + "-" +
+        pad(now.getDate()) + " | " +
+        pad(now.getHours()) + ":" +
+        pad(now.getMinutes()) + ":" +
+        pad(now.getSeconds());
+
+    selectedCompilation.label += ' - ' + localDateTime;
+
+    return selectedCompilation;
+}
+
 const generate = async () => {
     generateActive.value = true;
     if (!loading.value) {
@@ -136,9 +153,7 @@ const generate = async () => {
             axios.post(route('export.generate', form.compilations)).then((res) => {
                 activeQueue.value = res.data.id_queue;
                 progress.value = 0;
-                activeGenerations.value = dataLabel.find(
-                    (item) => item.value === selectedCompilations.value
-                );
+                activeGenerations.value = offlineCompilationName(selectedCompilations.value);
                 localStorage.setItem('id_queue', activeQueue.value);
                 localStorage.setItem('selected_queue', selectedCompilations.value);
                 showProgress(activeQueue.value);

@@ -31,7 +31,6 @@ trait HasPlanSubscription
     }
 
     /**
-     * @param string $subscription
      * @param Plan $plan
      * @param Carbon|null $startDate
      * @return PlanSubscription

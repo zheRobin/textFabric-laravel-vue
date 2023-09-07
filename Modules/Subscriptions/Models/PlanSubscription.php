@@ -201,9 +201,7 @@ class PlanSubscription extends Model
             return true;
         }
 
-        if (is_null($featureValue) ||
-            $featureValue === '0' ||
-            $featureValue === 'false') {
+        if (is_null($featureValue) || $featureValue === '0' || $featureValue === 'false') {
             return false;
         }
 

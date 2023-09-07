@@ -130,7 +130,7 @@
     "Team has running compilations": "Team hat laufende Kompilationen",
     "is": "is",
     "are": "are",
-    "Other jobs are in front of this job": "There :isSingular :count job in the queue in front of you before we can start your processing.",
+    "There :isSingular :count job in the queue in front of you before we can start your processing.": "There :isSingular :count job in the queue in front of you before we can start your processing.",
     "Waiting for background workers to start processing.": "Waiting for background workers to start processing.",
     "Fetching status of this job.": "Fetching status of this job.",
     "Loading": "Wird geladen",

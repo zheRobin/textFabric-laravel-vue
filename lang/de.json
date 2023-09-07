@@ -137,6 +137,7 @@
     "Nothing is being generated now": "Es wird gerade nichts generiert",
     "History of created compilations": "Verlauf der erstellten Kompilationen",
     "History of cancelled and failed compilations": "Verlauf der abgebrochen und gescheitert Kompilationen",
+    "Error generating compilation": "Error generating compilation",
     "Error generating translation": "Error generating translation",
     "Search": "Suchen...",
     "View": "Ansehen",

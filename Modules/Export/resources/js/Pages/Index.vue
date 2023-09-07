@@ -146,7 +146,7 @@ const generate = async () => {
                 notify({
                     group: 'error',
                     title: 'Error!',
-                    text: error.response.data?.message || 'Error generating compilation',
+                    text: error.response.data?.message || trans('Error generating compilation'),
                 }, 4000);
             });
         }
@@ -221,7 +221,7 @@ const translation = () => {
         notify({
             group: 'error',
             title: 'Error!',
-            text: trans('Error generating translation'),
+            text: error.response.data?.message || trans( 'Error generating translation'),
         }, 4000);
     }).finally(() => {
         activeModal.value = false;

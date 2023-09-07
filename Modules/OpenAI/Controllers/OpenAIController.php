@@ -21,7 +21,7 @@ class OpenAIController extends Controller
             'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
             'languages' => Language::where('target', '1')
-                ->orderBy('name', 'asc')
+                ->orderBy('name')
                 ->get(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [

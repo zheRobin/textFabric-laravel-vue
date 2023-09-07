@@ -29,7 +29,7 @@ class ExportController extends Controller
     {
         return Inertia::render('Export::Index', [
             'languages' => Language::where('target', '1')
-                ->orderBy('name', 'asc')
+                ->orderBy('name')
                 ->get(),
             'compilations' => $request->user()->currentCollection->compilations ?? [],
             'activeExport' => $request->user()->currentCollection->exports()->active()->first(),

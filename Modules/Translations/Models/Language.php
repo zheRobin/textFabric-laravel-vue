@@ -22,4 +22,14 @@ class Language extends Model
         'target',
         'formality_support',
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

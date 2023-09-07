@@ -62,10 +62,11 @@ class HandleInertiaRequests extends Middleware
                 return LaravelLocalization::getSupportedLocales();
             },
             'language' => function () {
-                if (!file_exists(base_path('lang/' . app()->getLocale() . '.json'))) {
-                    return [];
-                }
-                return json_decode(file_get_contents(base_path('lang/' . app()->getLocale() . '.json')), true);
+                $currentLocaleFilename = base_path('lang/' . app()->getLocale() . '.json');
+
+                return file_exists($currentLocaleFilename)
+                    ? json_decode(file_get_contents($currentLocaleFilename), true)
+                    : [];
             },
             'collections' => function () use ($user) {
                 return [

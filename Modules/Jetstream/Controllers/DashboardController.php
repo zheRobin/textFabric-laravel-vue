@@ -5,7 +5,6 @@ namespace Modules\Jetstream\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Modules\Translations\Models\Language;
 use App\Models\WelcomeData;
 
 class DashboardController extends Controller

@@ -69,15 +69,6 @@ const page = usePage();
 const exports = ref(null);
 const cancelledExports = ref(null);
 
-async function fetchProgress() {
-    try {
-        const response = await axios.get('/get-progress');
-        progress.value = response.data.progress;
-    } catch (error) {
-        // console.error('Error fetching progress:', error);
-    }
-}
-
 const generateActive = ref(false);
 
 let progressInterval;

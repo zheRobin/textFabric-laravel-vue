@@ -4,13 +4,13 @@ import DialogModal from 'Jetstream/Components/DialogModal.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import InputLabel from 'Jetstream/Components/InputLabel.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
-import {useForm} from "@inertiajs/vue3";
 import {ref} from 'vue'
 import {PencilSquareIcon} from "@heroicons/vue/20/solid";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import axios from "axios";
 import Youtube from "Jetstream/Components/Youtube.vue";
-import LanguageSelector from "Jetstream/Components/LanguageSelector.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
 const locale = localStorage.getItem('locale') || 'en';
 const activeLocale = ref(locale);
 
@@ -26,7 +26,6 @@ const showYouTubeModal = (url) => {
     displayingYouTubeModal.value = true;
 }
 const handleSubmit = () => {
-    console.log(activeLocale);
     axios.post(route('dashboard.update'), activeBlock.value).then(()=>{
         displayingModal.value = false;
     })
@@ -57,14 +56,14 @@ const editTitle = (active) => {
             <div class="flex">
                 <div>
                     <h1 class="mt-8 text-2xl font-medium text-gray-900 dark:text-white">
-                        <div>{{props.data[0].title[activeLocale]}}</div>
+                        <span>{{props.data[0].title[activeLocale]}}</span>
                     </h1>
 
                     <p class="mt-6 text-gray-500 dark:text-gray-400 leading-relaxed">
                         {{props.data[0].value[activeLocale]}}
                     </p>
                     <p class="mt-4 text-sm">
-                        <div v-if="props.data[0].link_name[activeLocale]">
+                        <span v-if="props.data[0].link_name[activeLocale]">
                             <button v-if="isYouTubeLink(props.data[0].link)" @click="showYouTubeModal(props.data[0].link)" class="inline-flex items-center font-semibold text-tf-blue-700 dark:text-tf-blue-300">
                                 {{props.data[0].link_name[activeLocale]}}
 
@@ -79,7 +78,7 @@ const editTitle = (active) => {
                                     <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                                 </svg>
                             </a>
-                        </div>
+                        </span>
                     </p>
                 </div>
                 <div>
@@ -109,7 +108,7 @@ const editTitle = (active) => {
                 </p>
 
                 <p class="mt-4 text-sm">
-                    <div v-if="props.data[1].link_name[activeLocale]">
+                    <span v-if="props.data[1].link_name[activeLocale]">
                         <button v-if="isYouTubeLink(props.data[1].link)" @click="showYouTubeModal(props.data[1].link)" class="inline-flex items-center font-semibold text-tf-blue-700 dark:text-tf-blue-300">
                             {{props.data[1].link_name[activeLocale]}}
 
@@ -124,7 +123,7 @@ const editTitle = (active) => {
                             <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                         </svg>
                     </a>
-                    </div>
+                    </span>
                 </p>
             </div>
 
@@ -146,7 +145,7 @@ const editTitle = (active) => {
                 </p>
 
                 <p class="mt-4 text-sm">
-                    <div v-if="props.data[2].link_name[activeLocale]">
+                    <span v-if="props.data[2].link_name[activeLocale]">
                         <button v-if="isYouTubeLink(props.data[2].link)" @click="showYouTubeModal(props.data[2].link)" class="inline-flex items-center font-semibold text-tf-blue-700 dark:text-tf-blue-300">
                             {{props.data[2].link_name[activeLocale]}}
 
@@ -161,7 +160,7 @@ const editTitle = (active) => {
                                 <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                             </svg>
                         </a>
-                    </div>
+                    </span>
                 </p>
             </div>
 
@@ -183,7 +182,7 @@ const editTitle = (active) => {
                 </p>
 
                 <p class="mt-4 text-sm" v-if="props.data[3].link">
-                    <div v-if="props.data[3].link_name[activeLocale]">
+                    <span v-if="props.data[3].link_name[activeLocale]">
                         <button v-if="isYouTubeLink(props.data[3].link)" @click="showYouTubeModal(props.data[3].link)" class="inline-flex items-center font-semibold text-tf-blue-700 dark:text-tf-blue-300">
                             {{props.data[3].link_name[activeLocale]}}
 
@@ -198,7 +197,7 @@ const editTitle = (active) => {
                                 <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                             </svg>
                         </a>
-                    </div>
+                    </span>
                 </p>
             </div>
 
@@ -221,7 +220,7 @@ const editTitle = (active) => {
                 </p>
 
                 <p class="mt-4 text-sm" v-if="props.data[4].link">
-                    <div v-if="props.data[4].link_name[activeLocale]">
+                    <span v-if="props.data[4].link_name[activeLocale]">
                         <button v-if="isYouTubeLink(props.data[4].link)" @click="showYouTubeModal(props.data[4].link)" class="inline-flex items-center font-semibold text-tf-blue-700 dark:text-tf-blue-300">
                             {{props.data[4].link_name[activeLocale]}}
 
@@ -236,7 +235,7 @@ const editTitle = (active) => {
                                 <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                             </svg>
                         </a>
-                    </div>
+                    </span>
                 </p>
             </div>
         </div>

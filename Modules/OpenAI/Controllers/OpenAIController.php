@@ -15,14 +15,14 @@ class OpenAIController extends Controller
 {
     public function index(Request $request): \Inertia\Response
     {
-        return Inertia::render('OpenAI::Editor',[
+        return Inertia::render('OpenAI::Editor', [
             'presets' => $request->user()->currentCollection->presets ?? [],
             'selectedPreset' => session('preset'),
             'attributes' => $request->user()->currentCollection->headers ?? [],
             'models' => ChatModelEnum::values(),
             'languages' => Language::where('target', '1')
-                                    ->orderBy('name', 'asc')
-                                    ->get(),
+                ->orderBy('name')
+                ->get(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManagePresets' => Gate::check('manage', Preset::class),

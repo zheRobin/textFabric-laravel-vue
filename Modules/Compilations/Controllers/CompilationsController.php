@@ -26,7 +26,9 @@ class CompilationsController extends Controller
             'previewItem' => boolval($request->user()?->currentCollection?->items()->exists()) ? $request->user()->currentCollection?->items()->get()[0] : null,
             'previewItemLength' => $request->user()?->currentCollection?->items()->exists() ? count($request->user()->currentCollection?->items()->get()) : null,
             'complications' => $compilations,
-            'languages' => Language::all(),
+            'languages' => Language::where('target', '1')
+                ->orderBy('name')
+                ->get(),
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManageCompilations' => Gate::check('manage', Compilations::class)

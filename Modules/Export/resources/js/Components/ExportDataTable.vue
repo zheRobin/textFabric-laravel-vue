@@ -1,7 +1,6 @@
 <script setup>
 import Pagination from "Modules/Export/resources/js/Components/Pagination.vue";
 import {computed} from "vue";
-import {useForm} from "@inertiajs/vue3";
 import {ref} from "vue";
 import axios from "axios";
 
@@ -21,13 +20,7 @@ const rowsCount = ref(null);
 const gridColsCount = computed(() => `grid-cols-${colsCount.value + 1}`);
 const gridRowsCount = computed(() => rowsCount.value);
 
-const colNumber = (index) => {
-    return 5 * (5 - 1) + (index + 1);
-}
-
-const form = useForm({
-    page: 0
-});
+const colNumberRange = ref([]);
 
 const paginate = (destination = false) => {
     loading.value = true;
@@ -43,6 +36,7 @@ const paginate = (destination = false) => {
             loading.value = false;
 
             rowsCount.value = response.data.data.data[0].data.length;
+            colNumberRange.value = Array.from(new Array(items.value?.to - items.value?.from + 1), (x, i) => i + items.value?.from);
         });
 }
 paginate();
@@ -61,8 +55,8 @@ paginate();
                     <div class="p-4 bg-gray-200 h-14 text-center">
                         <span class="font-semibold text-gray-600"></span>
                     </div>
-                    <div class="p-4 bg-gray-200 h-14 text-center" v-for="n in colsCount">
-                        <span class="font-semibold text-gray-600">{{ n + (form.page*3) }}</span>
+                    <div class="p-4 bg-gray-200 h-14 text-center" v-for="n in colNumberRange">
+                        <span class="font-semibold text-gray-600">{{ n }}</span>
                     </div>
                 </div>
 

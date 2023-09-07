@@ -9,7 +9,7 @@ import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import axios from "axios";
 import {notify} from "notiwind";
-import {computed, ref} from "vue"
+import {computed, onUnmounted, ref} from "vue"
 import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
@@ -119,6 +119,8 @@ const showProgress = (id) => {
         }
     }, 2000);
 }
+
+onUnmounted(() => clearInterval(progressInterval));
 
 if (props.activeExport && props.activeExport.batch) {
     showProgress(props.activeExport.job_batch_id);

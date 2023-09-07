@@ -68,11 +68,7 @@ class Export extends Model
      */
     public static function buildName(string $name): string
     {
-        return implode('_', [
-            Str::slug($name),
-            'at',
-            Carbon::now()->format('Y-m-d-H-i-s'),
-        ]);
+        return sprintf("%s - %s | %s", $name, Carbon::now()->format('d.m.Y'), Carbon::now()->format('H:i:s'));
     }
 
     /**

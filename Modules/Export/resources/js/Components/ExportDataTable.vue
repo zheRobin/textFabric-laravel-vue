@@ -36,7 +36,7 @@ const paginate = (destination = false) => {
             loading.value = false;
 
             rowsCount.value = response.data.data.data[0].data.length;
-            colNumberRange.value = Array.from(new Array(items.value?.to - items.value?.from + 1), (x, i) => i + items.value?.from);
+            colNumberRange.value = Array.from({length: items.value?.to - items.value?.from + 1}, (x, i) => i + items.value?.from);
         });
 }
 paginate();

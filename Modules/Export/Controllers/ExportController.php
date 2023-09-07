@@ -142,7 +142,7 @@ class ExportController extends Controller
             ->then(function (Batch $batch) use ($export) {
                 //
             })
-            ->finally(function (Batch $batch) use ($export, $request) {
+            ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'translate', $batch->id));
@@ -162,7 +162,7 @@ class ExportController extends Controller
                     $export->save();
                 }
 
-                $request->user()->currentTeam->planSubscription
+                request()->user()->currentTeam->planSubscription
                     ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
             })
             ->name('Translate Export Compilation')

@@ -28,7 +28,8 @@
         "spatie/laravel-translatable": "^6.5",
         "swoolex/swoolex": "^2.5",
         "symfony/filesystem": "^6.2",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+      "ext-simplexml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

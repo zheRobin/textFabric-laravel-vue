@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div v-if="planSubscription.is_active" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-yellow-200">
+    <div v-if="planSubscription.is_active" class="mx-auto px-4 sm:px-6 lg:px-8 bg-yellow-200">
         <div v-if="planSubscription.on_trial" class="flex gap-x-6 px-2 py-2.5 justify-center">
             <a class="text-xs text-yellow-900 leading-6 lg:text-sm" :href="subscriptionContactLink">
                 <span v-if="daysLeft(planSubscription.ends_at) <= 1">

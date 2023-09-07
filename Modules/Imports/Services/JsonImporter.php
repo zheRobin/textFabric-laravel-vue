@@ -21,7 +21,17 @@ class JsonImporter implements Importer
      */
     public function import(User $user, Collection $collection): void
     {
-        $data = $this->validateJsonStructure($collection->importFileContent());
+        if($collection->importFileExtension() === 'xml'){
+            $data = simplexml_load_string($collection->importFileContent());
+            $result = [];
+            foreach ($data as $item){
+                $result[] = json_decode(json_encode($item), true);
+
+            }
+            $data = $result;
+        }else{
+            $data = $this->validateJsonStructure($collection->importFileContent());
+        }
 
         if (empty($data)) {
             throw ValidationException::withMessages([
@@ -67,6 +77,7 @@ class JsonImporter implements Importer
 
     public function getHeaders(Collection $collection): array
     {
+
         $data = $this->validateJsonStructure($collection->importFileContent());
 
         if (empty($data)) {

@@ -85,8 +85,8 @@ const translateItem = () => {
 <template>
     <div class="bg-gray-50 rounded">
         <div class="px-6 py-3 items-center">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center">
+            <div class="flex items-center justify-end">
+                <div class="flex items-center hidden">
                     <LanguageInput :disabled="!canChangeLanguage" @update:modelValue="changeLanguage" v-model="currentLanguage" :languages="languages" />
 
                     <PrimaryButton v-if="currentItem && currentLanguage && canChangeLanguage" @click="translateItem" class="inline-flex ml-3"> {{ $t('Translate') }} </PrimaryButton>

@@ -30,16 +30,11 @@ const supportedExtensions = computed(() => {
 const canUploadRef = ref(!!(form.upload && !uploadingError.value));
 
 const uploadInfo = computed(() => {
-    if (Array.isArray(form.upload)) {
-        return form.upload.length === 1
-            ? form.upload[0].name
-            : `${form.upload.length} files selected`
-    } else {
-        return form.upload.name;
-    }
+    return form.upload.name;
 });
 
 const handleUpload = () => {
+    console.log('upload')
     const imageFiles = [];
     const dataFiles = [];
 
@@ -89,14 +84,20 @@ const upload = (append = false) => {
             errorBag: 'importFile',
             preserveScroll: true,
             preserveState: false,
+            onSuccess: () => {
+                canUploadRef.value = false;
+            }
         });
     } else {
         form.post(route('import.file'), {
             errorBag: 'importFile',
             preserveScroll: true,
+            onSuccess: () => {
+                canUploadRef.value = false;
+            }
         });
     }
-    canUploadRef.value = false;
+    // canUploadRef.value = false;
 }
 
 const clearFileInput = () => {
@@ -127,16 +128,15 @@ const closeModal = () => {
 
             <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full flex-col block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
                 <div class="text-center">
-                    <!-- TODO: pass formats as parameters to translation method -->
-                    <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
-                    <small v-if="canUploadRef" :class="`text-gray-600 block`">
-                        {{ uploadInfo }}
-                    </small>
-                    <!-- TODO: fix validation message for images -->
-                    <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                    <div v-if="canUploadRef" class="block mt-2 pointer-events-auto">
-                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
-                    </div>
+                        <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
+                        <small v-if="canUploadRef" :class="`text-gray-600 block`">
+                            {{ uploadInfo }}
+                        </small>
+                        <!-- TODO: fix validation message for images -->
+                        <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
+                        <div v-if="canUploadRef" class="block mt-2 pointer-events-auto">
+                            <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
+                        </div>
                     <div>
                    <PrimaryButton v-if="!canUploadRef" class="ml-2 mt-2 gap-x-1.5">
                         {{ $t('Add file') }}

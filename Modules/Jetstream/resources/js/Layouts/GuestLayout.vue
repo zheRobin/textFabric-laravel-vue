@@ -136,6 +136,13 @@ const logout = () => {
                             {{ $t('Editor') }}
                         </ResponsiveNavLink>
                     </div>
+
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('demo.compilations.index')" :active="route().current('demo.compilations.index')">
+                            {{ $t('Compilations') }}
+                        </ResponsiveNavLink>
+                    </div>
                 </div>
             </nav>
 

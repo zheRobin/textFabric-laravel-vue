@@ -101,6 +101,7 @@ const triggerLoading = (value) => {
 }
 
 const setupStream = () => {
+    console.log(props.item);
     console.log(props.activeItem);
     generatingContent.value = true;
     triggerLoading(true);

@@ -147,25 +147,25 @@ const offlineCompilationName = (compilation) => {
 
 const generate = async () => {
     generateActive.value = true;
-    if (!loading.value) {
-        if (selectedCompilations.value) {
-            loading.value = true;
-            axios.post(route('export.generate', form.compilations)).then((res) => {
-                activeQueue.value = res.data.id_queue;
-                progress.value = 0;
-                activeGenerations.value = offlineCompilationName(selectedCompilations.value);
-                localStorage.setItem('id_queue', activeQueue.value);
-                localStorage.setItem('selected_queue', selectedCompilations.value);
-                showProgress(activeQueue.value);
-            }).catch(error => {
-                generateActive.value = false;
-                notify({
-                    group: 'error',
-                    title: 'Error!',
-                    text: error.response.data?.message || trans('Error generating compilation'),
-                }, 4000);
-            });
-        }
+
+    if (!loading.value && selectedCompilations.value) {
+        loading.value = true;
+
+        axios.post(route('export.generate', form.compilations)).then((res) => {
+            activeQueue.value = res.data.id_queue;
+            progress.value = 0;
+            activeGenerations.value = offlineCompilationName(selectedCompilations.value);
+            localStorage.setItem('id_queue', activeQueue.value);
+            localStorage.setItem('selected_queue', selectedCompilations.value);
+            showProgress(activeQueue.value);
+        }).catch(error => {
+            generateActive.value = false;
+            notify({
+                group: 'error',
+                title: 'Error!',
+                text: error.response.data?.message || trans('Error generating compilation'),
+            }, 4000);
+        });
     }
 };
 

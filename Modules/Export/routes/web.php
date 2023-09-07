@@ -12,21 +12,20 @@ $authMiddleware = array_filter([
 ]);
 
 Route::middleware($authMiddleware)->group(function () {
-    Route::group(['prefix' => LaravelLocalization::setLocale()]
-        , function () {
-            Route::get('/export', [ExportController::class, 'index'])->name('export.index');
-            Route::post('/export/generate/compilations/{compilation}', [ExportController::class, 'generate'])->name('export.generate');
-            Route::post('/export/{export}/delete', [ExportController::class, 'delete'])->name('export.delete');
-            Route::post('/export/translate/{export}', [ExportController::class, 'translate'])->name('export.translation');
+    Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
+        Route::get('/export', [ExportController::class, 'index'])->name('export.index');
+        Route::post('/export/generate/compilations/{compilation}', [ExportController::class, 'generate'])->name('export.generate');
+        Route::post('/export/{export}/delete', [ExportController::class, 'delete'])->name('export.delete');
+        Route::post('/export/translate/{export}', [ExportController::class, 'translate'])->name('export.translation');
 
-            Route::get('/export/{export}/items', [ExportCollectionItemController::class, 'index'])->name('export.items.index');
+        Route::get('/export/{export}/items', [ExportCollectionItemController::class, 'index'])->name('export.items.index');
 
-            Route::post('/export/{export}/download', [ExportController::class, 'download'])->name('export.download');
-            Route::post('/export', [ExportController::class, 'search'])->name('export.search');
-            Route::post('/export/cancelled', [ExportController::class, 'cancelled'])->name('export.cancelled');
+        Route::post('/export/{export}/download', [ExportController::class, 'download'])->name('export.download');
+        Route::post('/export', [ExportController::class, 'search'])->name('export.search');
+        Route::post('/export/cancelled', [ExportController::class, 'cancelled'])->name('export.cancelled');
 
-            Route::get('/export/showProgress', [ExportController::class, 'showProgress'])->name('export.showProgress');
+        Route::get('/export/showProgress', [ExportController::class, 'showProgress'])->name('export.showProgress');
 
-            Route::get('/export/cancel/{id}', [ExportController::class, 'cancel']);
-        });
+        Route::get('/export/cancel/{id}', [ExportController::class, 'cancel']);
+    });
 });

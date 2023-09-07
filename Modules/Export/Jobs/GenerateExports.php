@@ -4,9 +4,7 @@ namespace Modules\Export\Jobs;
 
 use App\Models\Compilations;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Modules\Export\Models\CompilationExport;
-use Modules\Fortify\Mail\RegistrationEmail;
 use Modules\OpenAI\Contracts\BuildsParams;
 use Modules\Translations\Models\Language;
 use Modules\Presets\Models\Preset;
@@ -19,6 +17,7 @@ use OpenAI\Laravel\Facades\OpenAI;
 use App\Models\User;
 use Modules\Export\Events\GetNotificationWhenQueueEndEvents;
 use Modules\Export\Models\QueueProgress;
+
 class GenerateExports implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -28,6 +27,7 @@ class GenerateExports implements ShouldQueue
     protected $user;
     protected $team_id;
     protected $collection_id;
+
     public function __construct($compilationId, $items, $idUser, $team_id, $collection_id)
     {
         $this->compilationId = $compilationId;
@@ -68,7 +68,7 @@ class GenerateExports implements ShouldQueue
             }
 
             $queueProgress->status = 'in_progress';
-            $queueProgress->progress = 100 * ($count++/count($presetIds));
+            $queueProgress->progress = 100 * ($count++ / count($presetIds));
             $queueProgress->save();
         }
 

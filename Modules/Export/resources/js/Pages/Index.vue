@@ -20,6 +20,7 @@ import {DocumentArrowDownIcon, DocumentTextIcon} from "@heroicons/vue/24/outline
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 import ExportDataTable from "Modules/Export/resources/js/Components/ExportDataTable.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     languages: Array,
@@ -195,6 +196,9 @@ const deleteExport = () => {
     });
 }
 const translation = () => {
+    progress.value = null;
+    localStorage.setItem('progress', 0);
+
     axios.post(route('export.translation', form.id), {
         value: form.value,
         languages: form.languages,
@@ -202,22 +206,26 @@ const translation = () => {
         search();
         fetchCancelledExports();
         loading.value = false;
-        activeModal.value = false;
         activeQueue.value = res.data.id_queue;
         localStorage.setItem('id_queue', res.data.id_queue);
         localStorage.setItem('selected_queue_translation', form.name);
         progress.value = 0;
         showProgress(activeQueue.value);
+
+        activeGenerations.value = {
+          value: 0,
+          label: form.name
+        }
+    }).catch((error) => {
+        generateActive.value = false;
+        notify({
+            group: 'error',
+            title: 'Error!',
+            text: trans('Error generating translation'),
+        }, 4000);
+    }).finally(() => {
+        activeModal.value = false;
     });
-
-    progress.value = 0;
-    localStorage.setItem('progress', 0);
-    generateActive.value = true;
-
-    activeGenerations.value = {
-        value: 0,
-        label: form.name
-    }
 }
 
 const download = () => {
@@ -527,9 +535,9 @@ fetchCancelledExports();
             <template #content>
                 <div class="mt-4">
                     <InputLabel for="title" value="Select languages" />
-                    <span @click="setLanguage(key)" v-for="(item, key) in props.languages" :class="activeLanguages.includes(key) ? style.enable : style.disable">
-                      {{ item }}
-                      <button v-if="activeLanguages.includes(key)" type="button" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20">
+                    <span @click="setLanguage(language.code)" v-for="language in props.languages" :class="activeLanguages.includes(language.code) ? style.enable : style.disable">
+                      {{ language.name }}
+                      <button v-if="activeLanguages.includes(language.code)" type="button" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20">
                         <span class="sr-only">Remove</span>
                         <svg viewBox="0 0 14 14" class="h-3.5 w-3.5 stroke-gray-600/50 group-hover:stroke-gray-600/75">
                           <path d="M4 4l6 6m0-6l-6 6" />

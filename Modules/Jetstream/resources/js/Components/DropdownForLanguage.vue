@@ -34,12 +34,13 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 const widthClass = computed(() => {
     return {
         '48': 'w-48',
+        'max': 'w-max',
     }[props.width.toString()];
 });
 
 const heightClass = computed(() => {
     return {
-        '48': 'h-48 overflow-scroll',
+        '48': 'h-48 overflow-y-auto',
         'full': 'h-full',
     }[props.height.toString()];
 });

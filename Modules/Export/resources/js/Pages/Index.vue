@@ -214,6 +214,7 @@ const deleteExport = () => {
 const translation = () => {
     progress.value = null;
     localStorage.setItem('progress', 0);
+    generateActive.value = true;
 
     axios.post(route('export.translation', form.id), {
         value: form.value,

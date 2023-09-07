@@ -16,7 +16,7 @@ import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import Pagination from "Jetstream/Components/Pagination.vue";
 import {MinusCircleIcon} from "@heroicons/vue/20/solid";
-import {DocumentTextIcon, DocumentArrowDownIcon} from "@heroicons/vue/24/outline";
+import {DocumentArrowDownIcon, DocumentTextIcon} from "@heroicons/vue/24/outline";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 import ExportDataTable from "Modules/Export/resources/js/Components/ExportDataTable.vue";
@@ -120,8 +120,7 @@ const showProgress = (id) => {
     }, 2000);
 }
 
-if (props.activeExport &&
-    props.activeExport.batch) {
+if (props.activeExport && props.activeExport.batch) {
     showProgress(props.activeExport.job_batch_id);
 }
 
@@ -137,7 +136,7 @@ const generate = async () => {
                 activeGenerations.value = dataLabel.find(
                     (item) => item.value === selectedCompilations.value
                 );
-                localStorage.setItem('id_queue', res.data.id_queue);
+                localStorage.setItem('id_queue', activeQueue.value);
                 localStorage.setItem('selected_queue', selectedCompilations.value);
                 showProgress(activeQueue.value);
             }).catch(error => {
@@ -281,9 +280,7 @@ const showViewModal = (item) => {
     form.id = item.id;
 
     axios.get(route('export.items.index', item), {}).then((response) => {
-        const item = response.data.data;
-
-        activeViewJson.value = item;
+        activeViewJson.value = response.data.data;
         activeViewModal.value = true;
     });
 }

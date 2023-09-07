@@ -2,6 +2,7 @@
 
 namespace Modules\Export\Jobs;
 
+use DeepL\DeepLException;
 use DeepL\Translator;
 use Illuminate\Bus\Batchable;
 use Illuminate\Support\Str;
@@ -16,12 +17,20 @@ class GenerateTranslations implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 3; // The number of times the job may be attempted.
+    public bool $failOnTimeout = true; // Indicate if the job should be marked as failed on timeout.
+    public int $timeout = 60; // The number of seconds the job can run before timing out.
+    public array $backoff = [3, 5, 10]; // The number of seconds to wait before retrying the job.
+
     public function __construct(
         protected array $languages,
         protected ExportCollectionItem $exportCollectionItem,
     ) {
     }
 
+    /**
+     * @throws DeepLException
+     */
     public function handle(): void
     {
         $translator = app(Translator::class);
@@ -31,8 +40,7 @@ class GenerateTranslations implements ShouldQueue
             $completions = $this->exportCollectionItem->completions;
 
             foreach ($completions as $completion) {
-                if (isset($completion['header']) &&
-                    isset($completion['value'])) {
+                if (isset($completion['header']) && isset($completion['value'])) {
                     $translations[] = [
                         'header' => $this->translatedHeader($completion['header'], $languageCode),
                         'value' => empty($completion['value'])

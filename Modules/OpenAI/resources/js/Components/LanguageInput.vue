@@ -22,7 +22,7 @@ const changeLanguage = (language) => {
         {{ props.modelValue ? props.modelValue.name : $t('Language') }}
     </span>
 
-    <Dropdown v-else align="left" width="30" height="48">
+    <Dropdown v-else align="left" height="48" class="w-max">
         <template #trigger>
             <span class="inline-flex rounded-md">
                 <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -36,7 +36,7 @@ const changeLanguage = (language) => {
         <template #content>
             <div class="w-30 relative">
                 <div class="sticky top-0 bg-white">
-                    <button @click="changeLanguage(null)" class="block flex justify-between w-full px-4 py-2 text-left text-sm font-semibold border-b leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
+                    <button @click="changeLanguage(null)" class="flex justify-between w-full px-4 py-2 text-left text-sm font-semibold border-b leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out">
                         {{ $t('Clear') }}
                         <XMarkIcon class="inline-flex w-5" />
                     </button>

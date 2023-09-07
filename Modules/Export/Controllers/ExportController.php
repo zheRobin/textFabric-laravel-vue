@@ -28,7 +28,8 @@ class ExportController extends Controller
     public function index(Request $request, RunningCompilationService $runningCompilationService)
     {
         return Inertia::render('Export::Index', [
-            'languages' => Language::where('target', '1')
+            'languages' => Language::select(['name', 'code'])
+                ->where('target', '1')
                 ->orderBy('name')
                 ->get(),
             'compilations' => $request->user()->currentCollection->compilations ?? [],
@@ -123,6 +124,9 @@ class ExportController extends Controller
         $export->delete();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function translate(Request $request, Export $export)
     {
         // store languages into export model

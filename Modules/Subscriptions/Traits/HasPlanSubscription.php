@@ -11,18 +11,6 @@ use Modules\Subscriptions\Services\Period;
 trait HasPlanSubscription
 {
     /**
-     * Define a polymorphic one-to-one relationship.
-     *
-     * @param  string  $related
-     * @param  string  $name
-     * @param  string|null  $type
-     * @param  string|null  $id
-     * @param  string|null  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
-     */
-    abstract public function morphOne($related, $name, $type = null, $id = null, $localKey = null);
-
-    /**
      * @return MorphOne
      */
     public function planSubscription(): MorphOne

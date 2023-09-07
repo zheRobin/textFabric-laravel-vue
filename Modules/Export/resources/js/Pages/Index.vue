@@ -143,6 +143,7 @@ const generate = async () => {
                 localStorage.setItem('selected_queue', selectedCompilations.value);
                 showProgress(activeQueue.value);
             }).catch(error => {
+                generateActive.value = false;
                 notify({
                     group: 'error',
                     title: 'Error!',

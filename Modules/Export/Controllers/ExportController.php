@@ -127,8 +127,10 @@ class ExportController extends Controller
     /**
      * @throws \Throwable
      */
-    public function translate(Request $request, Export $export)
+    public function translate(Request $request, Export $export, RunningCompilationService $runningCompilationService)
     {
+        abort_if($runningCompilationService->inPersonalTeam()->count() > 0, 403, __('Team has running compilations'));
+
         // store languages into export model
 
         $export->load('items');

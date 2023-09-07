@@ -76,7 +76,10 @@ let progressInterval;
 const showProgress = (id) => {
     clearInterval(progressInterval);
     if (localStorage.getItem('selected_queue_translation')) {
-        activeGenerations.value.label = localStorage.getItem('selected_queue_translation');
+        activeGenerations.value = {
+            label: localStorage.getItem('selected_queue_translation'),
+            value: 0,
+        }
     }
 
     generateActive.value = true;
@@ -106,13 +109,14 @@ const showProgress = (id) => {
                 }
 
                 if (res.data.data.name) {
-                    activeGenerations.value.label = res.data.data.name;
+                    activeGenerations.value = {label: res.data.data.name, value: progress.value};
                 } else if (localStorage.getItem('selected_queue')) {
-                    activeGenerations.value = dataLabel.find(
-                        (item) => item.value === parseInt(localStorage.getItem('selected_queue'))
-                    );
+                    activeGenerations.value = dataLabel.find((item) => item.value === parseInt(localStorage.getItem('selected_queue')));
                 } else if (localStorage.getItem('selected_queue_translation')) {
-                    activeGenerations.value.label = localStorage.getItem('selected_queue_translation');
+                    activeGenerations.value = {
+                        label: localStorage.getItem('selected_queue_translation'),
+                        value: progress.value,
+                    }
                 }
             });
         } else {
@@ -128,29 +132,29 @@ if (props.activeExport && props.activeExport.batch) {
 }
 
 const activeQueue = ref(null);
+
 const generate = async () => {
     generateActive.value = true;
-    if (!loading.value) {
-        if (selectedCompilations.value) {
-            loading.value = true;
-            axios.post(route('export.generate', form.compilations)).then((res) => {
-                activeQueue.value = res.data.id_queue;
-                progress.value = 0;
-                activeGenerations.value = dataLabel.find(
-                    (item) => item.value === selectedCompilations.value
-                );
-                localStorage.setItem('id_queue', activeQueue.value);
-                localStorage.setItem('selected_queue', selectedCompilations.value);
-                showProgress(activeQueue.value);
-            }).catch(error => {
-                generateActive.value = false;
-                notify({
-                    group: 'error',
-                    title: 'Error!',
-                    text: error.response.data?.message || trans('Error generating compilation'),
-                }, 4000);
-            });
-        }
+    progress.value = null;
+
+    if (!loading.value && selectedCompilations.value) {
+        loading.value = true;
+
+        axios.post(route('export.generate', form.compilations)).then((res) => {
+            activeQueue.value = res.data.id_queue;
+            progress.value = 0;
+            activeGenerations.value = dataLabel.find((item) => item.value === selectedCompilations.value);
+            localStorage.setItem('id_queue', activeQueue.value);
+            localStorage.setItem('selected_queue', selectedCompilations.value);
+            showProgress(activeQueue.value);
+        }).catch(error => {
+            generateActive.value = false;
+            notify({
+                group: 'error',
+                title: 'Error!',
+                text: error.response?.data?.message || trans('Error generating compilation'),
+            }, 4000);
+        });
     }
 };
 
@@ -197,8 +201,9 @@ const deleteExport = () => {
     });
 }
 const translation = () => {
-    progress.value = null;
     localStorage.setItem('progress', 0);
+    generateActive.value = true;
+    progress.value = null;
 
     axios.post(route('export.translation', form.id), {
         value: form.value,
@@ -211,12 +216,8 @@ const translation = () => {
         localStorage.setItem('id_queue', res.data.id_queue);
         localStorage.setItem('selected_queue_translation', form.name);
         progress.value = 0;
+        activeGenerations.value = {label: form.name, value: 0};
         showProgress(activeQueue.value);
-
-        activeGenerations.value = {
-          value: 0,
-          label: form.name
-        }
     }).catch((error) => {
         generateActive.value = false;
         notify({
@@ -361,7 +362,7 @@ const generationDone = (data) => {
     localStorage.removeItem('id_queue');
     localStorage.removeItem('selected_queue');
     generateActive.value = false;
-    progress.value = 0;
+    progress.value = null;
 }
 
 search();

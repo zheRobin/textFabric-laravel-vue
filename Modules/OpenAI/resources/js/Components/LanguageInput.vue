@@ -22,7 +22,7 @@ const changeLanguage = (language) => {
         {{ props.modelValue ? props.modelValue.name : $t('Language') }}
     </span>
 
-    <Dropdown v-else align="left" width="30" height="48">
+    <Dropdown v-else align="left" height="48" class="w-max">
         <template #trigger>
             <span class="inline-flex rounded-md">
                 <button type="button" class="inline-flex items-center text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">

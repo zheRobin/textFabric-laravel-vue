@@ -2,8 +2,12 @@
 
 namespace Modules\Translations\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin Builder
+ */
 class Language extends Model
 {
     /**

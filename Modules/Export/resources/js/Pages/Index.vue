@@ -201,6 +201,10 @@ const deleteExport = () => {
     });
 }
 const translation = () => {
+    if (form.languages.length === 0) {
+        return;
+    }
+
     localStorage.setItem('progress', 0);
     generateActive.value = true;
     progress.value = null;

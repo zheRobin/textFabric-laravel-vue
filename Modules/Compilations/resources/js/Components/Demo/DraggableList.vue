@@ -143,9 +143,12 @@ function onDropOurColumn (e, arr, column) {
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex" v-if="presetsToComplete.length">
                 <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    Product
+                    {{ items[currentPage][1].value }}
+                    <span class="ml-2">
+                        -
+                    </span>
                     <span class="ml-2 mr-4">
-                            {{ `- #${currentPage + 1}` }}
+                            {{ `#${currentPage + 1}` }}
                         </span>
                 </div>
                 <span class="isolate inline-flex rounded-md shadow-sm">

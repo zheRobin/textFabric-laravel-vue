@@ -10,7 +10,7 @@ import {getActiveLanguage} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 
-const selectedPreset = ref(null);
+const selectedPreset = ref(localStorage.getItem('selected-preset-demo') ? presets.find((el) => el.slug === localStorage.getItem('selected-preset-demo')) : null );
 
 const selectedPresetOption = computed(() => {
     return selectedPreset.value
@@ -31,6 +31,7 @@ const presetOptions = () => {
 }
 
 const changePreset = (value) => {
+    localStorage.setItem('selected-preset-demo', value)
     selectedPreset.value = presets.find((el) => el.slug === value);
 }
 </script>

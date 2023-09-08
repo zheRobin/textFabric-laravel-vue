@@ -4,11 +4,13 @@ import {ChevronRightIcon, ChevronLeftIcon} from '@heroicons/vue/20/solid';
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {iterateCollectionItems} from "Modules/OpenAI/resources/js/axios";
 import LanguageInput from "Modules/OpenAI/resources/js/Components/LanguageInput.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
     languages: Array,
     languageId: Number,
     canChangeLanguage: Boolean,
+    title: Object
 });
 
 const emit = defineEmits(['itemChanged', 'update:inputLanguage']);
@@ -38,7 +40,18 @@ const itemData = computed(() => {
 
 const currentPage = ref(1);
 const lastPage = ref(null);
-
+const fincElementHeader = () => {
+    let title = '';
+    if(currentItem.value.data !== undefined){
+        title = currentItem.value.data.find(item => item.header === props.title.name);
+        if(title){
+            if(title.length > 50){
+                 return title.value.slice(0, 50) + '...';
+            }
+            return title.value;
+        }
+    }
+}
 const collectionItem = (page) => {
     iterateCollectionItems(page)
         .then((response) => {
@@ -94,10 +107,18 @@ const translateItem = () => {
 
                 <div class="flex items-center">
                     <div class="text-sm font-medium text-gray-900 truncate">
-                        {{$page.props.auth.user.current_collection.headers.find(item => item.type === 'title').name}}
-                        <span class="ml-2 mr-4">
-                            {{ `- #${currentPage}` }}
-                        </span>
+                        <div v-if="fincElementHeader()">
+                            {{fincElementHeader()}}
+                            <span class="ml-2 mr-2">-</span>
+                            <span class="ml-2 mr-4">
+                            {{ `#${currentPage}` }}
+                            </span>
+                        </div>
+                        <div v-else>
+                            <span class="ml-2 mr-4">
+                            {{ `#${currentPage}` }}
+                            </span>
+                        </div>
                     </div>
 
                     <span class="isolate inline-flex rounded-md shadow-sm">

@@ -14,6 +14,7 @@ const props = defineProps({
     compilation: Object,
     languages: Array,
     canEdit: Boolean,
+    title: Object
 });
 console.log(props, 'props')
 const {presets, previewItem, compilation, previewItemLength} = props;
@@ -40,12 +41,27 @@ const sortedPresets = existingPresets.sort((a, b) => {
     const bIndex = activePresets.indexOf(b.id);
     return aIndex - bIndex;
 });
-
+const titleHeader = ref(null);
+const findElementHeader = () => {
+    let title = '';
+    if(activeItem.value.data !== undefined){
+        title = activeItem.value.data.find(item => item.header === props.title.name);
+        if(title){
+            if(title.length > 50){
+                titleHeader.value = title.value.slice(0, 50) + '...';
+            }
+            titleHeader.value = title.value;
+        }
+    }
+    console.log(props.previewItem.data);
+}
+findElementHeader();
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
 
 let interval;
 const nextPrevElements = (item) => {
+    findElementHeader();
     if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
         loading.value = true;
         interval = setTimeout(() => {
@@ -180,11 +196,17 @@ function onDropOurColumn (e, arr, column) {
         <div class="flex justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex" v-if="itemsRight.length !== 0">
-                <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    {{$page.props.auth.user.current_collection.headers.find(item => item.type === 'title').name}}
+                <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">
+                    {{titleHeader}}
+                    <span class="ml-2 mr-2">-</span>
                     <span class="ml-2 mr-4">
-                            {{ `- #${idItems + 1}` }}
-                        </span>
+                        {{ `#${idItems + 1}` }}
+                    </span>
+                </div>
+                <div v-else>
+                    <span class="ml-2 mr-4">
+                        {{ `#${idItems + 1}` }}
+                    </span>
                 </div>
                   <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">

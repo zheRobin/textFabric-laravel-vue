@@ -14,6 +14,7 @@ const props = defineProps({
     languages: Array,
     hasItems: Boolean,
     permissions: Object,
+    title: Object
 });
 
 const loader = ref(true);
@@ -58,7 +59,7 @@ const selectedPresetData = async (data) => {
                             <div class="dark:text-gray-400">{{$t('Select or create a new compilation...')}}</div>
                         </div>
                         <div class="flex gap-10" v-else>
-                            <DarggableList :canEdit="true" :presets="presets" :previewItem="previewItem" :previewItemLength="previewItemLength" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" />
+                            <DarggableList :canEdit="true" :presets="presets" :previewItem="previewItem" :previewItemLength="previewItemLength" :compilation="activeCompilations" :languages="languages" @itemRight="itemRightData" :title="title" />
                         </div>
                     </template>
                 </div>

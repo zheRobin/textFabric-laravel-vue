@@ -1,14 +1,14 @@
 branch-defaults:
   master:
-    environment: Texthub-prod-env
+    environment: Texthub-prod-env-php82-env
 environment-defaults:
-  Texthub-prod-env:
+  Texthub-prod-env-php82-env:
     branch: null
     repository: null
 global:
-  application_name: texthub-prod
+  application_name: Texthub-prod-env-php8.2
   default_ec2_keyname: texthub
-  default_platform: PHP 8.1 running on 64bit Amazon Linux 2
+  default_platform: PHP 8.2 running on 64bit Amazon Linux 2023
   default_region: eu-central-1
   include_git_submodules: true
   instance_profile: null

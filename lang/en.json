@@ -139,6 +139,7 @@
     "History of cancelled and failed compilations": "History of cancelled and failed compilations",
     "Error generating compilation": "Error generating compilation",
     "Error generating translation": "Error generating translation",
+    "This compilation doesn't contain any presets. Please add presets to the selected compilation to start an export.": "This compilation doesn't contain any presets. Please add presets to the selected compilation to start an export.",
     "Search": "Search...",
     "View": "View",
     "Translation": "Translation",

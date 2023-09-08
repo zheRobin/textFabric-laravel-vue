@@ -390,18 +390,14 @@ const generationDone = (data) => {
     loading.value = false;
     activeGenerations.value = null;
     searchQuery.value = '';
-
+    search();
+    fetchCancelledExports();
+    triggerTeamRunningCompilationsStatus();
     localStorage.removeItem('selected_queue_translation');
     localStorage.removeItem('id_queue');
     localStorage.removeItem('selected_queue');
     generateActive.value = false;
     progress.value = null;
-
-    setTimeout(() => {
-        search();
-        fetchCancelledExports();
-        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
-    }, 2000);
 }
 
 const switchToCollection = (collectionId) => {
@@ -423,8 +419,14 @@ const teamRunningCompilationsStatus = () => {
     }
 }
 
+const triggerTeamRunningCompilationsStatus = () => {
+    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 2000);
+}
+
 onMounted(() => {
-    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 2000)
+    if (!progressInterval) {
+        triggerTeamRunningCompilationsStatus();
+    }
 });
 onUnmounted(() => clearInterval(teamRunningCompilationsInterval));
 

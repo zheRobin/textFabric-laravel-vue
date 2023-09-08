@@ -133,7 +133,35 @@ if (props.activeExport && props.activeExport.batch) {
 
 const activeQueue = ref(null);
 
+const alertCompilationWithNoPreset = () => notify({
+    group: 'error',
+    title: 'Error!',
+    text: trans("This compilation doesn't contain any presets. Please add presets to the selected compilation to start an export."),
+}, 4000);
+
+const selectedCompilationHasPreset = () => {
+    const selectedCompilation = localStorage.getItem('selected-compilations');
+
+    if (!selectedCompilation) {
+        alertCompilationWithNoPreset();
+        return false;
+    }
+
+    const currentCompilation = props?.compilations.find((compilation) => compilation.id === parseInt(selectedCompilation));
+
+    if (currentCompilation.preset_ids.length === 0) {
+        alertCompilationWithNoPreset();
+        return false;
+    }
+
+    return true;
+}
+
 const generate = async () => {
+    if (!selectedCompilationHasPreset()) {
+        return;
+    }
+
     generateActive.value = true;
     progress.value = null;
 

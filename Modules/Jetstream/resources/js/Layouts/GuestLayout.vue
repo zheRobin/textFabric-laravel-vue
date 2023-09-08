@@ -90,12 +90,13 @@ const logout = () => {
 
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <LanguageSelector />
-                        </div>
+
 
                         <!-- Hamburger -->
                         <div class="-mr-2 flex items-center sm:hidden">
+                            <div class="">
+                                <LanguageSelector />
+                            </div>
                             <button class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out" @click="showingNavigationDropdown = ! showingNavigationDropdown">
                                 <svg
                                     class="h-6 w-6"
@@ -143,6 +144,7 @@ const logout = () => {
                             {{ $t('Compilations') }}
                         </ResponsiveNavLink>
                     </div>
+
                 </div>
             </nav>
 

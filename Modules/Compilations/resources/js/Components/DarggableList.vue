@@ -180,8 +180,11 @@ function onDropOurColumn (e, arr, column) {
         <div class="flex justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex" v-if="itemsRight.length !== 0">
-                <div class="mr-4 mt-1">
-                    #{{ idItems + 1 }}
+                <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
+                    {{$page.props.auth.user.current_collection.headers.find(item => item.type === 'title').name}}
+                    <span class="ml-2 mr-4">
+                            {{ `- #${idItems + 1}` }}
+                        </span>
                 </div>
                   <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">

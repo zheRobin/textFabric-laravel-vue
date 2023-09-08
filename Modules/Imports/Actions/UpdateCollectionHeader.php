@@ -24,8 +24,16 @@ class UpdateCollectionHeader implements UpdatesCollectionHeader
        $headers = [];
 
        foreach ($collection->headers as $header) {
-           if ($header['name'] === $input['header']) {
-               $header['type'] = $input['type'];
+           if($input['type'] === 'title'){
+               if ($header['name'] === $input['header']) {
+                   $header['type'] = $input['type'];
+               }else{
+                   $header['type'] = 'text';
+               }
+           }else{
+               if ($header['name'] === $input['header']) {
+                   $header['type'] = $input['type'];
+               }
            }
 
            $headers[] = $header;

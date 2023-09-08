@@ -61,9 +61,12 @@ changeItem();
         <div class="px-6 py-3 items-center">
             <div class="flex justify-end items-center">
                 <div class="flex items-center">
-                    <span class="mr-4">
-                        {{ `#${currentPage + 1}` }}
-                    </span>
+                    <div class="text-sm font-medium text-gray-900 truncate">
+                        Product
+                        <span class="ml-2 mr-4">
+                            {{ `- #${currentPage + 1}` }}
+                        </span>
+                    </div>
                     <span class="isolate inline-flex rounded-md shadow-sm">
                         <button type="button" @click="previousItem" :disabled="previousButtonDisabled" :class="!previousButtonDisabled ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                             <span class="sr-only"> {{ $t('Previous') }} </span>

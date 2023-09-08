@@ -415,12 +415,12 @@ const teamRunningCompilationsStatus = () => {
     if (props.teamRunningCompilations.length === 0) {
         clearInterval(teamRunningCompilationsInterval);
     } else {
-        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
+        router.reload({ only: ['teamRunningCompilations'] });
     }
 }
 
 const triggerTeamRunningCompilationsStatus = () => {
-    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 2000);
+    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 3000);
 }
 
 onMounted(() => {
@@ -470,10 +470,15 @@ fetchCancelledExports();
                                 </svg>
                                 <span>{{ $t('Team has running compilations') }}</span>
                                 <span v-for="teamRunningCompilation in props.teamRunningCompilations" class="flex flex-wrap font-medium text-sm">
-                                    <a href="" @click.prevent="switchToCollection(teamRunningCompilation.collection_id)" class="flex items-center ml-3 hover:underline">
-                                        <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                        {{ teamRunningCompilation?.name }}
-                                    </a>
+                                    <span class="flex items-center ml-3">
+                                        <a href="" @click.prevent="switchToCollection(teamRunningCompilation.collection_id)" class="flex items-center hover:underline">
+                                            <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                            <span>{{ teamRunningCompilation?.name }}</span>
+                                        </a>
+                                        <span class="mx-2 px-1 bg-amber-500 text-amber-50 rounded shadow">
+                                            {{ (teamRunningCompilation?.batch?.total_jobs - teamRunningCompilation?.batch?.pending_jobs + teamRunningCompilation?.batch?.failed_jobs) / teamRunningCompilation?.batch?.total_jobs * 100 }}%
+                                        </span>
+                                    </span>
                                 </span>
                             </div>
                             <div class="flex items-center">

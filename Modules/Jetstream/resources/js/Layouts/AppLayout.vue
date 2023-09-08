@@ -35,7 +35,7 @@ const switchToCollection = (collection) => {
     localStorage.removeItem('selected-preset');
     router.put(route('current-collection.update', collection.id), {}, {
         preserveState: false,
-    })
+    });
 }
 
 const logout = () => {

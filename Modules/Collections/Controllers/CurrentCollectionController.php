@@ -14,6 +14,10 @@ class CurrentCollectionController extends Controller
             abort(403);
         }
 
+        if ($request->offsetGet('redirect') === 'export') {
+            return redirect(route('export.index'), 303);
+        }
+
         return redirect(config('fortify.home'), 303);
     }
 

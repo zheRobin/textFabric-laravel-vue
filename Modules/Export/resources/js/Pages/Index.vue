@@ -9,7 +9,7 @@ import ApiModal from "Jetstream/Components/ApiModal.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import axios from "axios";
 import {notify} from "notiwind";
-import {computed, onUnmounted, ref} from "vue"
+import {computed, onMounted, onUnmounted, ref} from "vue"
 import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
@@ -404,6 +404,30 @@ const generationDone = (data) => {
     }, 2000);
 }
 
+const switchToCollection = (collectionId) => {
+    localStorage.removeItem('selected-preset');
+    router.put(route('current-collection.update', collectionId), {
+      redirect: 'export',
+    }, {
+        preserveState: false,
+    });
+}
+
+let teamRunningCompilationsInterval;
+
+const teamRunningCompilationsStatus = () => {
+    if (props.teamRunningCompilations.length === 0) {
+        clearInterval(teamRunningCompilationsInterval);
+    } else {
+        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
+    }
+}
+
+onMounted(() => {
+    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 2000)
+});
+onUnmounted(() => clearInterval(teamRunningCompilationsInterval));
+
 search();
 fetchCancelledExports();
 </script>
@@ -438,20 +462,22 @@ fetchCancelledExports();
                 <div v-else class="mx-auto px-6 py-6">
                     <div class="max-w-7xl mx-auto pt-10 sm:px-6 lg:px-8">
                         <div class="border-b border-gray-200 pb-8">
-                            <div v-if="!generateActive && teamRunningCompilations.length !== 0" class="flex items-center mb-6 text-sm bg-yellow-200 text-yellow-900 border-l-4 border-yellow-400">
+                            <div v-if="!generateActive && props.teamRunningCompilations.length !== 0" class="flex items-center mb-6 text-sm bg-yellow-200 text-yellow-900 border-l-4 border-yellow-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" class="w-4 h-4 m-4 text-yellow-500">
                                     <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
                                 </svg>
                                 <span>{{ $t('Team has running compilations') }}</span>
-                                <span v-for="teamRunningCompilation in teamRunningCompilations" class="flex items-center font-medium text-sm ml-3">
-                                    <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                    {{ teamRunningCompilation?.name }}
+                                <span v-for="teamRunningCompilation in props.teamRunningCompilations" class="flex flex-wrap font-medium text-sm">
+                                    <a href="" @click.prevent="switchToCollection(teamRunningCompilation.collection_id)" class="flex items-center ml-3 hover:underline">
+                                        <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
+                                        {{ teamRunningCompilation?.name }}
+                                    </a>
                                 </span>
                             </div>
                             <div class="flex items-center">
                                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
-                                <PrimaryButton v-if="!generateActive && selectedCompilations && teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
+                                <PrimaryButton v-if="!generateActive && selectedCompilations && props.teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
                                     {{ $t('Generate') }}
                                 </PrimaryButton>
                             </div>
@@ -461,7 +487,7 @@ fetchCancelledExports();
                         <div class="border-b border-gray-200 pb-8 mb-8">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('Currently running compilations')}}</h2>
                             <div class="flex justify-between mt-6" v-if="generateActive">
-                                <div class="my-3 font-medium text-sm items-center flex">
+                                <div class="flex items-center text-sm font-semibold leading-6 text-gray-900 my-3">
                                     <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
                                     {{activeGenerations.label || '...'}}
                                 </div>

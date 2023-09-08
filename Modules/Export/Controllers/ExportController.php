@@ -190,6 +190,7 @@ class ExportController extends Controller
                 'progress' => $export?->batch->progress() ?? 100,
                 'finished' => $export?->batch->finished() ?? true,
                 'cancelled' => $export?->batch->cancelled() ?? false,
+                'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,
                 'compilations' => $runningCompilationService->inAnyTeam(),

@@ -4,4 +4,4 @@
 echo "Shutting down Supervisor.."
 supervisorctl stop all
 
-supervisorctl shutdown
+# supervisorctl shutdown

@@ -413,6 +413,21 @@ const switchToCollection = (collectionId) => {
     });
 }
 
+let teamRunningCompilationsInterval;
+
+const teamRunningCompilationsStatus = () => {
+    if (props.teamRunningCompilations.length === 0) {
+        clearInterval(teamRunningCompilationsInterval);
+    } else {
+        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
+    }
+}
+
+onMounted(() => {
+    teamRunningCompilationsInterval = setInterval(() => teamRunningCompilationsStatus(), 2000)
+});
+onUnmounted(() => clearInterval(teamRunningCompilationsInterval));
+
 search();
 fetchCancelledExports();
 </script>

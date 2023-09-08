@@ -104,7 +104,7 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'generate', $batch->id));
-                    Artisan::call("queue:retry-batch {$batch->id}");
+                    Artisan::call('queue:retry-batch', ['id' => $batch->id]);
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
@@ -161,7 +161,7 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'translate', $batch->id));
-                    Artisan::call("queue:retry-batch {$batch->id}");
+                    Artisan::call('queue:retry-batch', ['id' => $batch->id]);
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message

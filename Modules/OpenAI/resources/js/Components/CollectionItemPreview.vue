@@ -45,8 +45,8 @@ const fincElementHeader = () => {
     if(currentItem.value.data !== undefined){
         title = currentItem.value.data.find(item => item.header === props.title.name);
         if(title){
-            if(title.length > 50){
-                 return title.value.slice(0, 50) + '...';
+            if(title.value.length > 30){
+                 return title.value.slice(0, 25) + '...';
             }
             return title.value;
         }
@@ -107,8 +107,8 @@ const translateItem = () => {
 
                 <div class="flex items-center">
                     <div class="text-sm font-medium text-gray-900 truncate">
-                        <div v-if="fincElementHeader()">
-                            {{fincElementHeader()}}
+                        <div v-if="fincElementHeader()" class="flex">
+                            <div>{{fincElementHeader()}}</div>
                             <span class="ml-2 mr-2">-</span>
                             <span class="ml-2 mr-4">
                             {{ `#${currentPage}` }}

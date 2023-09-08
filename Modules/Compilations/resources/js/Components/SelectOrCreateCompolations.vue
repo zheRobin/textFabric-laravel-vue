@@ -197,8 +197,8 @@ initSelectedCompilation();
 </script>
 
 <template>
-    <div class="flex border-b border-gray-200 pb-8 items-center">
-        <div class="items-center flex flex-1">
+    <div class="flex border-b border-gray-200 pb-8 md:items-center">
+        <div class="md:items-center flex flex-1 flex-col md:flex-row">
             <template v-if="!complications.length || addingPreset">
                 <template v-if="canManageCompilations">
                     <label class="mr-2 font-medium">{{$t('Name:')}}</label>
@@ -215,25 +215,27 @@ initSelectedCompilation();
             </template>
 
             <template v-else>
-                <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                <SelectMenu @update:modelValue="changePreset" class="w-60" v-model="selectedPreset" :options="presetOptions()" :placeholder="$t('Select')" />
+                <label class="mr-2 font-medium dark:text-white mb-3 md:mb-0">{{$t('Compilation')}}:</label>
+                <SelectMenu @update:modelValue="changePreset" class="w-60 mb-3 md:mb-0" v-model="selectedPreset" :options="presetOptions()" :placeholder="$t('Select')" />
                 <template v-if="canManageCompilations">
-                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                        {{$t('Add')}}
-                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                    </PrimaryButton>
-                    <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                        <PrimaryButton class="ml-2 gap-x-1.5">
-                            {{$t('Rename')}}
-                            <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                    <div>
+                        <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                            {{$t('Add')}}
+                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                         </PrimaryButton>
-                    </RenamePreset>
-                    <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                        <DangerButton class="ml-2 gap-x-1.5">
-                            {{$t('Delete')}}
-                            <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                        </DangerButton>
-                    </DeletePreset>
+                        <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                            <PrimaryButton class="ml-2 gap-x-1.5">
+                                {{$t('Rename')}}
+                                <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                            </PrimaryButton>
+                        </RenamePreset>
+                        <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                            <DangerButton class="ml-2 gap-x-1.5">
+                                {{$t('Delete')}}
+                                <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                            </DangerButton>
+                        </DeletePreset>
+                    </div>
                 </template>
             </template>
         </div>

@@ -251,6 +251,9 @@ const logout = () => {
 
                         <!-- Hamburger -->
                         <div class="-mr-2 flex items-center sm:hidden">
+                            <div class="">
+                                <LanguageSelector />
+                            </div>
                             <button class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out" @click="showingNavigationDropdown = ! showingNavigationDropdown">
                                 <svg
                                     class="h-6 w-6"
@@ -280,6 +283,7 @@ const logout = () => {
 
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
+
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             {{ $t('Dashboard') }}
@@ -314,7 +318,6 @@ const logout = () => {
                             {{$t('Compilations')}}
                         </ResponsiveNavLink>
                     </div>
-
 
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('export.index')" :active="route().current('export.index')">

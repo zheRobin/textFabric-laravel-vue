@@ -193,11 +193,11 @@ function onDropOurColumn (e, arr, column) {
          @dragenter="onDragEnter($event)"
          @dragover.prevent
          @dragenter.preven>
-        <div class="flex justify-between">
+        <div class="flex md:flex-row flex-col justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
-            <div class="flex" v-if="itemsRight.length !== 0">
+            <div class="flex md:justify-normal justify-between" v-if="itemsRight.length !== 0">
                 <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    {{titleHeader}}
+                    {{titleHeader.length > 20 ? titleHeader.slice(0, 25) + '...' : titleHeader.length}}
                     <span class="ml-2 mr-2">-</span>
                     <span class="ml-2 mr-4">
                         {{ `#${idItems + 1}` }}
@@ -208,7 +208,8 @@ function onDropOurColumn (e, arr, column) {
                         {{ `#${idItems + 1}` }}
                     </span>
                 </div>
-                  <span class="isolate inline-flex rounded-md shadow-sm">
+                <div>
+                   <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Previous</span>
                       <ChevronLeftIcon class="h-5 w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
@@ -218,6 +219,7 @@ function onDropOurColumn (e, arr, column) {
                       <ChevronRightIcon class="h-5 w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
                     </button>
                   </span>
+                </div>
             </div>
         </div>
         <div>

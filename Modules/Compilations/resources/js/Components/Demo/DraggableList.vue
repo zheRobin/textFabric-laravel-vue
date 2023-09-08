@@ -143,7 +143,7 @@ function onDropOurColumn (e, arr, column) {
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex" v-if="presetsToComplete.length">
                 <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    {{ items[currentPage][0].value }}
+                    {{ items[currentPage][1].value }}
                     <span class="ml-2">
                         -
                     </span>

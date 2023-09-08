@@ -10,7 +10,7 @@ return [
             ],
             [
                 'name' => 'Product',
-                'type' => 'text'
+                'type' => 'title'
             ],
             [
                 'name' => 'Feature 1',
@@ -135,7 +135,7 @@ return [
             ],
             [
                 'name' => 'Produkt',
-                'type' => 'text'
+                'type' => 'title'
             ],
             [
                 'name' => 'Merkmal 1',

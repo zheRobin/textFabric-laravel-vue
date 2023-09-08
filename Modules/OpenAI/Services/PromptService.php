@@ -17,7 +17,7 @@ class PromptService
     public function getHeaders(Collection $collection): array
     {
         $headers = array_filter($collection->headers, function ($header) {
-            return $header['type'] !== HeaderTypeEnum::IMAGE->slug();
+            return $header['type'] !== '';
         });
 
         return array_column($headers, 'name');

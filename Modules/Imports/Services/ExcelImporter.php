@@ -22,8 +22,12 @@ class ExcelImporter implements Importer
     {
         $headers = $this->getHeaders($collection);
 
-        foreach ($headers as $header) {
-            $collection->addHeader($header, HeaderTypeEnum::TEXT);
+        foreach ($headers as $index => $header) {
+            if($index === 0) {
+                $collection->addHeader($header, HeaderTypeEnum::TITLE);
+            }else{
+                $collection->addHeader($header, HeaderTypeEnum::TEXT);
+            }
         }
 
         // TODO: get headers from collection

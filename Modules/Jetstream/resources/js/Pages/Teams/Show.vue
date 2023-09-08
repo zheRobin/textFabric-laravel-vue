@@ -47,17 +47,15 @@ defineProps({
                         </template>
                     </ActionPanel>
                 </template>
+                <div class="mt-10 sm:mt-0">
+                    <UpdateTeamNameForm :team="team" :permissions="permissions" />
 
-                <UpdateTeamNameForm :team="team" :permissions="permissions" />
-
-                <TeamMemberManager
-                    class="mt-10 sm:mt-0"
-                    :team="team"
-                    :available-roles="availableRoles"
-                    :user-permissions="permissions"
-                />
-
-
+                    <TeamMemberManager
+                        :team="team"
+                        :available-roles="availableRoles"
+                        :user-permissions="permissions"
+                    />
+                </div>
 
                 <template v-if="$page.props.auth.user.is_admin && team.plan_subscription">
                     <SectionBorder />
@@ -68,13 +66,15 @@ defineProps({
                 <template v-if="permissions.canSwitchTeam">
                     <SectionBorder />
 
-                    <SwitchTeamForm :team="team" :user="$page.props.auth.user" />
+                    <div class="mt-10 sm:mt-0">
+                        <SwitchTeamForm :team="team" :user="$page.props.auth.user" />
+                    </div>
                 </template>
 
                 <template v-if="permissions.canToggleDisabled">
                     <SectionBorder />
 
-                    <ToggleDisabledTeamForm :team="team" />
+                        <ToggleDisabledTeamForm :team="team" />
                 </template>
 
                 <template v-if="permissions.canDeleteTeam && ! team.personal_team">

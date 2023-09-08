@@ -142,8 +142,11 @@ function onDropOurColumn (e, arr, column) {
         <div class="flex justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex" v-if="presetsToComplete.length">
-                <div class="mr-4 mt-1">
-                    {{ `#${currentPage + 1}` }}
+                <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
+                    Product
+                    <span class="ml-2 mr-4">
+                            {{ `- #${currentPage + 1}` }}
+                        </span>
                 </div>
                 <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="previousItem" :disabled="previousButtonDisabled" :class="!previousButtonDisabled ? 'hover:bg-gray-50 focus:z-10' : ''" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">

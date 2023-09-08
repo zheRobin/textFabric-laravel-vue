@@ -28,6 +28,7 @@ class ExportController extends Controller
     public function index(Request $request, RunningCompilationService $runningCompilationService)
     {
         $currentCollection = $request->user()->currentCollection;
+        $activeExport = $currentCollection->exports()->active()->first();
 
         return Inertia::render('Export::Index', [
             'languages' => Language::select(['name', 'code'])
@@ -35,7 +36,8 @@ class ExportController extends Controller
                 ->orderBy('name')
                 ->get(),
             'compilations' => $currentCollection->compilations ?? [],
-            'activeExport' => $currentCollection->exports()->active()->first(),
+            'activeExport' => $activeExport,
+            'activeExportProgress' => $activeExport?->batch->progress(),
             'hasItems' => boolval($currentCollection?->items()->exists()),
             'teamRunningCompilations' => $runningCompilationService->inPersonalTeam(),
         ]);

@@ -28,6 +28,7 @@ const props = defineProps({
     active: Array,
     hasItems: Boolean,
     activeExport: Object,
+    activeExportProgress: Number | null,
     items: Object,
     teamRunningCompilations: Array,
 });
@@ -415,7 +416,7 @@ const teamRunningCompilationsStatus = () => {
     if (props.teamRunningCompilations.length === 0) {
         clearInterval(teamRunningCompilationsInterval);
     } else {
-        router.reload({ only: ['teamRunningCompilations'] });
+        router.reload({ only: ['activeExportProgress', 'teamRunningCompilations'] });
     }
 }
 
@@ -475,8 +476,8 @@ fetchCancelledExports();
                                             <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
                                             <span>{{ teamRunningCompilation?.name }}</span>
                                         </a>
-                                        <span class="mx-2 px-1 bg-amber-500 text-amber-50 rounded shadow">
-                                            {{ (teamRunningCompilation?.batch?.total_jobs - teamRunningCompilation?.batch?.pending_jobs + teamRunningCompilation?.batch?.failed_jobs) / teamRunningCompilation?.batch?.total_jobs * 100 }}%
+                                        <span v-if="props.activeExportProgress" class="mx-2 px-1 bg-amber-500 text-amber-50 rounded shadow">
+                                            {{ props.activeExportProgress }}%
                                         </span>
                                     </span>
                                 </span>

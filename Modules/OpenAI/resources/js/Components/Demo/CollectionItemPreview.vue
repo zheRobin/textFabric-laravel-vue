@@ -62,7 +62,7 @@ changeItem();
             <div class="flex justify-end items-center">
                 <div class="flex items-center">
                     <div class="text-sm font-medium text-gray-900 truncate">
-                        Product
+                        {{ items[currentPage][0].value }}
                         <span class="ml-2 mr-4">
                             {{ `- #${currentPage + 1}` }}
                         </span>

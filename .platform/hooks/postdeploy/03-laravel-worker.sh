@@ -13,6 +13,8 @@ supervisorctl reread
 
 supervisorctl update
 
+supervisorctl restart all
+
 # check supervisor status
 echo "Checking Supervisor Status.."
 supervisorctl status

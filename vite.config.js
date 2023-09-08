@@ -4,12 +4,6 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import i18n from 'laravel-vue-i18n/vite';
 export default defineConfig({
-
-    build: {
-        outDir: 'public/build/storage', // Шлях до папки збірки
-        emptyOutDir: true,      // Очищати папку збірки перед збіркою
-    },
-
     plugins: [
         laravel({
             input: 'resources/js/app.js',

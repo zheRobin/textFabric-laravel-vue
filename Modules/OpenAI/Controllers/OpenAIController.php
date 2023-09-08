@@ -15,6 +15,12 @@ class OpenAIController extends Controller
 {
     public function index(Request $request): \Inertia\Response
     {
+        $title = '';
+        foreach ($request->user()->currentCollection->headers as $item){
+            if($item['type'] === 'title'){
+                $title = $item;
+            }
+        }
         return Inertia::render('OpenAI::Editor', [
             'presets' => $request->user()->currentCollection->presets ?? [],
             'selectedPreset' => session('preset'),
@@ -30,7 +36,8 @@ class OpenAIController extends Controller
                     ->currentTeam
                     ->planSubscription
                     ->canUseFeature(SubscriptionFeatureEnum::OPENAI_PARAMS),
-            ]
+            ],
+            'title' => $title
         ]);
     }
 }

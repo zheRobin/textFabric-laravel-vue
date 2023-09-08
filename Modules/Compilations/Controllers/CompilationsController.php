@@ -15,6 +15,13 @@ class CompilationsController extends Controller
 {
     public function index(Request $request)
     {
+        $title = '';
+        foreach ($request->user()->currentCollection->headers as $item){
+            if($item['type'] === 'title'){
+                $title = $item;
+            }
+        }
+
         $compilations = Compilations::where('owner', $request->user()->current_team_id)
             ->where('collection_id', $request->user()->currentCollection?->id)
             ->get();
@@ -32,7 +39,8 @@ class CompilationsController extends Controller
             'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
             'permissions' => [
                 'canManageCompilations' => Gate::check('manage', Compilations::class)
-            ]
+            ],
+            'title' => $title
         ]);
     }
 

@@ -28,6 +28,7 @@ const props = defineProps({
     languages: Array,
     hasItems: Boolean,
     permissions: Object,
+    title: Object
 });
 
 const selectedPreset = ref(null);
@@ -412,7 +413,8 @@ const promptHasWrongAttribute = (prompt) => {
                                            :languages="languages"
                                            :canChangeLanguage="permissions.canManagePresets"
                                            :needPresetUpdate="presetNeedsUpdate"
-                                           :updatePreset="updatePreset"/>
+                                           :updatePreset="updatePreset"
+                                           :title="props.title"/>
                 </template>
             </template>
         </DashboardPanel>

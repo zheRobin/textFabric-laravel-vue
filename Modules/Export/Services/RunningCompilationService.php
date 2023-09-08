@@ -20,7 +20,7 @@ class RunningCompilationService
             return collect();
         }
 
-        return Export::select('id', 'name')
+        return Export::select('id', 'collection_id', 'name')
             ->whereIn('collection_id', $collections->pluck('id'))
             ->whereNotNull('job_batch_id')
             ->get();

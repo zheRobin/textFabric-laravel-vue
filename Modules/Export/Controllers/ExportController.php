@@ -44,7 +44,9 @@ class ExportController extends Controller
         $exports = $request->user()->currentCollection
             ->exports()
             ->history()
-            ->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%')
+            ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%');
+            })
             ->orderBy('id', 'DESC')
             ->paginate(10);
 
@@ -188,6 +190,7 @@ class ExportController extends Controller
                 'progress' => $export?->batch->progress() ?? 100,
                 'finished' => $export?->batch->finished() ?? true,
                 'cancelled' => $export?->batch->cancelled() ?? false,
+                'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,
                 'compilations' => $runningCompilationService->inAnyTeam(),

@@ -186,12 +186,13 @@ class ExportController extends Controller
     public function showProgress(Request $request, RunningCompilationService $runningCompilationService)
     {
         $export = $request->user()->currentCollection->exports()->active()->first();
+        $batch = $export?->batch;
 
         return [
             'data' => [
-                'progress' => $export?->batch->progress() ?? 100,
-                'finished' => $export?->batch->finished() ?? true,
-                'cancelled' => $export?->batch->cancelled() ?? false,
+                'progress' => $batch->progress() ?? null,
+                'finished' => $batch->finished() ?? false,
+                'cancelled' => $batch->cancelled() ?? false,
                 'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,

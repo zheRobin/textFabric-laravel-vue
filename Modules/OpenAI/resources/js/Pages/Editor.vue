@@ -292,8 +292,8 @@ const promptHasWrongAttribute = (prompt) => {
             <EmptyImport v-else-if="!hasItems" />
 
             <template v-else>
-                <div class="flex border-b border-gray-200 pb-8 items-center">
-                    <div class="items-center flex flex-1">
+                <div class="flex border-b border-gray-200 pb-8 md:items-center">
+                    <div class="md:items-center flex flex-1 flex-col md:flex-row">
                         <template v-if="addingPreset">
                             <template v-if="permissions.canManagePresets">
                                 <label class="mr-2 font-medium">Name:</label>
@@ -312,40 +312,45 @@ const promptHasWrongAttribute = (prompt) => {
                         </template>
 
                         <template v-else>
-                            <label class="mr-2 font-medium">Preset:</label>
-                            <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+                            <div class="flex">
+                                <label class="mr-2 mt-1.5 font-medium">Preset:</label>
+                                <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+                            </div>
 
                             <template v-if="permissions.canManagePresets">
-                                <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                    {{ $t('Add') }}
-                                    <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                </PrimaryButton>
-
-                                <PrimaryButton v-if="selectedPreset"
-                                               :class="{ 'opacity-50': form.processing }"
-                                               :disabled="form.processing"
-                                               @click="savePreset"
-                                               class="ml-2 gap-x-1.5">
-                                    {{$t('Save')}}
-                                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                </PrimaryButton>
-
-                                <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                                    <PrimaryButton class="ml-2 gap-x-1.5">
-                                        {{$t('Rename')}}
-                                        <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                                <div class="grid grid-cols-4 sm:grid-cols-5 lg:flex mt-5 md:mt-0">
+                                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
+                                        {{ $t('Add') }}
+                                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                     </PrimaryButton>
-                                </RenamePreset>
 
-                                <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                                    <DangerButton class="ml-2 gap-x-1.5">
-                                        {{$t('Delete')}}
-                                        <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </DangerButton>
-                                </DeletePreset>
-                                <div class="ml-5 text-gray-500" v-if="selectedPresetId">
-                                    ID: {{selectedPresetId}}
+                                    <PrimaryButton v-if="selectedPreset"
+                                                   :class="{ 'opacity-50': form.processing }"
+                                                   :disabled="form.processing"
+                                                   @click="savePreset"
+                                                   class="ml-2 gap-x-1.5">
+                                        {{$t('Save')}}
+                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
+
+                                    <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
+                                        <PrimaryButton class="ml-2 gap-x-1.5">
+                                            {{$t('Rename')}}
+                                            <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </RenamePreset>
+
+                                    <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
+                                        <DangerButton class="ml-2 gap-x-1.5">
+                                            {{$t('Delete')}}
+                                            <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </DangerButton>
+                                    </DeletePreset>
+                                    <div class="ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                        ID: {{selectedPresetId}}
+                                    </div>
                                 </div>
+
                             </template>
                         </template>
                     </div>
@@ -359,8 +364,10 @@ const promptHasWrongAttribute = (prompt) => {
 
                 <template v-if="showMainPanel">
                     <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
-                        <div class="flex items-center justify-between space-x-6">
-                            <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="min-w-44 inline-block" placeholder="Select a model" />
+                        <div class="grid grid-cols-2 md:flex items-center justify-between space-x-6">
+                            <div class="col-span-2">
+                                <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="ml-5 mr-8 mb-5 md:ml-0 md:mr-0 md:mb-0 md:min-w-44 md:inline-block" placeholder="Select a model" />
+                            </div>
 
                             <div class="w-56">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">

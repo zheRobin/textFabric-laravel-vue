@@ -44,7 +44,9 @@ class ExportController extends Controller
         $exports = $request->user()->currentCollection
             ->exports()
             ->history()
-            ->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%')
+            ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%');
+            })
             ->orderBy('id', 'DESC')
             ->paginate(10);
 

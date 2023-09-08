@@ -201,9 +201,14 @@ const deleteExport = () => {
     });
 }
 const translation = () => {
+    if (form.languages.length === 0) {
+        return;
+    }
+
     localStorage.setItem('progress', 0);
     generateActive.value = true;
     progress.value = null;
+    activeLanguages.value = [];
 
     axios.post(route('export.translation', form.id), {
         value: form.value,
@@ -315,6 +320,7 @@ const closeModal = () => {
     form.id = null;
     form.value = null;
     activeModal.value = false;
+    activeLanguages.value = [];
 }
 
 const confirmingExportDeletion = ref(false);
@@ -356,13 +362,18 @@ const generationDone = (data) => {
     loading.value = false;
     activeGenerations.value = null;
     searchQuery.value = '';
-    search();
-    fetchCancelledExports();
+
     localStorage.removeItem('selected_queue_translation');
     localStorage.removeItem('id_queue');
     localStorage.removeItem('selected_queue');
     generateActive.value = false;
     progress.value = null;
+
+    setTimeout(() => {
+        search();
+        fetchCancelledExports();
+        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
+    }, 2000);
 }
 
 search();

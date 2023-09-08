@@ -204,6 +204,7 @@ const translation = () => {
     localStorage.setItem('progress', 0);
     generateActive.value = true;
     progress.value = null;
+    activeLanguages.value = [];
 
     axios.post(route('export.translation', form.id), {
         value: form.value,
@@ -315,6 +316,7 @@ const closeModal = () => {
     form.id = null;
     form.value = null;
     activeModal.value = false;
+    activeLanguages.value = [];
 }
 
 const confirmingExportDeletion = ref(false);

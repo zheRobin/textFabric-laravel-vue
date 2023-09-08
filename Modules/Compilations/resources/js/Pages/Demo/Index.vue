@@ -9,7 +9,6 @@ import {getActiveLanguage} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 
-
 const compilationOptions = () => {
     return [
         {

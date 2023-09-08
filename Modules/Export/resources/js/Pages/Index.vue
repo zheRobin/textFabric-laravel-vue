@@ -362,13 +362,18 @@ const generationDone = (data) => {
     loading.value = false;
     activeGenerations.value = null;
     searchQuery.value = '';
-    search();
-    fetchCancelledExports();
+
     localStorage.removeItem('selected_queue_translation');
     localStorage.removeItem('id_queue');
     localStorage.removeItem('selected_queue');
     generateActive.value = false;
     progress.value = null;
+
+    setTimeout(() => {
+        search();
+        fetchCancelledExports();
+        router.reload({ only: ['compilations', 'teamRunningCompilations'] });
+    }, 2000);
 }
 
 search();

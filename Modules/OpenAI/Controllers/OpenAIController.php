@@ -16,11 +16,14 @@ class OpenAIController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $title = '';
-        foreach ($request->user()->currentCollection->headers as $item){
-            if($item['type'] === 'title'){
-                $title = $item;
+        if($request->user()->currentCollection->headers){
+            foreach ($request->user()->currentCollection->headers as $item){
+                if($item['type'] === 'title'){
+                    $title = $item;
+                }
             }
         }
+
         return Inertia::render('OpenAI::Editor', [
             'presets' => $request->user()->currentCollection->presets ?? [],
             'selectedPreset' => session('preset'),

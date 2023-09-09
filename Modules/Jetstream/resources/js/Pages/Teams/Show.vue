@@ -49,20 +49,23 @@ defineProps({
                 </template>
                 <div class="mt-10 sm:mt-0">
                     <UpdateTeamNameForm :team="team" :permissions="permissions" />
+                </div>
 
+                <div class="mt-10 sm:mt-0">
                     <TeamMemberManager
                         :team="team"
                         :available-roles="availableRoles"
                         :user-permissions="permissions"
                     />
                 </div>
+                <div class="mt-10 sm:mt-0">
 
                 <template v-if="$page.props.auth.user.is_admin && team.plan_subscription">
                     <SectionBorder />
 
                     <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" />
                 </template>
-
+                </div>
                 <template v-if="permissions.canSwitchTeam">
                     <SectionBorder />
 
@@ -72,15 +75,22 @@ defineProps({
                 </template>
 
                 <template v-if="permissions.canToggleDisabled">
+                    <div class="mt-10 sm:mt-0">
+
                     <SectionBorder />
 
                         <ToggleDisabledTeamForm :team="team" />
+                    </div>
                 </template>
 
                 <template v-if="permissions.canDeleteTeam && ! team.personal_team">
-                    <SectionBorder />
+                    <div class="mt-10 sm:mt-0">
 
-                    <DeleteTeamForm class="mt-10 sm:mt-0" :team="team" />
+                        <SectionBorder />
+
+                        <DeleteTeamForm class="mt-10 sm:mt-0" :team="team" />
+                    </div>
+
                 </template>
             </div>
         </div>

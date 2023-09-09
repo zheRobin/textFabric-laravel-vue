@@ -201,16 +201,19 @@ initSelectedCompilation();
         <div class="md:items-center flex flex-1 flex-col md:flex-row">
             <template v-if="!complications.length || addingPreset">
                 <template v-if="canManageCompilations">
-                    <label class="mr-2 font-medium">{{$t('Name:')}}</label>
-                    <TextInput v-model="form.name" type="text" class="w-60"/>
-                    <PrimaryButton @click="savePreset('create')" class="ml-2 gap-x-1.5">
-                        {{$t('Save')}}
-                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                    </PrimaryButton>
-                    <SecondaryButton v-if="complications.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                        {{$t('Cancel')}}
-                        <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                    </SecondaryButton>
+                    <div class="flex">
+                        <label class="mr-2 font-medium">{{$t('Name:')}}</label>
+                        <TextInput v-model="form.name" type="text" class="w-60"/>
+                        <PrimaryButton @click="savePreset('create')" class="ml-2 gap-x-1.5">
+                            {{$t('Save')}}
+                            <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                        </PrimaryButton>
+                        <SecondaryButton v-if="complications.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                            {{$t('Cancel')}}
+                            <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                        </SecondaryButton>
+                    </div>
+
                 </template>
             </template>
 

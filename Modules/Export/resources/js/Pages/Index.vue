@@ -416,7 +416,7 @@ const teamRunningCompilationsStatus = () => {
     if (props.teamRunningCompilations.length === 0) {
         clearInterval(teamRunningCompilationsInterval);
     } else {
-        router.reload({ only: ['activeExportProgress', 'teamRunningCompilations'] });
+        router.reload({ only: ['teamRunningCompilations'] });
     }
 }
 
@@ -476,8 +476,8 @@ fetchCancelledExports();
                                             <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
                                             <span>{{ teamRunningCompilation?.name }}</span>
                                         </a>
-                                        <span v-if="props.activeExportProgress" class="mx-2 px-1 bg-amber-500 text-amber-50 rounded shadow">
-                                            {{ props.activeExportProgress }}%
+                                        <span v-if="teamRunningCompilation?.batch?.total_jobs" class="mx-2 px-1 bg-amber-500 text-amber-50 rounded shadow">
+                                            {{ Math.round((teamRunningCompilation?.batch?.total_jobs - teamRunningCompilation?.batch?.pending_jobs) / teamRunningCompilation?.batch?.total_jobs * 100) }}%
                                         </span>
                                     </span>
                                 </span>

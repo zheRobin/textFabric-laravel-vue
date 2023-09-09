@@ -2,9 +2,13 @@
 
 namespace Modules\Export\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin Builder
+ */
 class JobBatch extends Model
 {
     use HasFactory;

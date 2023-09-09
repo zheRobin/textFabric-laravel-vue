@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Fortify\Actions\CreateSuperAdminUser;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'create-admin')]
 class CreateSuperAdmin extends Command
 {
     /**

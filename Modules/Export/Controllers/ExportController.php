@@ -27,14 +27,16 @@ class ExportController extends Controller
 {
     public function index(Request $request, RunningCompilationService $runningCompilationService)
     {
+        $currentCollection = $request->user()->currentCollection;
+
         return Inertia::render('Export::Index', [
             'languages' => Language::select(['name', 'code'])
                 ->where('target', '1')
                 ->orderBy('name')
                 ->get(),
-            'compilations' => $request->user()->currentCollection->compilations ?? [],
-            'activeExport' => $request->user()->currentCollection->exports()->active()->first(),
-            'hasItems' => boolval($request->user()?->currentCollection?->items()->exists()),
+            'compilations' => $currentCollection->compilations ?? [],
+            'activeExport' => $currentCollection->exports()->active()->first(),
+            'hasItems' => boolval($currentCollection?->items()->exists()),
             'teamRunningCompilations' => $runningCompilationService->inPersonalTeam(),
         ]);
     }
@@ -100,7 +102,7 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'generate', $batch->id));
-                    Artisan::call("queue:retry-batch {$batch->id}");
+                    Artisan::call('queue:retry-batch', ['id' => $batch->id]);
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
@@ -157,7 +159,7 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'translate', $batch->id));
-                    Artisan::call("queue:retry-batch {$batch->id}");
+                    Artisan::call('queue:retry-batch', ['id' => $batch->id]);
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
@@ -184,12 +186,13 @@ class ExportController extends Controller
     public function showProgress(Request $request, RunningCompilationService $runningCompilationService)
     {
         $export = $request->user()->currentCollection->exports()->active()->first();
+        $batch = $export?->batch;
 
         return [
             'data' => [
-                'progress' => $export?->batch->progress() ?? 100,
-                'finished' => $export?->batch->finished() ?? true,
-                'cancelled' => $export?->batch->cancelled() ?? false,
+                'progress' => $batch?->progress() ?? null,
+                'finished' => $batch?->finished() ?? true,
+                'cancelled' => $batch?->cancelled() ?? false,
                 'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,

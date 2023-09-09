@@ -296,18 +296,20 @@ const promptHasWrongAttribute = (prompt) => {
                     <div class="md:items-center flex flex-1 flex-col md:flex-row">
                         <template v-if="addingPreset">
                             <template v-if="permissions.canManagePresets">
-                                <label class="mr-2 font-medium">Name:</label>
-                                <TextInput v-model="form.name" type="text" class="w-60"/>
+                                <div>
+                                    <label class="mr-2 font-medium">Name:</label>
+                                    <TextInput v-model="form.name" type="text" class="w-60"/>
 
-                                <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
-                                    {{$t('Save')}}
-                                    <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                </PrimaryButton>
+                                    <PrimaryButton @click="savePreset" :disabled="form.processing" :class="{ 'opacity-50': form.processing }" class="ml-2 gap-x-1.5">
+                                        {{$t('Save')}}
+                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </PrimaryButton>
 
-                                <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
-                                    {{$t('Cancel')}}
-                                    <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                </SecondaryButton>
+                                    <SecondaryButton v-if="presets.length" class="ml-2 gap-x-1.5" @click="cancelPreset">
+                                        {{$t('Cancel')}}
+                                        <XCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                    </SecondaryButton>
+                                </div>
                             </template>
                         </template>
 

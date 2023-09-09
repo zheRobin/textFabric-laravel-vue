@@ -16,11 +16,15 @@ class CompilationsController extends Controller
     public function index(Request $request)
     {
         $title = '';
-        foreach ($request->user()->currentCollection->headers as $item){
-            if($item['type'] === 'title'){
-                $title = $item;
+        if($request->user()->currentCollection->headers) {
+            foreach ($request->user()->currentCollection->headers as $item){
+                if($item['type'] === 'title'){
+                    $title = $item;
+                }
             }
         }
+
+
 
         $compilations = Compilations::where('owner', $request->user()->current_team_id)
             ->where('collection_id', $request->user()->currentCollection?->id)

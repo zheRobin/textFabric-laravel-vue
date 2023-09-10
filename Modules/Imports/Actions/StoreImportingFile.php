@@ -14,11 +14,10 @@ class StoreImportingFile implements StoresImportingFile
     public function store(User $user, array $input): void
     {
         Gate::forUser($user)->authorize('update', $user->currentCollection);
-
         Validator::make($input, [
             'upload' => [
                 'required',
-                File::types(['xlsx', 'xls', 'csv', 'xml', 'json'])
+                File::types(['xls', 'xlsx', 'csv', 'json', 'xml'])
                     ->max(5 * 1024),
             ],
             'append' => ['required', 'boolean']
@@ -27,6 +26,18 @@ class StoreImportingFile implements StoresImportingFile
                 $validator->errors()->add(
                     'upload', 'You need to select a collection before importing.'
                 );
+            }
+            if(!$input['append']){
+                $importer = (new ImporterFactory)
+                    ->getImporter($user->currentCollection->importFileExtension());
+
+                $importedHeaders = $importer->getHeaders($user->currentCollection);
+
+                if(count($importedHeaders) > 100){
+                    $validator->errors()->add(
+                        'upload', 'The number of headers cannot be more than 100'
+                    );
+                }
             }
 
             // validate headers
@@ -37,7 +48,12 @@ class StoreImportingFile implements StoresImportingFile
                     ->getImporter($user->currentCollection->importFileExtension());
 
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
-
+//                dd($importer->getHeaders($user->currentCollection));
+                if(count($importedHeaders) + count($user->currentCollection->headers) > 100){
+                    $validator->errors()->add(
+                        'upload', 'The number of headers cannot be more than 100'
+                    );
+                }
                 $extraHeaders = array_diff(
                     $importedHeaders,
                     array_column($user->currentCollection->headers, 'name')

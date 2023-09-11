@@ -283,6 +283,7 @@
     "re-generate": "Neu generieren",
 
     "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.": "Durchsuchen Sie die hochzuladende Datei. Wir unterstützen .xls, .xlsx, .csv, .json, .xml.",
+    "Wrong importer file extension": "Wrong importer file extension",
     "System": "System",
     "User": "Benutzer",
     "Language": "Sprache",

@@ -68,7 +68,7 @@ class Export extends Model
      */
     public static function buildName(string $name): string
     {
-        return sprintf("%s - %s | %s", $name, Carbon::now()->format('d.m.Y'), Carbon::now()->format('H:i:s'));
+        return sprintf("%s - %s - %s", $name, Carbon::now()->format('d.m.Y'), Carbon::now()->format('H-i-s'));
     }
 
     /**

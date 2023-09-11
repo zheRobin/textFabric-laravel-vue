@@ -17,8 +17,8 @@ class StoreImportingFile implements StoresImportingFile
         Validator::make($input, [
             'upload' => [
                 'required',
-//                File::types(['xls', 'xlsx', 'csv', 'json', 'xml'])
-//                    ->max(5 * 1024),
+                File::types(['xls', 'xlsx', 'csv', 'json', 'xml'])
+                    ->max(5 * 1024),
             ],
             'append' => ['required', 'boolean']
         ])->after(function (\Illuminate\Validation\Validator $validator) use ($user, $input) {
@@ -32,7 +32,6 @@ class StoreImportingFile implements StoresImportingFile
 
                 $importer = (new ImporterFactory)
                     ->getImporter($user->currentCollection->importFileExtension());
-
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
 
                 if(count($importedHeaders) > 100){

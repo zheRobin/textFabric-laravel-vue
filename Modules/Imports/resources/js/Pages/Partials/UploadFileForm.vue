@@ -34,7 +34,8 @@ const uploadInfo = computed(() => {
 });
 
 const handleUpload = () => {
-    console.log('upload')
+    form.errors.upload = null;
+
     const imageFiles = [];
     const dataFiles = [];
 
@@ -134,14 +135,18 @@ const closeModal = () => {
                         </small>
                         <!-- TODO: fix validation message for images -->
                         <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                        <div v-if="canUploadRef" class="block mt-2 pointer-events-auto">
+                        <div v-if="canUploadRef && !form.errors.upload" class="block mt-2 pointer-events-auto">
                             <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
                         </div>
+                        <div v-else>
+                            <PrimaryButton class="ml-2 mt-2 gap-x-1.5">
+                            {{ $t('Add file') }}
+                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                        </PrimaryButton>
+                        </div>
+
                     <div>
-                   <PrimaryButton v-if="!canUploadRef" class="ml-2 mt-2 gap-x-1.5">
-                        {{ $t('Add file') }}
-                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                    </PrimaryButton>
+
                 </div>
                 </div>
             </span>

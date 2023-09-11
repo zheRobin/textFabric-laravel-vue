@@ -41,9 +41,7 @@ const handleUpload = () => {
 
     // TODO: move to separate validation function
     Array.from(fileInput.value.files).forEach(function (file) {
-        file.type.includes('image')
-            ? imageFiles.push(file)
-            : dataFiles.push(file)
+        dataFiles.push(file);
     });
 
     if (imageFiles.length && dataFiles.length) {

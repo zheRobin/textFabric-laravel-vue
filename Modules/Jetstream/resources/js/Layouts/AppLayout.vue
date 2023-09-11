@@ -66,51 +66,51 @@ const logout = () => {
                                 </Link>
                             </div>
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :class="route().current('dashboard') ? 'dark:text-white' : ''" :active="route().current('dashboard')">
                                     {{$t('Dashboard')}}
                                 </NavLink>
                             </div>
-                            <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-show="$page.props.auth.user.is_admin" class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('teams.index')" :class="route().current('teams.index') ? 'dark:text-white' : ''" :active="route().current('teams.index')">
                                     {{$t('Teams')}}
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('import.index')" :class="route().current('import.index') ? 'dark:text-white' : ''" :active="route().current('import.index')">
                                     {{$t('Import')}}
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('editor.index')" :class="route().current('editor.index') ? 'dark:text-white' : ''" :active="route().current('editor.index')">
                                     {{$t('Editor')}}
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('compilations.index')" :class="route().current('compilations.index') ? 'dark:text-white' : ''" :active="route().current('compilations.index')">
                                     {{$t('Compilations')}}
                                 </NavLink>
                             </div>
 
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('export.index')" :class="route().current('export.index') ? 'dark:text-white' : ''" :active="route().current('export.index')">
                                     {{$t('Export')}}
                                 </NavLink>
                             </div>
-                            <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
                                     API
                                 </NavLink>
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
+                        <div class="hidden md:flex md:items-center md:ml-6">
                             <!-- Collection Dropdown -->
-                            <div class="ml-3 relative">
+                            <div class="xl:ml-3 relative">
                                 <Dropdown align="right" width="60">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -172,7 +172,7 @@ const logout = () => {
                             </div>
 
                             <!-- Settings Dropdown -->
-                            <div class="ml-3 relative">
+                            <div class="xl:ml-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
@@ -252,7 +252,7 @@ const logout = () => {
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-mr-2 flex items-center sm:hidden">
+                        <div class="-mr-2 flex items-center md:hidden">
                             <div class="">
                                 <LanguageSelector />
                             </div>
@@ -284,7 +284,7 @@ const logout = () => {
                 </div>
 
                 <!-- Responsive Navigation Menu -->
-                <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
+                <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="md:hidden">
 
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
@@ -303,7 +303,7 @@ const logout = () => {
                         </ResponsiveNavLink>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                         <NavLink :href="route('import.index')" :class="route().current('import.index') ? 'dark:text-white' : ''" :active="route().current('import.index')">
                             {{$t('Import')}}
                         </NavLink>

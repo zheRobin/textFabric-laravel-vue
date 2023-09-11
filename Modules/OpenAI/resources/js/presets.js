@@ -3,7 +3,7 @@ export const defaultPresets = {
         {
             slug: 'headline',
             name: 'Headline',
-            system_prompt: 'Write a one-line title about the following product.',
+            system_prompt: 'Write a one-line title about the following product. Do not use quotation marks.',
             user_prompt: '@Product group',
         },
         {
@@ -41,7 +41,7 @@ export const defaultPresets = {
         {
             slug: 'headline',
             name: 'Headline',
-            system_prompt: 'Schreibe einen einzeiligen Titel zu folgendem Produkt.',
+            system_prompt: 'Schreibe einen einzeiligen Titel zu folgendem Produkt. Verwende keine Anführungszeichen.',
             user_prompt: '@Produktgruppe',
         },
         {

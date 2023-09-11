@@ -27,14 +27,14 @@ class StoreImportingFile implements StoresImportingFile
                     'upload', 'You need to select a collection before importing.'
                 );
             }
-            if(!$input['append']){
+            if (!$input['append']) {
                 $user->currentCollection->uploadImportFile($input['upload']);
 
                 $importer = (new ImporterFactory)
                     ->getImporter($user->currentCollection->importFileExtension());
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
 
-                if(count($importedHeaders) > 100){
+                if (count($importedHeaders) > 100) {
                     $validator->errors()->add(
                         'upload', 'The number of headers cannot be more than 100'
                     );
@@ -49,12 +49,13 @@ class StoreImportingFile implements StoresImportingFile
                     ->getImporter($user->currentCollection->importFileExtension());
 
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
-//                dd($importer->getHeaders($user->currentCollection));
-                if(count($importedHeaders) + count($user->currentCollection->headers) > 100){
+
+                if (count($importedHeaders) + count($user->currentCollection->headers) > 100) {
                     $validator->errors()->add(
                         'upload', 'The number of headers cannot be more than 100'
                     );
                 }
+
                 $extraHeaders = array_diff(
                     $importedHeaders,
                     array_column($user->currentCollection->headers, 'name')

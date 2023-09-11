@@ -98,7 +98,6 @@ const upload = (append = false) => {
             }
         });
     }
-    // canUploadRef.value = false;
 }
 
 const clearFileInput = () => {
@@ -106,7 +105,6 @@ const clearFileInput = () => {
         fileInput.value.value = null;
     }
     canUploadRef.value = false;
-
 }
 
 const closeModal = () => {
@@ -127,28 +125,24 @@ const closeModal = () => {
                 @change="handleUpload"
             />
 
-            <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full flex-col block bg-white text-gray-800 pointer-events-none flex justify-center items-center`">
-                <div class="text-center">
-                        <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
-                        <small v-if="canUploadRef" :class="`text-gray-600 block`">
-                            {{ uploadInfo }}
-                        </small>
-                        <!-- TODO: fix validation message for images -->
-                        <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                        <div v-if="canUploadRef && !form.errors.upload" class="block mt-2 pointer-events-auto">
-                            <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
-                        </div>
-                        <div v-else>
-                            <PrimaryButton class="ml-2 mt-2 gap-x-1.5">
-                            {{ $t('Add file') }}
-                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+            <span :class="`absolute top-0 left-0 right-0 bottom-0 w-full flex flex-col bg-white text-gray-800 pointer-events-none justify-center items-center`">
+                <span class="mx-2 text-center">
+                    <strong>{{ hasItems ? $t('Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.') : $t('Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.') }}</strong>
+                    <small v-if="canUploadRef" :class="`text-gray-600 block`">
+                        {{ uploadInfo }}
+                    </small>
+                    <!-- TODO: fix validation message for images -->
+                    <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
+                    <span v-if="canUploadRef && !form.errors.upload" class="block mt-2 pointer-events-auto">
+                        <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
+                    </span>
+                    <span v-else class="block">
+                        <PrimaryButton class="mt-2 gap-x-1.5">
+                        {{ $t('Add file') }}
+                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                         </PrimaryButton>
-                        </div>
-
-                    <div>
-
-                </div>
-                </div>
+                    </span>
+                </span>
             </span>
         </label>
 
@@ -163,7 +157,7 @@ const closeModal = () => {
 
             <template #footer>
                 <SecondaryButton class="ml-3" @click="closeModal">
-                    {{$t('Cancel')}}
+                    {{ $t('Cancel') }}
                 </SecondaryButton>
                 <div class="text-right">
                     <PrimaryButton

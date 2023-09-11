@@ -12,7 +12,7 @@ enum HeaderTypeEnum
     {
         return match ($this) {
             self::TITLE => 'title',
-            self::TEXT => 'text'
+            self::TEXT => 'text',
         };
     }
 

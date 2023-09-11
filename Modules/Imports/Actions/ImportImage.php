@@ -16,6 +16,7 @@ use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 class ImportImage implements ImportsImage
 {
     /**
+     * @param User $user
      * @param Collection $collection
      * @param array $input
      * @return void
@@ -69,6 +70,7 @@ class ImportImage implements ImportsImage
     }
 
     /**
+     * @param User $user
      * @param Collection $collection
      * @param UploadedFile[] $images
      * @return void

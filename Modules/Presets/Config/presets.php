@@ -5,7 +5,7 @@ return [
         'en' => [
             [
                 'name' => 'Headline',
-                'system_prompt' => 'Write a one-line title about the following product. Do not use quotation marks.',
+                'system_prompt' => 'Write a one-line title about the following product. Do not use any quotation marks.',
                 'user_prompt' => '@Product group',
                 'model' => 'gpt-3.5-turbo',
                 'temperature' => 1,
@@ -25,7 +25,7 @@ return [
             ],
             [
                 'name' => 'Bulletpoints',
-                'system_prompt' => 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics. Use dashes.',
+                'system_prompt' => 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics. Use only dashes.',
                 'user_prompt' => '@Product group
 @Product
 @Feature 1
@@ -79,7 +79,7 @@ return [
             ],
             [
                 'name' => 'Bulletpoints',
-                'system_prompt' => 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften. Verwende Bindestriche.',
+                'system_prompt' => 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften. Verwende nur Bindestriche.',
                 'user_prompt' => '@Produktgruppe
 @Produkt
 @Merkmal 1

@@ -63,7 +63,14 @@ class StoreImportingFile implements StoresImportingFile
                     return;
                 }
 
-                $importedHeaders = $importer->getHeaders($user->currentCollection);
+                try {
+                    $importedHeaders = $importer->getHeaders($user->currentCollection);
+                } catch (\Exception $exception) {
+                    $validator->errors()->add(
+                        'upload', $exception->getMessage()
+                    );
+                    return;
+                }
 
                 if (count($importedHeaders) + count($user->currentCollection->headers) > 100) {
                     $validator->errors()->add(

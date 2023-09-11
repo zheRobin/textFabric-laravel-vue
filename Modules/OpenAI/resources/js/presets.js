@@ -3,7 +3,7 @@ export const defaultPresets = {
         {
             slug: 'headline',
             name: 'Headline',
-            system_prompt: 'Write a one-line title about the following product.',
+            system_prompt: 'Write a one-line title about the following product. Do not use any quotation marks.',
             user_prompt: '@Product group',
         },
         {
@@ -15,7 +15,7 @@ export const defaultPresets = {
         {
             slug: 'bulletpoints',
             name: 'Bulletpoints',
-            system_prompt: 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics.',
+            system_prompt: 'Write 3 bullet points with one sentence each about the most important features of the product and its characteristics. Use only dashes.',
             user_prompt: '@Product group\n' +
                 '@Product\n' +
                 '@Feature 1\n' +
@@ -41,7 +41,7 @@ export const defaultPresets = {
         {
             slug: 'headline',
             name: 'Headline',
-            system_prompt: 'Schreibe einen einzeiligen Titel zu folgendem Produkt.',
+            system_prompt: 'Schreibe einen einzeiligen Titel zu folgendem Produkt. Verwende keine Anführungszeichen.',
             user_prompt: '@Produktgruppe',
         },
         {
@@ -53,7 +53,7 @@ export const defaultPresets = {
         {
             slug: 'bulletpoints',
             name: 'Bulletpoints',
-            system_prompt: 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften.',
+            system_prompt: 'Schreibe 3 Bulletpoints mit jeweils einem Satz über die wichtigsten Features zu dem genanten Produkt und dessen Eigenschaften. Verwende nur Bindestriche.',
             user_prompt: '@Produktgruppe\n' +
                 '@Produkt\n' +
                 '@Merkmal 1\n' +

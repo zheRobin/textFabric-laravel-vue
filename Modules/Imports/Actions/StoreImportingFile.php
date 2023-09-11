@@ -28,6 +28,8 @@ class StoreImportingFile implements StoresImportingFile
                 );
             }
             if(!$input['append']){
+                $user->currentCollection->uploadImportFile($input['upload']);
+
                 $importer = (new ImporterFactory)
                     ->getImporter($user->currentCollection->importFileExtension());
 

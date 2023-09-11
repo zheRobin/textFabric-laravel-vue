@@ -30,7 +30,8 @@ class JsonImporter implements Importer
             }
             $data = $result;
         }else{
-            $data = $this->validateJsonStructure($collection->importFileContent());
+            $jsonString = preg_replace('/^\xEF\xBB\xBF/', '', $collection->importFileContent());
+            $data = $this->validateJsonStructure($jsonString);
         }
 
         if (empty($data)) {

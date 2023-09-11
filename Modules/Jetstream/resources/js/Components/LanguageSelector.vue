@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-3 relative">
+    <div class="xl:ml-3 relative">
         <Dropdown align="right" width="48">
             <template #trigger>
         <span class="inline-flex rounded-md">

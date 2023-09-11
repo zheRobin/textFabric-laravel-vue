@@ -25,7 +25,7 @@ class VerifySubscription
         if (! $request->user() ||
             ! $request->user()->currentTeam ||
             ! $request->user()->currentTeam->planSubscription ||
-            $request->user()->currentTeam->planSubscription->inActive()) {
+            $request->user()->currentTeam->planSubscription->inactive()) {
             return $request->wantsJson()
                 ? abort(403, 'Team subscription has expired.')
                 : Redirect::route('profile.show');

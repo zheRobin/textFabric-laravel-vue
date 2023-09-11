@@ -30,8 +30,16 @@ class StoreImportingFile implements StoresImportingFile
             if (!$input['append']) {
                 $user->currentCollection->uploadImportFile($input['upload']);
 
-                $importer = (new ImporterFactory)
-                    ->getImporter($user->currentCollection->importFileExtension());
+                try {
+                    $importer = (new ImporterFactory)
+                        ->getImporter($user->currentCollection->importFileExtension());
+                } catch (\Exception $exception) {
+                    $validator->errors()->add(
+                        'upload', $exception->getMessage()
+                    );
+                    return;
+                }
+
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
 
                 if (count($importedHeaders) > 100) {
@@ -45,8 +53,15 @@ class StoreImportingFile implements StoresImportingFile
             if ($input['append'] && $user->currentCollection->items->isNotEmpty()) {
                 $user->currentCollection->uploadImportFile($input['upload']);
 
-                $importer = (new ImporterFactory)
-                    ->getImporter($user->currentCollection->importFileExtension());
+                try {
+                    $importer = (new ImporterFactory)
+                        ->getImporter($user->currentCollection->importFileExtension());
+                } catch (\Exception $exception) {
+                    $validator->errors()->add(
+                        'upload', $exception->getMessage()
+                    );
+                    return;
+                }
 
                 $importedHeaders = $importer->getHeaders($user->currentCollection);
 

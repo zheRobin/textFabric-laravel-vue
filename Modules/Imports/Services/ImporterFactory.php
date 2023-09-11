@@ -13,7 +13,7 @@ class ImporterFactory
             'json', 'xml' => new JsonImporter,
             'xls', 'xlsx' => new ExcelImporter,
             'csv' => new SimpleExcelImporter,
-            default => throw new InvalidArgumentException("Wrong importer file extension [${$fileExtension}]")
+            default => throw new InvalidArgumentException("Wrong importer file extension [{$fileExtension}]"),
         };
     }
 }

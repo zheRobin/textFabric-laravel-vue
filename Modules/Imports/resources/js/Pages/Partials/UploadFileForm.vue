@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
-import {useForm} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import ConfirmationModal from "Modules/Imports/resources/js/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
 import {trans} from "laravel-vue-i18n";
@@ -30,7 +30,7 @@ const supportedExtensions = computed(() => {
 const canUploadRef = ref(!!(form.upload && !uploadingError.value));
 
 const uploadInfo = computed(() => {
-    return form.upload.name;
+    return form.upload?.name;
 });
 
 const handleUpload = () => {
@@ -62,7 +62,7 @@ const handleUpload = () => {
         ? imageFiles
         : dataFiles.find(() => true);
 
-    canUploadRef.value = true;
+    canUploadRef.value = !!form.upload;
     uploadingError.value = false;
 }
 
@@ -86,7 +86,12 @@ const upload = (append = false) => {
             preserveScroll: true,
             preserveState: false,
             onSuccess: () => {
-                canUploadRef.value = false;
+                clearFileInput();
+            },
+            onFinish: () => {
+                if (usePage().props?.errors?.importFile?.upload) {
+                    clearFileInput();
+                }
             }
         });
     } else {
@@ -94,7 +99,12 @@ const upload = (append = false) => {
             errorBag: 'importFile',
             preserveScroll: true,
             onSuccess: () => {
-                canUploadRef.value = false;
+                clearFileInput();
+            },
+            onFinish: () => {
+                if (usePage().props?.errors?.importFile?.upload) {
+                    clearFileInput();
+                }
             }
         });
     }
@@ -133,13 +143,13 @@ const closeModal = () => {
                     </small>
                     <!-- TODO: fix validation message for images -->
                     <span v-if="uploadingError || form.errors.upload" class="text-sm text-red-900 block">{{ uploadingError || form.errors.upload }}</span>
-                    <span v-if="canUploadRef && !form.errors.upload" class="block mt-2 pointer-events-auto">
+                    <span v-if="canUploadRef" class="block mt-2 pointer-events-auto">
                         <PrimaryButton @click="confirmUploading" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{ $t('Upload') }}</PrimaryButton>
                     </span>
                     <span v-else class="block">
                         <PrimaryButton class="mt-2 gap-x-1.5">
-                        {{ $t('Add file') }}
-                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                            {{ $t('Add file') }}
+                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                         </PrimaryButton>
                     </span>
                 </span>

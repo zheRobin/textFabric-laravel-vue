@@ -35,7 +35,7 @@ const updateHeaderType = (header) => {
 
 <template>
     <div class="w-full">
-        <div class="block truncate"  :title="header.name">
+        <div class="block truncate whitespace-normal"  :title="header.name">
             {{ header.name }}
         </div>
 

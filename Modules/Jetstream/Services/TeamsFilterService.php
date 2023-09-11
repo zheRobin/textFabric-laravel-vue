@@ -70,7 +70,7 @@ class TeamsFilterService
     {
         if (is_bool($value) || $value === 'true') {
             $this->teamsQuery->whereHas('planSubscription', function ($query) {
-                $query->inActive();
+                $query->inactive();
             });
         }
     }

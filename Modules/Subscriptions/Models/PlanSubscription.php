@@ -117,7 +117,7 @@ class PlanSubscription extends Model
     /**
      * @return bool
      */
-    public function inActive(): bool
+    public function inactive(): bool
     {
         return !$this->active();
     }

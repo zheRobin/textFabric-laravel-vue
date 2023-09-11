@@ -8,11 +8,14 @@ enum HeaderTypeEnum
 
     case TEXT;
 
+    case IMAGE;
+
     public function slug(): string
     {
         return match ($this) {
             self::TITLE => 'title',
             self::TEXT => 'text',
+            self::IMAGE => 'image',
         };
     }
 

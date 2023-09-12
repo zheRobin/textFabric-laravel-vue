@@ -25,20 +25,20 @@ onMounted(() => {
 });
 
 const isMobile = computed(() => {
-    return windowWidth.value < 768;
+    return windowWidth.value < 563;
 });
 
 const isTablet = computed(() => {
-    return windowWidth.value >= 768 && windowWidth.value < 1024;
+    return windowWidth.value >= 563 && windowWidth.value < 1024;
 });
 
 const truncatedTitleHeader = computed(() => {
     if (isMobile.value) {
         return titleHeader.value.length > 10 ? titleHeader.value.slice(0, 3) + '...' : titleHeader.value;
     } else if (isTablet.value) {
-        return titleHeader.value.length > 10 ? titleHeader.value.slice(0, 10) + '...' : titleHeader.value;
+        return titleHeader.value.length > 15 ? titleHeader.value.slice(0, 20) + '...' : titleHeader.value;
     } else {
-        return titleHeader.value.length > 10 ? titleHeader.value.slice(0, 30) + '...' : titleHeader.value;
+        return  titleHeader.value;
     }
 });
 
@@ -225,8 +225,7 @@ function onDropOurColumn (e, arr, column) {
          @dragenter.preven>
         <div class="flex md:flex-row flex-col justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
-            <div class="flex md:justify-normal justify-between" v-if="itemsRight.length !== 0">
-
+            <div class="flex md:justify-normal justify-end" v-if="itemsRight.length !== 0">
                 <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">
                     {{ truncatedTitleHeader }}
                     <span class="ml-2 mr-2">-</span>
@@ -248,11 +247,11 @@ function onDropOurColumn (e, arr, column) {
                    <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Previous</span>
-                      <ChevronLeftIcon class="h-2 w-2 sm:h-5 sm:w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
+                      <ChevronLeftIcon class="h-5 w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
                     </button>
                     <button type="button" @click="nextPrevElements('next')" :class="idItems === lastElementNumber - 1 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Next</span>
-                      <ChevronRightIcon class="h-2 w-2 sm:h-5 sm:w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
+                      <ChevronRightIcon class="h-5 w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
                     </button>
                   </span>
                 </div>

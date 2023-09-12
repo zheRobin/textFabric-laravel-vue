@@ -114,7 +114,9 @@ class User extends Authenticatable
 
         $this->setRelation('currentTeam', $team);
 
-        $this->switchCollection($this->currentCollection);
+        if ($this->currentCollection) {
+            $this->switchCollection($this->currentCollection);
+        }
 
         return true;
     }

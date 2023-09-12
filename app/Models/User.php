@@ -114,9 +114,7 @@ class User extends Authenticatable
 
         $this->setRelation('currentTeam', $team);
 
-        if ($this->currentCollection) {
-            $this->switchCollection($this->currentCollection);
-        }
+        $this->switchCollection($this->currentCollection);
 
         return true;
     }
@@ -132,24 +130,20 @@ class User extends Authenticatable
     }
 
     /**
-     * @param Collection $collection
+     * @param Collection|null $collection
      * @return bool
      */
-    public function switchCollection(Collection $collection): bool
+    public function switchCollection(?Collection $collection): bool
     {
-        if (!$this->currentTeam?->ownsCollection($collection)) {
+        if (!$collection || !$this->currentTeam?->ownsCollection($collection)) {
             $collection = $this->currentTeam?->collections?->first();
         }
 
-        if ($collection) {
-            $this->forceFill([
-                'current_collection_id' => $collection->getKey()
-            ])->save();
+        $this->forceFill([
+            'current_collection_id' => $collection?->getKey() ?? null
+        ])->save();
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**

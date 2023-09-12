@@ -247,11 +247,11 @@ function onDropOurColumn (e, arr, column) {
                    <span class="isolate inline-flex rounded-md shadow-sm">
                     <button type="button" @click="nextPrevElements('prev')" :class="idItems === 0 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Previous</span>
-                      <ChevronLeftIcon class="h-5 w-5 sm:h-4 sm:w-4" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
+                      <ChevronLeftIcon class="h-2 w-2 sm:h-5 sm:w-5" :class="idItems === 0 ? '' : 'text-black'" aria-hidden="true" />
                     </button>
                     <button type="button" @click="nextPrevElements('next')" :class="idItems === lastElementNumber - 1 ? '' : 'hover:bg-gray-50 focus:z-10'" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300">
                       <span class="sr-only">Next</span>
-                      <ChevronRightIcon class="h-5 w-5 sm:h-4 sm:w-4" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
+                      <ChevronRightIcon class="h-2 w-2 sm:h-5 sm:w-5" :class="idItems === lastElementNumber - 1 ? '' : 'text-black'" aria-hidden="true"/>
                     </button>
                   </span>
                 </div>

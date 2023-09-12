@@ -24,7 +24,7 @@ class ProcessExportJob implements ShouldQueue
 
     public int $tries = 3; // The number of times the job may be attempted.
     public bool $failOnTimeout = true; // Indicate if the job should be marked as failed on timeout.
-    public int $timeout = 60; // The number of seconds the job can run before timing out.
+    public int $timeout = 20; // The number of seconds the job can run before timing out.
     public array $backoff = [3, 5, 10]; // The number of seconds to wait before retrying the job.
 
     /**

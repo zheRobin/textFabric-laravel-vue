@@ -317,38 +317,47 @@ const promptHasWrongAttribute = (prompt) => {
                             <div class="flex">
                                 <label class="mr-2 mt-1.5 font-medium">Preset:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+                                <div class="block sm:hidden ml-2 sm:ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                    ID: {{selectedPresetId}}
+                                </div>
                             </div>
 
                             <template v-if="permissions.canManagePresets">
-                                <div class="grid grid-cols-4 sm:grid-cols-5 lg:flex mt-5 md:mt-0">
-                                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                        {{ $t('Add') }}
-                                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
+                                <div class="flex mt-5 md:mt-0">
 
-                                    <PrimaryButton v-if="selectedPreset"
-                                                   :class="{ 'opacity-50': form.processing }"
-                                                   :disabled="form.processing"
-                                                   @click="savePreset"
-                                                   class="ml-2 gap-x-1.5">
+                                    <span>
+                                        <PrimaryButton @click="addPreset" class="ml-1 sm:ml-2 sm:gap-x-1.5">
+                                            {{ $t('Add') }}
+                                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </span>
+                                    <span>
+                                        <PrimaryButton v-if="selectedPreset"
+                                                       :class="{ 'opacity-50': form.processing }"
+                                                       :disabled="form.processing"
+                                                       @click="savePreset"
+                                                       class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                         {{$t('Save')}}
-                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
+                                            <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </span>
+
+
 
                                     <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                                        <PrimaryButton class="ml-2 gap-x-1.5">
+                                        <PrimaryButton class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                             {{$t('Rename')}}
                                             <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
                                         </PrimaryButton>
                                     </RenamePreset>
 
                                     <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                                        <DangerButton class="ml-2 gap-x-1.5">
+                                        <DangerButton class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                             {{$t('Delete')}}
                                             <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                         </DangerButton>
                                     </DeletePreset>
-                                    <div class="ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                    <div class="hidden sm:block ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
                                         ID: {{selectedPresetId}}
                                     </div>
                                 </div>

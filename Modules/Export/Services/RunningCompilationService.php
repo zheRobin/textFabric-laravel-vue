@@ -21,7 +21,9 @@ class RunningCompilationService
         }
 
         return Export::select('id', 'collection_id', 'name', 'job_batch_id')
-            ->with('batch:id,total_jobs,pending_jobs,failed_jobs')
+            ->withWhereHas('batch', fn($query) => $query
+                ->select(['id', 'total_jobs', 'pending_jobs', 'failed_jobs'])
+                ->whereNull('cancelled_at'))
             ->whereIn('collection_id', $collections->pluck('id'))
             ->whereNotNull('job_batch_id')
             ->get();
@@ -42,7 +44,9 @@ class RunningCompilationService
         }
 
         $exports = Export::select('id', 'collection_id', 'job_batch_id')
-            ->with('batch:id,total_jobs,pending_jobs')
+            ->withWhereHas('batch', fn($query) => $query
+                ->select(['id', 'total_jobs', 'pending_jobs', 'failed_jobs'])
+                ->whereNull('cancelled_at'))
             ->whereNotNull('job_batch_id')
             ->orderBy('id')
             ->get();

@@ -226,7 +226,6 @@ function onDropOurColumn (e, arr, column) {
         <div class="flex md:flex-row flex-col justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex md:justify-normal justify-end" v-if="itemsRight.length !== 0">
-
                 <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">
                     {{ truncatedTitleHeader }}
                     <span class="ml-2 mr-2">-</span>

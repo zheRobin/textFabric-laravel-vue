@@ -114,6 +114,8 @@ class User extends Authenticatable
 
         $this->setRelation('currentTeam', $team);
 
+        $this->switchCollection($this->currentCollection);
+
         return true;
     }
 
@@ -133,7 +135,11 @@ class User extends Authenticatable
      */
     public function switchCollection(Collection $collection): bool
     {
-        if ($this->currentTeam->ownsCollection($collection)) {
+        if (!$this->currentTeam->ownsCollection($collection)) {
+            $collection = $this->currentTeam->collections->first();
+        }
+
+        if ($collection) {
             $this->forceFill([
                 'current_collection_id' => $collection->getKey()
             ])->save();

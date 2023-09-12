@@ -367,6 +367,10 @@ const confirmingExportDeletion = ref(false);
 const selectedDownloadFormat = ref(null);
 
 const search = (event) => {
+    if (!page.props.auth.user.current_collection_id) {
+        return;
+    }
+
     axios
         .post(route('export.search'), {query: searchQuery.value})
         .then((response) => {
@@ -378,6 +382,10 @@ const search = (event) => {
 }
 
 const fetchCancelledExports = (event) => {
+    if (!page.props.auth.user.current_collection_id) {
+        return;
+    }
+
     axios
         .get(route('export.cancelled'))
         .then((response) => {

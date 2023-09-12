@@ -238,8 +238,8 @@ function onDropOurColumn (e, arr, column) {
 <!--                        {{ `#${idItems + 1}` }}-->
 <!--                    </span>-->
 <!--                </div>-->
-                <div v-else>
-                    <span class="">
+                <div v-else class="mt-1">
+                    <span class="mr-2">
                         {{ `#${idItems + 1}` }}
                     </span>
                 </div>

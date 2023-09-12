@@ -366,12 +366,12 @@ const promptHasWrongAttribute = (prompt) => {
 
                 <template v-if="showMainPanel">
                     <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
-                        <div class="grid grid-cols-2 md:flex items-center justify-between space-x-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-2 md:flex items-center justify-between space-x-6">
                             <div class="col-span-2">
                                 <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="ml-5 mr-8 mb-5 md:ml-0 md:mr-0 md:mb-0 md:min-w-44 md:inline-block" placeholder="Select a model" />
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
@@ -379,7 +379,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
@@ -387,7 +387,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
@@ -395,7 +395,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>

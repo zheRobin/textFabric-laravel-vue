@@ -231,13 +231,6 @@ function onDropOurColumn (e, arr, column) {
                     <span class="ml-2 mr-2">-</span>
                     <span class="mr-2">{{ `#${idItems + 1}` }}</span>
                 </div>
-<!--                <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">-->
-<!--                    {{titleHeader.length > 20 ? titleHeader.slice(0, 25) + '...' : titleHeader.length}}-->
-<!--                    <span class="ml-2 mr-2">-</span>-->
-<!--                    <span class="ml-2 mr-4">-->
-<!--                        {{ `#${idItems + 1}` }}-->
-<!--                    </span>-->
-<!--                </div>-->
                 <div v-else class="mt-1">
                     <span class="mr-2">
                         {{ `#${idItems + 1}` }}

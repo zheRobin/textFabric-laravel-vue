@@ -34,8 +34,8 @@ class ExportController extends Controller
                 ->where('target', '1')
                 ->orderBy('name')
                 ->get(),
-            'compilations' => $currentCollection->compilations ?? [],
-            'activeExport' => $currentCollection->exports()->active()->first(),
+            'compilations' => $currentCollection?->compilations ?? [],
+            'activeExport' => $currentCollection?->exports()->active()->first(),
             'hasItems' => boolval($currentCollection?->items()->exists()),
             'teamRunningCompilations' => $runningCompilationService->inPersonalTeam(),
         ]);

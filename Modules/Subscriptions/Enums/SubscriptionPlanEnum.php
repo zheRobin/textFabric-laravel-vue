@@ -4,6 +4,8 @@ namespace Modules\Subscriptions\Enums;
 
 enum SubscriptionPlanEnum
 {
+    case TRIAL;
+    
     case BASE;
 
     case PRO;
@@ -13,6 +15,7 @@ enum SubscriptionPlanEnum
     public function slug(): string
     {
         return match ($this) {
+            self::TRIAL => 'trial',
             self::BASE => 'base',
             self::PRO => 'pro',
             self::ENTERPRISE => 'enterprise',

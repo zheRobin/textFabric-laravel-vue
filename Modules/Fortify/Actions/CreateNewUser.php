@@ -92,7 +92,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         tap(Team::forceCreate([
             'user_id' => $user->id,
-            'name' => explode(' ', $user->company, 2)[0]."'s Team",
+            'name' => explode(' ', $user->first_name, 2)[0]."'s Team",
             'personal_team' => true,
         ]), function (Team $team) use ($locale, $user) {
             $this->createPlanSubscription($team, $user);
@@ -108,7 +108,7 @@ class CreateNewUser implements CreatesNewUsers
     protected function createPlanSubscription(Team $team, User $user): void
     {
         $plan = Plan::query()
-            ->where('slug', SubscriptionPlanEnum::BASE->slug())
+            ->where('slug', SubscriptionPlanEnum::TRIAL->slug())
             ->firstOrFail();
 
         $team->newPlanSubscription($plan);

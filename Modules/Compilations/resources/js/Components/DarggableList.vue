@@ -1,10 +1,9 @@
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import {onUnmounted, ref} from 'vue';
+import {onUnmounted, ref, onMounted, computed} from 'vue';
 import { notify } from "notiwind";
 import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
-
 const emit = defineEmits(['idItemsPage']);
 
 const props = defineProps({
@@ -16,7 +15,34 @@ const props = defineProps({
     canEdit: Boolean,
     title: Object
 });
-console.log(props, 'props')
+
+const windowWidth = ref(window.innerWidth);
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        windowWidth.value = window.innerWidth;
+    });
+});
+
+const isMobile = computed(() => {
+    return windowWidth.value < 563;
+});
+
+const isTablet = computed(() => {
+    return windowWidth.value >= 563 && windowWidth.value < 1024;
+});
+
+const truncatedTitleHeader = computed(() => {
+    if (isMobile.value) {
+        return titleHeader.value.length > 10 ? titleHeader.value.slice(0, 3) + '...' : titleHeader.value;
+    } else if (isTablet.value) {
+        return titleHeader.value.length > 15 ? titleHeader.value.slice(0, 20) + '...' : titleHeader.value;
+    } else {
+        return  titleHeader.value;
+    }
+});
+
+
 const {presets, previewItem, compilation, previewItemLength} = props;
 const loading = ref(false);
 const idItems = ref(0);
@@ -47,22 +73,20 @@ const findElementHeader = () => {
     if(activeItem.value.data !== undefined){
         title = activeItem.value.data.find(item => item.header === props.title.name);
         if(title){
-            if(title.length > 50){
-                titleHeader.value = title.value.slice(0, 50) + '...';
-            }
             titleHeader.value = title.value;
         }
     }
-    console.log(props.previewItem.data);
+    console.log(title);
+    console.log(titleHeader.value);
 }
-findElementHeader();
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
 
 let interval;
 const nextPrevElements = (item) => {
-    findElementHeader();
+    console.log('next');
     if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1 || itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
+
         loading.value = true;
         interval = setTimeout(() => {
             if (itemsRight.value.length !== 0 && item === 'next' && idItems.value < previewItemLength - 1) {
@@ -72,6 +96,7 @@ const nextPrevElements = (item) => {
                 axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
                     activeItem.value = res.data.item;
                     loading.value = false;
+                    findElementHeader();
 
                 })
             } else if (itemsRight.value.length !== 0 && item === 'prev' && idItems.value > 0) {
@@ -79,14 +104,18 @@ const nextPrevElements = (item) => {
                 axios.get(`/compilations/get-item/${idItems.value}`).then((res)=>{
                     activeItem.value = res.data.item;
                     loading.value = false;
+                    findElementHeader();
+
                 })
             }
         }, 100)
     }
 }
+findElementHeader();
 
 onUnmounted(() => {
     clearInterval(interval);
+
 })
 function onDragStart(e, item, start) {
     e.dataTransfer.dropEffect = 'move'
@@ -169,6 +198,7 @@ function onDropOurColumn (e, arr, column) {
         }
     }
 }
+
 </script>
 
 <template>
@@ -195,16 +225,21 @@ function onDropOurColumn (e, arr, column) {
          @dragenter.preven>
         <div class="flex md:flex-row flex-col justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
-            <div class="flex md:justify-normal justify-between" v-if="itemsRight.length !== 0">
+            <div class="flex md:justify-normal justify-end" v-if="itemsRight.length !== 0">
                 <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    {{titleHeader.length > 20 ? titleHeader.slice(0, 25) + '...' : titleHeader.length}}
+                    {{ truncatedTitleHeader }}
                     <span class="ml-2 mr-2">-</span>
-                    <span class="ml-2 mr-4">
-                        {{ `#${idItems + 1}` }}
-                    </span>
+                    <span class="mr-2">{{ `#${idItems + 1}` }}</span>
                 </div>
-                <div v-else>
-                    <span class="ml-2 mr-4">
+<!--                <div v-if="titleHeader" class="text-sm font-medium text-gray-900 truncate mt-1.5">-->
+<!--                    {{titleHeader.length > 20 ? titleHeader.slice(0, 25) + '...' : titleHeader.length}}-->
+<!--                    <span class="ml-2 mr-2">-</span>-->
+<!--                    <span class="ml-2 mr-4">-->
+<!--                        {{ `#${idItems + 1}` }}-->
+<!--                    </span>-->
+<!--                </div>-->
+                <div v-else class="mt-1">
+                    <span class="mr-2">
                         {{ `#${idItems + 1}` }}
                     </span>
                 </div>

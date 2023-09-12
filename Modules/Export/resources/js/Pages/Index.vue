@@ -70,8 +70,8 @@ const progress = ref(null);
 const page = usePage();
 const exports = ref(null);
 const cancelledExports = ref(null);
-
 const generateActive = ref(false);
+const jobBatchId = ref(localStorage.getItem('id_queue') || null);
 
 let progressInterval;
 const showProgress = (id) => {
@@ -89,6 +89,7 @@ const showProgress = (id) => {
             axios.get(route('export.showProgress')).then((res) => {
                 progress.value = res.data.data.progress;
                 runningCompilations.value = res.data.data.compilations;
+                jobBatchId.value = res.data.data.job_batch_id;
 
                 if (res.data.data.cancelled) {
                     cancelling.value = true;
@@ -98,11 +99,15 @@ const showProgress = (id) => {
                     generateActive.value = false;
                     cancelling.value = false;
                     generationDone();
-                    notify({
-                        group: 'success',
-                        title: 'Success!',
-                        text: 'The compilation was generated successfully!',
-                    }, 4000);
+
+                    if (progress.value === 100) {
+                        notify({
+                            group: 'success',
+                            title: 'Success!',
+                            text: 'The compilation was generated successfully!',
+                        }, 4000);
+                    }
+
                     clearInterval(progressInterval);
                     progress.value = 0;
 
@@ -225,8 +230,14 @@ const deleteExport = () => {
         notify({
             group: "success",
             title: "Success",
-            text: "Export file deleted!"
-        }, 4000)
+            text: trans("Export file deleted!")
+        }, 4000);
+    }).catch(() => {
+        notify({
+            group: "error",
+            title: "Error",
+            text: trans("Error deleting export file!")
+        }, 4000);
     });
 }
 const translation = () => {
@@ -368,7 +379,7 @@ const search = (event) => {
 
 const fetchCancelledExports = (event) => {
     axios
-        .post(route('export.cancelled'))
+        .get(route('export.cancelled'))
         .then((response) => {
             cancelledExports.value = response.data.data;
         })
@@ -378,13 +389,20 @@ const fetchCancelledExports = (event) => {
 }
 
 const cancelQueue = () => {
-    const id = localStorage.getItem('id_queue');
+    const id = localStorage.getItem('id_queue') || jobBatchId.value;
+
+    if (!id) {
+        notify({
+            group: 'error',
+            title: 'Error!',
+            text: trans( 'Error cancelling job, missing job-batch ID'),
+        }, 4000);
+    }
+
     axios.get(`/export/cancel/${id}`).then((res) => {
-        if (translationType !== res.data.data.exportType) {
-            generationDone();
-            clearInterval(progressInterval);
-        }
-    })
+        generationDone();
+        clearInterval(progressInterval);
+    });
 }
 
 const generationDone = (data) => {
@@ -507,9 +525,9 @@ fetchCancelledExports();
                                             {{ progress ? `${progress} %` : '' }}
                                         </span>
                                     </div>
-                                    <div class="mt-2">
+                                    <div v-if="jobBatchId" class="mt-2">
                                         <SecondaryButton @click="cancelQueue" class="ml-3">
-                                            {{$t('Cancel')}}
+                                            {{ $t('Cancel') }}
                                         </SecondaryButton>
                                     </div>
                                 </div>

@@ -22,7 +22,7 @@ Route::middleware($authMiddleware)->group(function () {
 
         Route::post('/export/{export}/download', [ExportController::class, 'download'])->name('export.download');
         Route::post('/export', [ExportController::class, 'search'])->name('export.search');
-        Route::post('/export/cancelled', [ExportController::class, 'cancelled'])->name('export.cancelled');
+        Route::get('/export/cancelled', [ExportController::class, 'cancelled'])->name('export.cancelled');
 
         Route::get('/export/showProgress', [ExportController::class, 'showProgress'])->name('export.showProgress');
 

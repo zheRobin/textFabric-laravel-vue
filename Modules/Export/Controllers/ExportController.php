@@ -196,6 +196,7 @@ class ExportController extends Controller
                 'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,
+                'job_batch_id' => $export?->job_batch_id,
                 'compilations' => $runningCompilationService->inAnyTeam(),
             ],
         ];

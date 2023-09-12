@@ -47,17 +47,15 @@ const findElementHeader = () => {
         title = currentItem.value.data.find((item) => item.header === props.title.name);
 
         if (title) {
-            let maxLength = 70; // За замовчуванням, для розширень екрану
+            let maxLength = 70;
             if (window.innerWidth < 768) {
-                // Мобільний розмір екрану
-                maxLength = 25; // Встановіть максимальну довжину для мобільних
+                maxLength = 25;
             } else if (window.innerWidth < 1024) {
-                // Планшетний розмір екрану
-                maxLength = 45; // Встановіть максимальну довжину для планшетів
+                maxLength = 45;
             }
 
             if (title.value.length > maxLength) {
-                return title.value.slice(0, maxLength - 5) + '...'; // Обрізати до максимальної довжини - 5 символів для "..."
+                return title.value.slice(0, maxLength - 5) + '...';
             }
             return title.value;
         }

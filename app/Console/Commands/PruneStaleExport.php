@@ -58,7 +58,7 @@ class PruneStaleExport extends Command
                     $jobBatches = JobBatch::query();
 
                     $uuids->each(function ($uuid) use ($batchId, &$jobBatches) {
-                        $jobBatches->where('failed_job_ids', 'LIKE', "%{$uuid}%");
+                        $jobBatches->orWhere('failed_job_ids', 'LIKE', "%{$uuid}%");
                     });
 
                     if ($jobBatches->exists()) {

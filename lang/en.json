@@ -133,6 +133,7 @@
     "There :isSingular :count job in the queue in front of you before we can start your processing.": "There :isSingular :count job in the queue in front of you before we can start your processing.",
     "Waiting for background workers to start processing.": "Waiting for background workers to start processing.",
     "Fetching status of this job.": "Fetching status of this job.",
+    "Error cancelling job, missing job-batch ID": "Error cancelling job, missing job-batch ID",
     "Loading": "Loading",
     "Nothing is being generated now": "Nothing is being generated now",
     "History of created compilations": "History of created compilations",
@@ -303,7 +304,10 @@
     "used": "used",
     "Ends at": "Ends at",
     "Ended at": "Ended at",
-    "You need to remove all users from the team first": "You need to remove all users from the team first",
-    "The password is incorrect.": "The password is incorrect."
 
+    "You need to remove all users from the team first": "You need to remove all users from the team first",
+    "The password is incorrect.": "The password is incorrect.",
+
+    "Export file deleted!": "Export file deleted!",
+    "Error deleting export file!": "Error deleting export file!"
 }

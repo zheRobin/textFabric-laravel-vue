@@ -136,7 +136,7 @@ class User extends Authenticatable
     public function switchCollection(Collection $collection): bool
     {
         if (!$this->currentTeam->ownsCollection($collection)) {
-            $collection = $this->currentTeam->collections->first();
+            $collection = $this->currentTeam?->collections?->first();
         }
 
         if ($collection) {

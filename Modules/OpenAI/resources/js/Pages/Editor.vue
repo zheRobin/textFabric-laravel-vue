@@ -320,35 +320,44 @@ const promptHasWrongAttribute = (prompt) => {
                             </div>
 
                             <template v-if="permissions.canManagePresets">
-                                <div class="grid grid-cols-4 sm:grid-cols-5 lg:flex mt-5 md:mt-0">
-                                    <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">
-                                        {{ $t('Add') }}
-                                        <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
+                                <div class="block flex justify-center sm:hidden ml-1 sm:ml-5 mt-2 text-gray-500 text-sm" v-if="selectedPresetId">
+                                    ID: {{selectedPresetId}}
+                                </div>
+                                <div class="flex mt-5 md:mt-0">
 
-                                    <PrimaryButton v-if="selectedPreset"
-                                                   :class="{ 'opacity-50': form.processing }"
-                                                   :disabled="form.processing"
-                                                   @click="savePreset"
-                                                   class="ml-2 gap-x-1.5">
+                                    <span>
+                                        <PrimaryButton @click="addPreset" class="ml-1 sm:ml-2 sm:gap-x-1.5">
+                                            {{ $t('Add') }}
+                                            <PlusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </span>
+                                    <span>
+                                        <PrimaryButton v-if="selectedPreset"
+                                                       :class="{ 'opacity-50': form.processing }"
+                                                       :disabled="form.processing"
+                                                       @click="savePreset"
+                                                       class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                         {{$t('Save')}}
-                                        <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
-                                    </PrimaryButton>
+                                            <ArrowDownTrayIcon class="-mr-0.5 w-4" aria-hidden="true" />
+                                        </PrimaryButton>
+                                    </span>
+
+
 
                                     <RenamePreset v-if="selectedPreset" :name="form.name" @rename="renamePreset">
-                                        <PrimaryButton class="ml-2 gap-x-1.5">
+                                        <PrimaryButton class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                             {{$t('Rename')}}
                                             <PencilSquareIcon  class="-mr-0.5 w-4" aria-hidden="true" />
                                         </PrimaryButton>
                                     </RenamePreset>
 
                                     <DeletePreset @delete="deletePreset" v-if="selectedPreset" :name="form.name">
-                                        <DangerButton class="ml-2 gap-x-1.5">
+                                        <DangerButton class="ml-1 sm:ml-2 sm:gap-x-1.5">
                                             {{$t('Delete')}}
                                             <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                         </DangerButton>
                                     </DeletePreset>
-                                    <div class="ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                    <div class="hidden sm:block ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
                                         ID: {{selectedPresetId}}
                                     </div>
                                 </div>
@@ -366,12 +375,12 @@ const promptHasWrongAttribute = (prompt) => {
 
                 <template v-if="showMainPanel">
                     <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
-                        <div class="grid grid-cols-2 md:flex items-center justify-between space-x-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-2 md:flex items-center justify-between sm:space-x-6">
                             <div class="col-span-2">
                                 <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="ml-5 mr-8 mb-5 md:ml-0 md:mr-0 md:mb-0 md:min-w-44 md:inline-block" placeholder="Select a model" />
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56 mr-2 sm:mr-0">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.temperature" :min="0" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t('Temperature') }} </label>
@@ -379,7 +388,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56 mr-2 sm:mr-0">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.top_p" :min="0" :max="1" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t('Top p') }} </label>
@@ -387,7 +396,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56 mr-2 sm:mr-0">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.presence_penalty" :min="-2" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{ $t("Presence Penalty") }} </label>
@@ -395,7 +404,7 @@ const promptHasWrongAttribute = (prompt) => {
                                 </RangeSlider>
                             </div>
 
-                            <div class="w-56">
+                            <div class="w-23 sm:w-56 mr-2 sm:mr-0">
                                 <RangeSlider :disabled="!permissions.canManagePresets" v-model="form.frequency_penalty" :min="-2" :max="2" :step="0.01">
                                     <template #label>
                                         <label class="inline-flex text-sm font-medium"> {{$t('Frequency Penalty')}} </label>

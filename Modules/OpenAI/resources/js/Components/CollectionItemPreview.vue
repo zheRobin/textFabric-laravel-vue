@@ -40,13 +40,22 @@ const itemData = computed(() => {
 
 const currentPage = ref(1);
 const lastPage = ref(null);
-const fincElementHeader = () => {
+const findElementHeader = () => {
     let title = '';
-    if(currentItem.value.data !== undefined){
-        title = currentItem.value.data.find(item => item.header === props.title.name);
-        if(title){
-            if(title.value.length > 30){
-                 return title.value.slice(0, 25) + '...';
+
+    if (currentItem.value.data !== undefined) {
+        title = currentItem.value.data.find((item) => item.header === props.title.name);
+
+        if (title) {
+            let maxLength = 70;
+            if (window.innerWidth < 768) {
+                maxLength = 25;
+            } else if (window.innerWidth < 1024) {
+                maxLength = 45;
+            }
+
+            if (title.value.length > maxLength) {
+                return title.value.slice(0, maxLength - 5) + '...';
             }
             return title.value;
         }
@@ -107,8 +116,8 @@ const translateItem = () => {
 
                 <div class="flex items-center">
                     <div class="text-sm font-medium text-gray-900 truncate">
-                        <div v-if="fincElementHeader()" class="flex">
-                            <div>{{fincElementHeader()}}</div>
+                        <div v-if="findElementHeader()" class="flex">
+                            <div>{{findElementHeader()}}</div>
                             <span class="ml-2 mr-2">-</span>
                             <span class="ml-2 mr-4">
                             {{ `#${currentPage}` }}

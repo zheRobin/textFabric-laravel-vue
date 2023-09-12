@@ -93,8 +93,8 @@ class PlanSeeder extends Seeder
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::COLLECTIONS_LIMIT->slug(),
                 'name' => 'Collections',
-                'description' => 'unlimited collections',
-                'value' => 'true'
+                'description' => 'up to 15 collections',
+                'value' => 15
             ]),
             new PlanFeature([
                 'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),

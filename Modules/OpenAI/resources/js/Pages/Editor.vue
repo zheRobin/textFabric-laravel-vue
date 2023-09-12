@@ -317,7 +317,7 @@ const promptHasWrongAttribute = (prompt) => {
                             <div class="flex">
                                 <label class="mr-2 mt-1.5 font-medium">Preset:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
-                                <div class="block sm:hidden ml-2 sm:ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                <div class="block sm:hidden ml-1 sm:ml-5 mt-2 text-gray-500 text-sm" v-if="selectedPresetId">
                                     ID: {{selectedPresetId}}
                                 </div>
                             </div>

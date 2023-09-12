@@ -16,7 +16,7 @@ class OpenAIController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $title = '';
-        if($request->user()->currentCollection->headers){
+        if($request->user()->currentCollection?->headers){
             foreach ($request->user()->currentCollection->headers as $item){
                 if($item['type'] === 'title'){
                     $title = $item;

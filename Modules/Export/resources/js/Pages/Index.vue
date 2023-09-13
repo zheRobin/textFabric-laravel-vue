@@ -372,7 +372,7 @@ const search = (event) => {
     }
 
     axios
-        .post(route('export.search'), {query: searchQuery.value, page: usePage().props.query.page})
+        .post(route('export.search'), {query: searchQuery.value, page: page.props.query.page})
         .then((response) => {
             exports.value = response.data.data;
         })

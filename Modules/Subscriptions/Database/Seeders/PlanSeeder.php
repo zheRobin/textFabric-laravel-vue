@@ -150,38 +150,6 @@ class PlanSeeder extends Seeder
             ]),
         ]);
 
-        $pro = $createPlan([
-            'slug' => SubscriptionPlanEnum::PRO->slug(),
-            'name' => 'Pro plan',
-            'description' => null,
-            'is_active' => true,
-            'trial_period' => 14,
-            'invoice_period' => 0,
-        ]);
-
-        $pro->features()->saveMany([
-            new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::COLLECTIONS_LIMIT->slug(),
-                'name' => 'Collections',
-                'description' => 'up to 5 collections',
-                'value' => 5
-            ]),
-            new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),
-                'name' => 'Collection Items',
-                'description' => 'up to 300 items per collection',
-                'value' => 300
-            ]),
-            new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
-                'description' => 'up to 10.000 request per month',
-                'value' => 10000,
-                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
-                'resettable_period' => 1,
-            ]),
-        ]);
-
         $unlimited = $createPlan([
             'slug' => SubscriptionPlanEnum::UNLIMITED->slug(),
             'name' => 'Unlimited plan',

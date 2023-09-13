@@ -12,7 +12,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-         $schedule->command('export:prune-batches')->cron('* * * * *');
+        $schedule->command('queue:prune-failed --hours=120')->daily();
+        $schedule->command('queue:prune-batches --hours=120')->daily();
+        $schedule->command('export:prune-batches')->cron('* * * * *');
     }
 
     /**

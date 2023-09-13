@@ -149,5 +149,44 @@ class PlanSeeder extends Seeder
                 'value' => true,
             ]),
         ]);
+
+        $unlimited = $createPlan([
+            'slug' => SubscriptionPlanEnum::UNLIMITED->slug(),
+            'name' => 'Unlimited plan',
+            'description' => null,
+            'is_active' => true,
+            'trial_period' => 14,
+            'invoice_period' => 0,
+        ]);
+
+        $unlimited->features()->saveMany([
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::COLLECTIONS_LIMIT->slug(),
+                'name' => 'Collections',
+                'description' => 'up to 100 collections',
+                'value' => 100
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),
+                'name' => 'Collection Items',
+                'description' => 'up to 10.000 items per collection',
+                'value' => 10000
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 500.000 request per month',
+                'value' => 500000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_PARAMS->slug(),
+                'name' => 'OpenAI params',
+                'description' => 'possibility to configure parameters',
+                'value' => true,
+            ]),
+        ]);
+
     }
 }

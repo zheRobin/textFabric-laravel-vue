@@ -12,6 +12,8 @@ enum SubscriptionPlanEnum
 
     case ENTERPRISE;
 
+    case UNLIMITED;
+
     public function slug(): string
     {
         return match ($this) {
@@ -19,6 +21,7 @@ enum SubscriptionPlanEnum
             self::BASE => 'base',
             self::PRO => 'pro',
             self::ENTERPRISE => 'enterprise',
+            self::UNLIMITED => 'unlimited',
         };
     }
 }

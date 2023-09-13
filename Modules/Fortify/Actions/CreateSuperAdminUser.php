@@ -63,7 +63,7 @@ class CreateSuperAdminUser implements CreatesSuperAdminUser
     protected function createPlanSubscription(Team $team): void
     {
         $plan = Plan::query()
-            ->where('slug', SubscriptionPlanEnum::PRO->slug())
+            ->where('slug', SubscriptionPlanEnum::UNLIMITED->slug())
             ->firstOrFail();
 
         $team->newPlanSubscription($plan);

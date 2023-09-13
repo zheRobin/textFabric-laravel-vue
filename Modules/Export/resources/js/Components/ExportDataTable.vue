@@ -29,7 +29,7 @@ const paginate = (destination = false) => {
         ? destination
         : route('export.items.index', props.idPage);
 
-    axios.get(`${uri}`, {})
+    axios.get(`${uri}`)
         .then((response) => {
             colsCount.value = response.data.data.data.length;
             items.value = response.data.data;

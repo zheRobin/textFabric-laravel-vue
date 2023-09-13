@@ -14,7 +14,7 @@ import {router, useForm, usePage} from "@inertiajs/vue3";
 import {options} from "Modules/Export/resources/js/optionsForDownload";
 import ConfirmationModal from "Jetstream/Components/ConfirmationModal.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
-import Pagination from "Jetstream/Components/Pagination.vue";
+import Pagination from "Modules/Export/resources/js/Components/Pagination.vue";
 import {MinusCircleIcon} from "@heroicons/vue/20/solid";
 import {DocumentArrowDownIcon, DocumentTextIcon} from "@heroicons/vue/24/outline";
 import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCollection.vue";
@@ -40,6 +40,8 @@ const activeLanguages = ref([]);
 const activeModal = ref(false);
 const selectedCompilations = ref(null);
 const cancelling = ref(false);
+const loadingSuccessfulJobs = ref(false);
+const loadingCancelledJobs = ref(false);
 
 const dataLabel = props.compilations.map(item => {
     return {
@@ -366,34 +368,38 @@ const closeModal = () => {
 const confirmingExportDeletion = ref(false);
 const selectedDownloadFormat = ref(null);
 
-const search = (event) => {
+const search = (uri = null, pageNumber = '1') => {
     if (!page.props.auth.user.current_collection_id) {
         return;
     }
 
+    loadingSuccessfulJobs.value = true;
+
     axios
-        .post(route('export.search'), {query: searchQuery.value, page: page.props.query.page})
+        .post(uri || route('export.search'), {query: searchQuery.value, page: pageNumber})
         .then((response) => {
             exports.value = response.data.data;
         })
         .catch((error) => {
             // console.error(error);
-        });
+        }).finally(() => (loadingSuccessfulJobs.value = false));
 }
 
-const fetchCancelledExports = (event) => {
+const fetchCancelledExports = (uri) => {
     if (!page.props.auth.user.current_collection_id) {
         return;
     }
 
+    loadingCancelledJobs.value = true;
+
     axios
-        .get(route('export.cancelled'))
+        .get(uri || route('export.cancelled'))
         .then((response) => {
             cancelledExports.value = response.data.data;
         })
         .catch((error) => {
             // console.error(error);
-        });
+        }).finally(() => (loadingCancelledJobs.value = false));
 }
 
 const cancelQueue = () => {
@@ -456,6 +462,20 @@ onMounted(() => {
     }
 });
 onUnmounted(() => clearInterval(teamRunningCompilationsInterval));
+
+const paginate = (destination = null) => {
+    let uri = null, pageNumber = '1';
+
+    if (destination) {
+        let url = new URL(destination);
+        uri = url.origin + url.pathname;
+        pageNumber = url.searchParams.get('page');
+    }
+
+    destination.includes('cancelled')
+        ? fetchCancelledExports(destination)
+        : search(uri, pageNumber);
+}
 
 search();
 fetchCancelledExports();
@@ -546,7 +566,7 @@ fetchCancelledExports();
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of created compilations')}}</h2>
                             <div>
                                 <div class="relative mt-2 flex items-center">
-                                    <input type="text" @keyup="search" v-model="searchQuery" name="search" :placeholder="`${$t('Search')}...`" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
+                                    <input type="text" @keyup="() => search(null)" v-model="searchQuery" name="search" :placeholder="`${$t('Search')}...`" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                         </div>
@@ -591,9 +611,11 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Pagination :links="exports.links" />
+                            <Transition>
+                              <Pagination v-if="!loadingSuccessfulJobs" @update:pagination="paginate" :links="exports.links" />
+                            </Transition>
                         </div>
-                        <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
+                        <div v-else class="border-b border-gray-200 pb-8 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
 
                         <div class="flex justify-between">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled and failed compilations')}}</h2>
@@ -620,9 +642,11 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Pagination :links="cancelledExports.links" />
+                            <Transition>
+                                <Pagination v-if="!loadingCancelledJobs" @update:pagination="paginate" :links="cancelledExports.links" />
+                            </Transition>
                         </div>
-                        <div v-else class="mt-6 text-center text-gray-700">{{$t('Not found')}}</div>
+                        <div v-else class="border-b border-gray-200 pb-8 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
                     </div>
                 </div>
             </div>

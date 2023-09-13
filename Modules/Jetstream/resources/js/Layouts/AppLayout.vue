@@ -370,13 +370,13 @@ const logout = () => {
                             <div>
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
-                                <template>
+                                <template v-if="currentCollection && $page.props.collections.canViewCollection">
                                     <div class="block px-4 py-2 text-xs text-gray-400">
                                         {{ $t('Manage Collection') }}
                                     </div>
 
                                     <!-- Collection Settings -->
-                                    <ResponsiveNavLink v-if="currentCollection && $page.props.collections.canViewCollection" :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
+                                    <ResponsiveNavLink :href="route('collections.show', currentCollection)" :active="route().current('collections.show')">
                                         {{ $t('Collection Settings') }}
                                     </ResponsiveNavLink>
                                 </template>

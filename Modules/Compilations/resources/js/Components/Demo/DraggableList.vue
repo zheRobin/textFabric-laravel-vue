@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import TextGenerate from "Modules/Compilations/resources/js/Components/Demo/TextGenerate.vue";
 import {getItems} from "Modules/Imports/resources/js/collection";
 import {getActiveLanguage} from "laravel-vue-i18n";
@@ -115,6 +115,34 @@ function onDropOurColumn (e, arr, column) {
         }
     }
 }
+
+
+const windowWidth = ref(window.innerWidth);
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        windowWidth.value = window.innerWidth;
+    });
+});
+
+const isMobile = computed(() => {
+    return windowWidth.value < 563;
+});
+
+const isTablet = computed(() => {
+    return windowWidth.value >= 563 && windowWidth.value < 1024;
+});
+
+const truncatedTitleHeader = computed(() => {
+    if (isMobile.value) {
+        return items.value[currentPage.value][1].value.length > 10 ? items.value[currentPage.value][1].value.slice(0, 3) + '...' : items.value[currentPage.value][1].value;
+    } else if (isTablet.value) {
+        return items.value[currentPage.value][1].value.length > 15 ? items.value[currentPage.value][1].value.slice(0, 20) + '...' : items.value[currentPage.value][1].value;
+    } else {
+        return  items.value[currentPage.value][1].value;
+    }
+});
+
 </script>
 
 <template>
@@ -143,7 +171,7 @@ function onDropOurColumn (e, arr, column) {
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex md:justify-normal justify-end" v-if="presetsToComplete.length">
                 <div class="text-sm font-medium text-gray-900 truncate mt-1.5">
-                    {{ items[currentPage][1].value.length > 25 ? items[currentPage][1].value.slice(0, 25) + '...' : items[currentPage][1].value }}
+                    {{ truncatedTitleHeader}}
                     <span class="ml-2">
                         -
                     </span>

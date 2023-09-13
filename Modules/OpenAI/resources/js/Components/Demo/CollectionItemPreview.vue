@@ -54,6 +54,12 @@ const changeItem = () => {
 }
 changeItem();
 
+const currentItemValue = computed(() => {
+    const value = items.value[currentPage.value][1].value;
+    const maxWidth = window.innerWidth < 768 ? 20 : (window.innerWidth < 1024 ? 40 : 70);
+
+    return value.length > maxWidth ? value.slice(0, maxWidth - 5) + '...' : value;
+});
 </script>
 
 <template>
@@ -62,7 +68,7 @@ changeItem();
             <div class="flex justify-end items-center">
                 <div class="flex items-center">
                     <div class="text-sm font-medium text-gray-900 truncate">
-                        {{ items[currentPage][1].value }}
+                        {{ currentItemValue }}
                         <span class="ml-2">-</span>
                         <span class="ml-2 mr-4">
                             {{ `#${currentPage + 1}` }}

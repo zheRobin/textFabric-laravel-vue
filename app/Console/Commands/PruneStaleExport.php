@@ -49,32 +49,12 @@ class PruneStaleExport extends Command
                 $jobsExists = $jobs->exists();
                 $failedJobsExists = $failedJobs->exists();
 
-                if (!$jobsExists && !$failedJobsExists) {
+                if (!$jobsExists && $failedJobsExists) {
                     $this->prunableBatchIds[] = $batchId;
-                } elseif (!$jobsExists && $failedJobsExists) {
-                    $uuids = $failedJobs->get()
-                        ->map(fn($failedJob) => $failedJob->uuid);
-
-                    $jobBatches = JobBatch::query();
-
-                    $uuids->each(function ($uuid) use ($batchId, &$jobBatches) {
-                        $jobBatches->orWhere('failed_job_ids', 'LIKE', "%{$uuid}%");
-                    });
-
-                    if ($jobBatches->exists()) {
-                        /**
-                         * TODO: if ```job_batch_id``` exist in ```failed_jobs_ids``` table ??? UNDECIDED TERRITORY
-                         *
-                         * One option is to wait for x second before we prune failed_jobs entry
-                         */
-                        // $jobBatches->get()->map(fn(JobBatch $jobBatch) => $this->prunableBatchIds[] = $jobBatch->id);
-                    }
+                    $this->prunableBatchIds = array_unique($this->prunableBatchIds);
+                    Export::whereIn('job_batch_id', $this->prunableBatchIds)
+                        ->update(['job_batch_id' => null]);
                 }
             });
-
-        $this->prunableBatchIds = array_unique($this->prunableBatchIds);
-
-        Export::whereIn('job_batch_id', $this->prunableBatchIds)
-            ->update(['job_batch_id' => null]);
     }
 }

@@ -16,6 +16,38 @@ class PlanSeeder extends Seeder
      */
     public function run(CreatesPlan $createPlan): void
     {
+        $trial = $createPlan([
+            'slug' => SubscriptionPlanEnum::TRIAL->slug(),
+            'name' => 'Trial plan',
+            'description' => null,
+            'is_active' => true,
+            'trial_period' => 14,
+            'invoice_period' => 0,
+        ]);
+
+        $trial->features()->saveMany([
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::COLLECTIONS_LIMIT->slug(),
+                'name' => 'Collections',
+                'description' => 'up to 2 collection',
+                'value' => 2
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::COLLECTION_ITEMS_LIMIT->slug(),
+                'name' => 'Collection Items',
+                'description' => 'up to 10 items per collection',
+                'value' => 10
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 300 request per month',
+                'value' => 300,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+        ]);
+
         $basic = $createPlan([
             'slug' => SubscriptionPlanEnum::BASE->slug(),
             'name' => 'Basic plan',

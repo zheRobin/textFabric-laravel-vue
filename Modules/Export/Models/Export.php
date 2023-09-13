@@ -100,7 +100,9 @@ class Export extends Model
     public function scopeCancelled(Builder $builder): Builder
     {
         return $builder
-            ->whereNotNull('job_batch_id')
-            ->orWhereDoesntHave('items');
+            ->where(fn($query) => $query
+                ->whereHas('batch', fn($query) => $query->whereNotNull('cancelled_at'))
+                ->orWhereDoesntHave('items')
+            );
     }
 }

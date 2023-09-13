@@ -40,7 +40,7 @@ class GenerateExports implements ShouldQueue
     public function handle(Preset $preset): void
     {
         $queueProgress = new QueueProgress;
-        $queueProgress->job_id = $this->job->getJobId(); // Отримайте id чергового завдання
+        $queueProgress->job_id = $this->job->getJobId(); // Get id of the task
         $queueProgress->status = 'pending';
         $queueProgress->save();
 
@@ -54,7 +54,8 @@ class GenerateExports implements ShouldQueue
         $count = 1;
         foreach ($presetIds as $id) {
             $pres = $preset->where('id', $id)->first();
-            $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code;
+            // $lang not needed here anymore, save a db query
+            // $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code; 
             $result[$compilationName . '_' . $pres->name] = [];
             foreach ($this->items as $index => $item) {
                 $params = $builder->build($this->user, $pres, $item);
@@ -64,7 +65,7 @@ class GenerateExports implements ShouldQueue
             }
 
             if ($this->queueShouldStop($this->job->getJobId())) {
-                return; // Завдання не буде продовжувати виконання
+                return; // The task will not continue to run
             }
 
             $queueProgress->status = 'in_progress';

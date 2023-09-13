@@ -49,12 +49,14 @@ class PruneStaleExport extends Command
                 $jobsExists = $jobs->exists();
                 $failedJobsExists = $failedJobs->exists();
 
-                if (!$jobsExists && $failedJobsExists) {
-                    $this->prunableBatchIds[] = $batchId;
-                    $this->prunableBatchIds = array_unique($this->prunableBatchIds);
-                    Export::whereIn('job_batch_id', $this->prunableBatchIds)
-                        ->update(['job_batch_id' => null]);
+                if (!$jobsExists) {
+                    $this->prunableBatchIds[] = $batchId; 
                 }
             });
+
+        $this->prunableBatchIds = array_unique($this->prunableBatchIds);
+
+        Export::whereIn('job_batch_id', $this->prunableBatchIds)
+            ->update(['job_batch_id' => null]);
     }
 }

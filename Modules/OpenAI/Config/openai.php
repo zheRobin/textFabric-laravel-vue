@@ -21,6 +21,6 @@ return [
         'top_p' => 1,
         'presence_penalty' => 0,
         'frequency_penalty' => 0,
-        'max_tokens' => 100,
+        'max_tokens' => 600,
     ]
 ];

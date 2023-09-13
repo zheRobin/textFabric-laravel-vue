@@ -372,7 +372,7 @@ const search = (event) => {
     }
 
     axios
-        .post(route('export.search'), {query: searchQuery.value})
+        .post(route('export.search'), {query: searchQuery.value, page: page.props.query.page})
         .then((response) => {
             exports.value = response.data.data;
         })
@@ -523,7 +523,7 @@ fetchCancelledExports();
                             <div class="flex justify-between mt-6" v-if="generateActive">
                                 <div class="flex items-center text-sm font-semibold leading-6 text-gray-900 my-3">
                                     <DocumentArrowDownIcon class="mr-1 w-5 inline-flex" />
-                                    {{activeGenerations.label || '...'}}
+                                    {{activeGenerations?.label || '...'}}
                                 </div>
                                 <div class="flex">
                                     <div aria-label="Loading..." role="status" class="flex items-center space-x-2">

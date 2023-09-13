@@ -26,7 +26,7 @@ class PruneStaleExport extends Command
     protected $description = 'Prune stale job-batch entries from the exports table';
 
     /**
-     * The job-batch-id that no longer has references in ```jobs``` and ```failed_jobs``` table.
+     * The ```job_batch_id``` in ```exports``` table that no longer references any record in the ```jobs``` table.
      *
      * @var array<string>
      */
@@ -44,13 +44,9 @@ class PruneStaleExport extends Command
             ->map(fn(Export $export) => $export->batch->id)
             ->each(function ($batchId) {
                 $jobs = DB::table('jobs')->where('payload', 'LIKE', "%{$batchId}%");
-                $failedJobs = DB::table('failed_jobs')->where('payload', 'LIKE', "%{$batchId}%");
 
-                $jobsExists = $jobs->exists();
-                $failedJobsExists = $failedJobs->exists();
-
-                if (!$jobsExists) {
-                    $this->prunableBatchIds[] = $batchId; 
+                if (!$jobs->exists()) {
+                    $this->prunableBatchIds[] = $batchId;
                 }
             });
 

@@ -11,6 +11,7 @@ import {ExclamationTriangleIcon} from "@heroicons/vue/24/outline";
 import UpdateSubscriptionForm from "Jetstream/Pages/Teams/Partials/UpdateSubscriptionForm.vue";
 import SwitchTeamForm from "Jetstream/Pages/Teams/Partials/SwitchTeamForm.vue";
 import ShowSubscriptionInfo from "Jetstream/Pages/Profile/Partials/ShowSubscriptionInfo.vue";
+import {usePage} from "@inertiajs/vue3";
 
 defineProps({
     team: Object,
@@ -18,6 +19,8 @@ defineProps({
     permissions: Object,
     subscriptionPlans: Array,
 });
+
+const page = usePage();
 </script>
 
 <template>
@@ -31,8 +34,8 @@ defineProps({
         <div>
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <template v-if="$page.props.planSubscription">
-                    <ShowSubscriptionInfo :planSubscription="$page.props.planSubscription" />
+                <template v-if="page.props.planSubscription">
+                    <ShowSubscriptionInfo :planSubscription="page.props.planSubscription" :collectionCount="page.props.team.collections.length" />
 
                     <SectionBorder />
                 </template>
@@ -60,7 +63,7 @@ defineProps({
                 </div>
                 <div class="mt-10 sm:mt-0">
 
-                <template v-if="$page.props.auth.user.is_admin && team.plan_subscription">
+                <template v-if="page.props.auth.user.is_admin && team.plan_subscription">
                     <SectionBorder />
 
                     <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" />
@@ -70,7 +73,7 @@ defineProps({
                     <SectionBorder />
 
                     <div class="mt-10 sm:mt-0">
-                        <SwitchTeamForm :team="team" :user="$page.props.auth.user" />
+                        <SwitchTeamForm :team="team" :user="page.props.auth.user" />
                     </div>
                 </template>
 

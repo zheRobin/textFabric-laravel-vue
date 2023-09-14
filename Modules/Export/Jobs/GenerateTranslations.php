@@ -2,6 +2,7 @@
 
 namespace Modules\Export\Jobs;
 
+use App\Models\User;
 use DeepL\DeepLException;
 use DeepL\Translator;
 use Illuminate\Bus\Batchable;
@@ -12,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 
 class GenerateTranslations implements ShouldQueue
 {
@@ -24,6 +26,7 @@ class GenerateTranslations implements ShouldQueue
     public int $maxExceptions = 2; // The maximum number of unhandled exceptions to allow before failing.
 
     public function __construct(
+        protected User $user,
         protected array $languages,
         protected ExportCollectionItem $exportCollectionItem,
     ) {
@@ -48,6 +51,16 @@ class GenerateTranslations implements ShouldQueue
                             ? $completion['value']
                             : $translator->translateText($completion['value'], null, $languageCode)->text
                     ];
+
+                    if (!empty($completion['value'])) {
+                        // ------------------------------------------------
+                        // count subscription plan ------------------------
+                        $this->user->currentTeam->planSubscription
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                        $this->user->currentTeam->planSubscription
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                        // ------------------------------------------------
+                    }
                 }
             }
         }

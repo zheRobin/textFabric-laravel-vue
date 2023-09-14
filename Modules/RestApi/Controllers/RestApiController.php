@@ -95,10 +95,16 @@ class RestApiController extends Controller
 
             foreach ($request['translate-target-list'] as $lang) {
                 $translatedText = $translator->translateText($request['text'], null, $lang);
-                $result[$lang] = $translatedText->text;
 
+                // ------------------------------------------------
+                // count subscription plan ------------------------
                 $request->user()->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+                    ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                $request->user()->currentTeam->planSubscription
+                    ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                // ------------------------------------------------
+
+                $result[$lang] = $translatedText->text;
             }
 
             return response()->json($result);

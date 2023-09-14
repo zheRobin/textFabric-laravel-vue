@@ -141,7 +141,7 @@ class ExportController extends Controller
         $export->fill(['type' => ExportTypeEnum::TRANSLATION])->save();
 
         $jobs = $export->items->map(function ($item) use ($request) {
-            return new GenerateTranslations($request->offsetGet('languages'), $item);
+            return new GenerateTranslations($request->user(), $request->offsetGet('languages'), $item);
         });
 
         $batch = Bus::batch($jobs)
@@ -159,7 +159,10 @@ class ExportController extends Controller
                 if ($batch->hasFailures()) {
                     // TODO: remove debug message
                     info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'translate', $batch->id));
-                    Artisan::call('queue:retry-batch', ['id' => $batch->id]);
+
+                    // TODO: we may not need this, this makes extra attempts after a job is failed,
+                    //  extra attempts will have affect on billing without user's knowledge
+                    // Artisan::call('queue:retry-batch', ['id' => $batch->id]);
                 }
                 if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
                     // TODO: remove debug message
@@ -167,9 +170,6 @@ class ExportController extends Controller
                     $export->job_batch_id = null;
                     $export->save();
                 }
-
-                request()->user()->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
             })
             ->name('Translate Export Compilation')
             ->allowFailures()

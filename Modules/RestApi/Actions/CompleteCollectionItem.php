@@ -3,6 +3,7 @@
 namespace Modules\RestApi\Actions;
 
 use App\Models\User;
+use DeepL\DeepLException;
 use DeepL\Translator;
 use Illuminate\Http\JsonResponse;
 use Modules\Imports\Models\CollectionItem;
@@ -17,6 +18,9 @@ use OpenAI\Responses\Chat\CreateResponse;
 use Modules\Translations\Models\Language;
 class CompleteCollectionItem implements CompletesCollectionItem
 {
+    /**
+     * @throws DeepLException
+     */
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
             if (!$this->validate($user)) {
@@ -41,6 +45,15 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
             // Handle OpenAI chat request
             $completion = OpenAI::chat()->create($params);
+
+            // ------------------------------------------------
+            // count subscription plan ------------------------
+            $user->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+            $user->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+            // ------------------------------------------------
+
             $formattedResponse = $this->formatResponse($completion);
 
             $result['output'] = $formattedResponse;
@@ -49,15 +62,18 @@ class CompleteCollectionItem implements CompletesCollectionItem
             if (count($translate) > 0) {
                     foreach ($translate as $lang) {
                         $translatedText = $translator->translateText($formattedResponse, null, $lang);
-                        $result[$lang] = $translatedText->text;
 
+                        // ------------------------------------------------
+                        // count subscription plan ------------------------
                         $user->currentTeam->planSubscription
-                            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                        $user->currentTeam->planSubscription
+                            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                        // ------------------------------------------------
+
+                        $result[$lang] = $translatedText->text;
                     }
             }
-
-            $user->currentTeam->planSubscription
-                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
 
             return $result;
     }

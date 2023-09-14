@@ -39,10 +39,26 @@ class PlanSeeder extends Seeder
                 'value' => 10
             ]),
             new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
+                'slug' => SubscriptionFeatureEnum::API_REQUESTS->slug(),
+                'name' => 'API requests',
                 'description' => 'up to 300 request per month',
                 'value' => 300,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 150 request per month',
+                'value' => 150,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::DEEPL_REQUESTS->slug(),
+                'name' => 'DeepL requests',
+                'description' => 'up to 150 request per month',
+                'value' => 150,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -71,10 +87,26 @@ class PlanSeeder extends Seeder
                 'value' => 100
             ]),
             new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
+                'slug' => SubscriptionFeatureEnum::API_REQUESTS->slug(),
+                'name' => 'API requests',
                 'description' => 'up to 3.000 request per month',
                 'value' => 3000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 1.500 request per month',
+                'value' => 1500,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::DEEPL_REQUESTS->slug(),
+                'name' => 'DeepL requests',
+                'description' => 'up to 1.500 request per month',
+                'value' => 1500,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -103,10 +135,26 @@ class PlanSeeder extends Seeder
                 'value' => 300
             ]),
             new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
+                'slug' => SubscriptionFeatureEnum::API_REQUESTS->slug(),
+                'name' => 'API requests',
                 'description' => 'up to 10.000 request per month',
                 'value' => 10000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 5.000 request per month',
+                'value' => 5000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::DEEPL_REQUESTS->slug(),
+                'name' => 'DeepL requests',
+                'description' => 'up to 5.000 request per month',
+                'value' => 5000,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -135,10 +183,18 @@ class PlanSeeder extends Seeder
                 'value' => 1000
             ]),
             new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
+                'slug' => SubscriptionFeatureEnum::API_REQUESTS->slug(),
+                'name' => 'API requests',
                 'description' => 'up to 30.000 request per month',
                 'value' => 30000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 15.000 request per month',
+                'value' => 15000,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -147,6 +203,14 @@ class PlanSeeder extends Seeder
                 'name' => 'OpenAI params',
                 'description' => 'possibility to configure parameters',
                 'value' => true,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::DEEPL_REQUESTS->slug(),
+                'name' => 'DeepL requests',
+                'description' => 'up to 15.000 request per month',
+                'value' => 15000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
             ]),
         ]);
 
@@ -173,10 +237,18 @@ class PlanSeeder extends Seeder
                 'value' => 10000
             ]),
             new PlanFeature([
-                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
-                'name' => 'OpenAI requests',
+                'slug' => SubscriptionFeatureEnum::API_REQUESTS->slug(),
+                'name' => 'API requests',
                 'description' => 'up to 500.000 request per month',
                 'value' => 500000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::OPENAI_REQUESTS->slug(),
+                'name' => 'OpenAI requests',
+                'description' => 'up to 250.000 request per month',
+                'value' => 250000,
                 'resettable_interval' => ResettableIntervalEnum::MONTH->value,
                 'resettable_period' => 1,
             ]),
@@ -185,6 +257,14 @@ class PlanSeeder extends Seeder
                 'name' => 'OpenAI params',
                 'description' => 'possibility to configure parameters',
                 'value' => true,
+            ]),
+            new PlanFeature([
+                'slug' => SubscriptionFeatureEnum::DEEPL_REQUESTS->slug(),
+                'name' => 'DeepL requests',
+                'description' => 'up to 250.000 request per month',
+                'value' => 250000,
+                'resettable_interval' => ResettableIntervalEnum::MONTH->value,
+                'resettable_period' => 1,
             ]),
         ]);
 

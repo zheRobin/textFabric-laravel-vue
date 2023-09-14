@@ -2,13 +2,18 @@
 
 namespace Modules\Translations\Actions;
 
+use DeepL\DeepLException;
 use DeepL\Translator;
 use Illuminate\Support\Facades\Validator;
 use Modules\Imports\Models\CollectionItem;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Contracts\TranslatesCollectionItemData;
 
 class TranslateCollectionItemData implements TranslatesCollectionItemData
 {
+    /**
+     * @throws DeepLException
+     */
     public function translate(CollectionItem $collectionItem, array $input): array
     {
         // TODO: authorization
@@ -27,6 +32,15 @@ class TranslateCollectionItemData implements TranslatesCollectionItemData
         $cellsValuesToTranslate = array_filter($allCellsValues);
 
         $translatedCellsValues = $translator->translateText($cellsValuesToTranslate, null, $input['languageCode']);
+
+        // ------------------------------------------------
+        // count subscription plan ------------------------
+        request()->user()->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+        request()->user()->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+        // ------------------------------------------------
+
         $translatedCellsValues = array_combine(
             array_keys($cellsValuesToTranslate),
             array_map(fn ($el) => $el->text, $translatedCellsValues)

@@ -94,7 +94,7 @@ class PlanSubscription extends Model
     protected function isActive(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->active()
+            get: fn () => $this->planIsActive()
         );
     }
 
@@ -109,7 +109,7 @@ class PlanSubscription extends Model
     /**
      * @return bool
      */
-    public function active(): bool
+    public function planIsActive(): bool
     {
         return !$this->ended();
     }
@@ -117,7 +117,7 @@ class PlanSubscription extends Model
     /**
      * @return bool
      */
-    public function inactive(): bool
+    public function planIsNotActive(): bool
     {
         return !$this->active();
     }
@@ -278,7 +278,7 @@ class PlanSubscription extends Model
      * @param Builder $query
      * @return void
      */
-    public function scopeInActive(Builder $query): void
+    public function scopeInactive(Builder $query): void
     {
         $query->where('ends_at', '<=', Carbon::now());
     }

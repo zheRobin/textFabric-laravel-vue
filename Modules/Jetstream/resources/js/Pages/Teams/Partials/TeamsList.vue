@@ -51,9 +51,9 @@ const fillFilters = () => {
     });
 }
 
-const openAIFeatureSlug = 'openai-requests';
-const openAIUsage = (team) => {
-    const usage = team.plan_subscription.usage.find((el) => el.feature.slug === openAIFeatureSlug);
+const apiFeatureSlug = 'api-requests';
+const apiUsage = (team) => {
+    const usage = team.plan_subscription.usage.find((el) => el.feature.slug === apiFeatureSlug);
 
     if (usage) {
         return usage.used;
@@ -109,7 +109,7 @@ fillFilters();
                             <div v-if="team.plan_subscription" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                                 <ClipboardDocumentListIcon class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                 <p>
-                                    {{ `OpenAI: ${openAIUsage(team)} requests` }}
+                                    {{ `Request: ${apiUsage(team)} requests` }}
                                 </p>
                             </div>
                             <div v-if="team.plan_subscription" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">

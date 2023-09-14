@@ -4,9 +4,11 @@ import PrimaryBadge from "Jetstream/Components/PrimaryBadge.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
+import {usePage} from "@inertiajs/vue3";
 
 const props = defineProps({
-    planSubscription: Object
+    planSubscription: Object,
+    collectionCount: Number,
 })
 
 const getUsage = (feature) => {
@@ -16,11 +18,7 @@ const getUsage = (feature) => {
 const getFeatureUsage = (feature) => {
     const usage = getUsage(feature);
 
-    if (getUsage(feature)) {
-        return usage.used;
-    }
-
-    return false;
+    return usage ? usage.used : 0;
 }
 </script>
 
@@ -39,16 +37,21 @@ const getFeatureUsage = (feature) => {
 
         <InputLabel class="mt-5">{{$t('Plan Features')}}</InputLabel>
         <ul role="list" class="mt-1 space-y-3 text-sm leading-6 text-gray-600">
-            <li v-for="(feature, key) in planSubscription.plan.features" class="flex gap-x-3" :key="feature.id">
-                <template v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'">
+            <template v-for="(feature, key) in planSubscription.plan.features">
+                <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3" :key="feature.id">
                     <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
                     <span>{{ feature.description }}</span>
                     {{ ' ' }}
-                    <span v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" class="font-semibold text-gray-500">
-                        {{ `(${$t('used')}: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
-                    </span>
-                </template>
-            </li>
+                    <template v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" >
+                        <span v-if="feature.slug === 'collections-limit'" class="font-semibold text-gray-500">
+                            {{ `(${$t('used')}: ${props.collectionCount})` }}
+                        </span>
+                        <span v-else class="font-semibold text-gray-500">
+                            {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
+                        </span>
+                    </template>
+                </li>
+            </template>
         </ul>
 
         <InputLabel class="mt-5">{{ planSubscription.is_active ? $t('Ends at') : $t('Ended at') }}</InputLabel>

@@ -22,16 +22,13 @@ class VerifySubscription
             return $next($request);
         }
 
-        if (! $request->user() ||
-            ! $request->user()->currentTeam ||
-            ! $request->user()->currentTeam->planSubscription ||
-            $request->user()->currentTeam->planSubscription->inactive()) {
+        if (!$request->user()?->currentTeam?->planSubscription?->planIsActive()) {
 
             if ($request->wantsJson()) {
                 abort(403, 'Team subscription has expired.');
             }
 
-            return ! $request->user() || ! $request->user()->currentTeam
+            return !$request->user()?->currentTeam
                 ? Redirect::route('profile.show')
                 : Redirect::route('teams.show', $request->user()->currentTeam->id);
         }

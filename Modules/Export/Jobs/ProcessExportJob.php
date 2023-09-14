@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Modules\Export\Models\Export;
 use Modules\Imports\Models\CollectionItem;
 use Modules\OpenAI\Contracts\BuildsParams;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateResponse;
 
@@ -58,6 +59,14 @@ class ProcessExportJob implements ShouldQueue
         foreach ($this->compilation->getPresets() as $preset) {
             $params = $builder->build($this->user, $preset, $this->collectionItem);
             $response = OpenAI::chat()->create($params);
+
+            // ------------------------------------------------
+            // count subscription plan ------------------------
+            $this->user->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+            $this->user->currentTeam->planSubscription
+                ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+            // ------------------------------------------------
 
             $header = Str::slug($this->compilation->name) . '_' . Str::slug($preset->name);
             $completions[] = [

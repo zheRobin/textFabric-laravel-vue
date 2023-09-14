@@ -141,7 +141,7 @@ class ExportController extends Controller
         $export->fill(['type' => ExportTypeEnum::TRANSLATION])->save();
 
         $jobs = $export->items->map(function ($item) use ($request) {
-            return new GenerateTranslations($request->offsetGet('languages'), $item);
+            return new GenerateTranslations($request->user(), $request->offsetGet('languages'), $item);
         });
 
         $batch = Bus::batch($jobs)
@@ -167,9 +167,6 @@ class ExportController extends Controller
                     $export->job_batch_id = null;
                     $export->save();
                 }
-
-                request()->user()->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
             })
             ->name('Translate Export Compilation')
             ->allowFailures()

@@ -19,8 +19,13 @@ class CollectionItemCompletionController extends Controller
 
         $params = $builder->build($request->user(), $preset, $item);
 
+        // ------------------------------------------------
+        // count subscription plan ------------------------
         $request->user()->currentTeam->planSubscription
             ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        $request->user()->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+        // ------------------------------------------------
 
         return response()->stream(function () use ($completer, $params, $request) {
             $completer->complete($request->user(), $params);

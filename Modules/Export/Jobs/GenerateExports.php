@@ -6,6 +6,7 @@ use App\Models\Compilations;
 use Carbon\Carbon;
 use Modules\Export\Models\CompilationExport;
 use Modules\OpenAI\Contracts\BuildsParams;
+use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
 use Modules\Translations\Models\Language;
 use Modules\Presets\Models\Preset;
 use Illuminate\Bus\Queueable;
@@ -28,11 +29,11 @@ class GenerateExports implements ShouldQueue
     protected $team_id;
     protected $collection_id;
 
-    public function __construct($compilationId, $items, $idUser, $team_id, $collection_id)
+    public function __construct($compilationId, $items, $user_id, $team_id, $collection_id)
     {
         $this->compilationId = $compilationId;
         $this->items = $items;
-        $this->user = User::where('id', $idUser)->get()->first();
+        $this->user = User::where('id', $user_id)->get()->first();
         $this->team_id = $team_id;
         $this->collection_id = $collection_id;
     }
@@ -54,12 +55,20 @@ class GenerateExports implements ShouldQueue
         $count = 1;
         foreach ($presetIds as $id) {
             $pres = $preset->where('id', $id)->first();
-            // $lang not needed here anymore, save a db query
-            // $lang = Language::get()->where('id', $pres->output_language_id ?? 31)->first()->code; 
+
             $result[$compilationName . '_' . $pres->name] = [];
             foreach ($this->items as $index => $item) {
                 $params = $builder->build($this->user, $pres, $item);
                 $response = OpenAI::chat()->create($params);
+
+                // ------------------------------------------------
+                // count subscription plan ------------------------
+                $this->user->currentTeam->planSubscription
+                    ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+                $this->user->currentTeam->planSubscription
+                    ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                // ------------------------------------------------
+
                 $content = $response->choices[0]->message->content;
                 $result[$compilationName . '_' . $pres->name]['def'][$index] = $content;
             }

@@ -39,13 +39,15 @@ const getFeatureUsage = (feature) => {
 
         <InputLabel class="mt-5">{{$t('Plan Features')}}</InputLabel>
         <ul role="list" class="mt-1 space-y-3 text-sm leading-6 text-gray-600">
-            <li v-for="(feature, key) in planSubscription.plan.features" class="flex gap-x-3">
-                <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
-                <span>{{ feature.description }}</span>
-                {{ ' ' }}
-                <span v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" class="font-semibold text-gray-500">
-                    {{ `(${$t('used')}: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
-                </span>
+            <li v-for="(feature, key) in planSubscription.plan.features" class="flex gap-x-3" :key="feature.id">
+                <template v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'">
+                    <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
+                    <span>{{ feature.description }}</span>
+                    {{ ' ' }}
+                    <span v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" class="font-semibold text-gray-500">
+                        {{ `(${$t('used')}: ${getFeatureUsage(feature) ? getFeatureUsage(feature) : 0})` }}
+                    </span>
+                </template>
             </li>
         </ul>
 

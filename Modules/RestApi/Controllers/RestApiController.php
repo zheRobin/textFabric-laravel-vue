@@ -98,10 +98,8 @@ class RestApiController extends Controller
 
                 // ------------------------------------------------
                 // count subscription plan ------------------------
-                $request->user()->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
-                $request->user()->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
                 // ------------------------------------------------
 
                 $result[$lang] = $translatedText->text;

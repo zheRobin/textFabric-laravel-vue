@@ -76,8 +76,6 @@ const findElementHeader = () => {
             titleHeader.value = title.value;
         }
     }
-    console.log(title);
-    console.log(titleHeader.value);
 }
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
@@ -131,7 +129,6 @@ function deleteItemById(array, id) {
     }
 }
 const updatePreset = (right) => {
-    console.log(right)
     const newPresetIds = [];
     if(right){
         right.map(item => newPresetIds.push(item.id))

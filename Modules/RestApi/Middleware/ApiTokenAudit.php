@@ -5,6 +5,7 @@ namespace Modules\RestApi\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Modules\Subscriptions\Enums\SubscriptionPlanEnum;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Models\Team;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,7 @@ class ApiTokenAudit
     {
         if (!Auth::check()) {
             $response = [
-                "message" => "Access denied",
+                "message" => "Access denied.",
                 "timestamp" => now()
             ];
             return new JsonResponse($response, 401);
@@ -30,16 +31,19 @@ class ApiTokenAudit
 
         if (count($request->user()->currentAccessToken()->abilities) === 0) {
             $response = [
-                "message" => "Access denied",
+                "message" => "API token is disabled. Please enable API token to make a request.",
                 "timestamp" => now()
             ];
 
             return new JsonResponse($response, 403);
         }
 
-        if (Team::where('user_id', $request->user()->id)->first()->planSubscription->plan->id !== 3) {
+        if (!in_array(Team::where('user_id', $request->user()->id)->first()->planSubscription->plan->slug, [
+            SubscriptionPlanEnum::ENTERPRISE->slug(),
+            SubscriptionPlanEnum::UNLIMITED->slug()
+        ])) {
             $response = [
-                "message" => "Access denied",
+                "message" => "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.",
                 "timestamp" => now()
             ];
 

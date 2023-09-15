@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import {computed, ref} from 'vue';
+import {useForm, usePage} from '@inertiajs/vue3';
 import ActionMessage from 'Jetstream/Components/ActionMessage.vue';
 import ActionSection from 'Jetstream/Components/ActionSection.vue';
 import Checkbox from 'Jetstream/Components/Checkbox.vue';
@@ -27,7 +27,7 @@ const props = defineProps({
     translateDocumentation: Object
 });
 
-const documentsationSelect = ref(null);
+const documentationSelect = ref(null);
 const selectExampleRequest = ref(null);
 const responseExample = ref(null);
 const exampleRequest = {
@@ -95,6 +95,19 @@ const apiTokenBeingDeleted = ref(null);
 
 const showDocumentation = ref(false);
 
+const newApiTokenRef = ref();
+const isTokenCopied = ref(false);
+const newApiToken = computed(() => usePage().props.jetstream.flash.token);
+const copyToClipboard = () => navigator.clipboard.writeText(newApiToken.value).then(() => {
+    newApiTokenRef.value.classList.add('text-green-500');
+    isTokenCopied.value = true;
+
+    setTimeout(() => {
+        newApiTokenRef.value.classList.remove('text-green-500');
+        isTokenCopied.value = false;
+    }, 2000);
+});
+
 const createApiToken = () => {
     createApiTokenForm.post(route('api-tokens.store'), {
         preserveScroll: true,
@@ -107,12 +120,11 @@ const createApiToken = () => {
 
 const documentation = id => {
     if(id === 1){
-        documentsationSelect.value = props.apiDocumentations.generate;
+        documentationSelect.value = props.apiDocumentations.generate;
         selectExampleRequest.value = exampleRequest.generate;
-        console.log(selectExampleRequest.value);
         responseExample.value = exampleRequest.generateResponse;
     }else{
-        documentsationSelect.value = props.apiDocumentations.translate;
+        documentationSelect.value = props.apiDocumentations.translate;
         selectExampleRequest.value = exampleRequest.translate;
         responseExample.value = exampleRequest.translateResponse;
     }
@@ -250,8 +262,12 @@ const test = {...props.apiDocumentations.generate};
                         <div class="text-base font-semibold leading-6 text-gray-900">
                             API Documentation
                         </div>
-                        <div class="mt-5 max-w-xl text-sm text-gray-500">
-                            Api URL:
+                        <div class="text-sm text-gray-500">
+                            <div class="mb-2">API Token must be passed as Bearer Token in the request header.</div>
+                            <div><code class="border p-1 bg-gray-100 rounded"><strong>Authorization: Bearer &lt;api-token&gt;</strong></code></div>
+                        </div>
+                        <div class="mt-8 max-w-xl text-sm text-gray-500">
+                            API Endpoints:
                         </div>
                         <div class="mt-2 flex" v-for="item in names">
                             <div>{{item.url}}</div>
@@ -276,9 +292,23 @@ const test = {...props.apiDocumentations.generate};
                     Please copy your new API token. For your security, it won't be shown again.
                 </div>
 
-                <div v-if="$page.props.jetstream.flash.token" class="mt-4 bg-gray-100 dark:bg-gray-900 px-4 py-2 rounded font-mono text-sm text-gray-500 break-all">
-                    {{ $page.props.jetstream.flash.token }}
+                <div v-if="newApiToken" class="relative flex items-center justify-between my-4 bg-gray-100 dark:bg-gray-900 pl-4 pr-10 py-2 rounded font-mono text-sm text-gray-500 break-all">
+                    <span>{{ newApiToken }}</span>
+                    <span ref="newApiTokenRef" class="absolute hover:cursor-pointer" style="right: 1rem;" @click="copyToClipboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor">
+                            <path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/>
+                        </svg>
+                    </span>
                 </div>
+
+                <Transition>
+                    <div v-if="isTokenCopied" class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="inline m-1 text-green-500">
+                            <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/>
+                        </svg>
+                        <span>Token copied to clipboard!</span>
+                    </div>
+                </Transition>
             </template>
 
             <template #footer>
@@ -294,7 +324,7 @@ const test = {...props.apiDocumentations.generate};
             </template>
 
             <template #content>
-                <vue-json-pretty class="mb-4" :data="documentsationSelect" />
+                <vue-json-pretty class="mb-4" :data="documentationSelect" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example JSON</h3>
                 <vue-json-pretty class="mt-4 mb-4" :data="selectExampleRequest" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example Response</h3>

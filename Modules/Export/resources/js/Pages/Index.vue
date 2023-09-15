@@ -611,7 +611,7 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Transition leave-active-class="transition ease-in" leave-from-class="opacity-0" leave-to-class="opacity-100">
+                            <Transition leave-active-class="transition ease-in duration-400">
                                 <Pagination v-if="!loadingSuccessfulJobs" @update:pagination="paginate" :links="exports.links" />
                             </Transition>
                         </div>
@@ -642,7 +642,7 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Transition leave-active-class="transition ease-in" leave-from-class="opacity-0" leave-to-class="opacity-100">
+                            <Transition leave-active-class="transition ease-in duration-400">
                                 <Pagination v-if="!loadingCancelledJobs" @update:pagination="paginate" :links="cancelledExports.links" />
                             </Transition>
                         </div>

@@ -18,9 +18,8 @@ const props = defineProps({
 });
 
 const loader = ref(true);
-
-const dataRight = ref();
-const activeCompilations = ref();
+const dataRight = ref(null);
+const activeCompilations = ref(null);
 const itemRightData = (data) => {
     dataRight.value = data;
 }

@@ -4,7 +4,7 @@ import {onUnmounted, ref, onMounted, computed} from 'vue';
 import { notify } from "notiwind";
 import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
-const emit = defineEmits(['idItemsPage']);
+const emit = defineEmits(['idItemsPage', 'itemRight']);
 
 const props = defineProps({
     presets: Array,
@@ -76,8 +76,6 @@ const findElementHeader = () => {
             titleHeader.value = title.value;
         }
     }
-    console.log(title);
-    console.log(titleHeader.value);
 }
 const itemsRight = ref(sortedPresets);
 const items = ref(nonExistingPresets);
@@ -131,7 +129,6 @@ function deleteItemById(array, id) {
     }
 }
 const updatePreset = (right) => {
-    console.log(right)
     const newPresetIds = [];
     if(right){
         right.map(item => newPresetIds.push(item.id))
@@ -204,7 +201,6 @@ function onDropOurColumn (e, arr, column) {
 <template>
     <div class="w-2/5 mt-5 bg-gray-50 rounded p-4"
          @drop="onDrop($event, 1)"
-         @dragenter="onDragEnter($event)"
          @dragover.prevent
          @dragenter.prevent>
         <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Available presets')}}</div>
@@ -220,9 +216,8 @@ function onDropOurColumn (e, arr, column) {
     </div>
     <div class="w-3/5 mt-5 bg-gray-50 rounded pt-4 pl-4 pr-4"
          @drop="onDrop($event, 2)"
-         @dragenter="onDragEnter($event)"
          @dragover.prevent
-         @dragenter.preven>
+         @dragenter.prevent>
         <div class="flex md:flex-row flex-col justify-between">
             <div class="text-base font-semibold leading-7 text-gray-900">{{$t('Compilation')}}</div>
             <div class="flex md:justify-normal justify-end" v-if="itemsRight.length !== 0">

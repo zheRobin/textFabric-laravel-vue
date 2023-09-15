@@ -90,7 +90,6 @@ const newItems = (items) => {
 }
 const emit = defineEmits(['selectedPreset']);
 const changePreset = (value) => {
-    console.log(value)
     selectedPreset.value = value;
     localStorage.setItem('selected-compilations', value);
     addingPreset.value = false;
@@ -120,7 +119,6 @@ const savePreset = (status) => {
 }
 
 const createPreset = () => {
-    console.log(emit(''));
     const newPresetIds = [];
     form.preset_ids = newPresetIds;
     form.patch(route('compilations.store'), {

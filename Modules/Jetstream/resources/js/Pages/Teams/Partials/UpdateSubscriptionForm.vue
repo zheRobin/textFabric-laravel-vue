@@ -87,18 +87,20 @@ const getFeatureUsage = (feature) => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel>Plan Features</InputLabel>
                 <ul role="list" class="mt-1 space-y-3 text-sm leading-6 text-gray-600">
-                    <li v-for="(feature, key) in planSubscription.plan.features" class="flex gap-x-3">
-                        <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
-                        <div>
-                            <span>
-                                {{ feature.description }}
-                            </span>
-                            {{ ' ' }}
-                            <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
-                                {{ `(used: ${getFeatureUsage(feature)})` }}
-                            </span>
-                        </div>
-                    </li>
+                    <template v-for="(feature, key) in planSubscription.plan.features">
+                        <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3">
+                            <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
+                            <div>
+                                <span>
+                                    {{ feature.description }}
+                                </span>
+                                {{ ' ' }}
+                                <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
+                                    {{ `(used: ${getFeatureUsage(feature)})` }}
+                                </span>
+                            </div>
+                        </li>
+                    </template>
                 </ul>
             </div>
 

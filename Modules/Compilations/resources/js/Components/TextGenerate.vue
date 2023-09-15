@@ -101,11 +101,8 @@ const triggerLoading = (value) => {
 }
 
 const setupStream = () => {
-    console.log(props.item);
-    console.log(props.activeItem);
     generatingContent.value = true;
     triggerLoading(true);
-    console.log(props.activeItem, 'props');
     if(loading.value){
         currentEventSource.value = streamItemCompletion(props.id, props.activeItem, (data) => {
             activeCopyButton.value = false;
@@ -115,7 +112,6 @@ const setupStream = () => {
             if(props.item.output_language_id){
                 translateContent(generatedContent.value, props.item.output_language_id)
             }
-            console.log('disable');
             generatingContent.value = false;
             triggerLoading(false);
             activeCopyButton.value = true;

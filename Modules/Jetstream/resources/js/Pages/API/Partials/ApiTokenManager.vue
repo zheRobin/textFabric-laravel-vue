@@ -78,7 +78,6 @@ const names = [
     }
 ];
 
-console.log(props, 'props');
 const createApiTokenForm = useForm({
     name: '',
     permissions: props.defaultPermissions,

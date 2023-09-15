@@ -27,7 +27,7 @@ const props = defineProps({
     translateDocumentation: Object
 });
 
-const documentsationSelect = ref(null);
+const documentationSelect = ref(null);
 const selectExampleRequest = ref(null);
 const responseExample = ref(null);
 const exampleRequest = {
@@ -120,12 +120,11 @@ const createApiToken = () => {
 
 const documentation = id => {
     if(id === 1){
-        documentsationSelect.value = props.apiDocumentations.generate;
+        documentationSelect.value = props.apiDocumentations.generate;
         selectExampleRequest.value = exampleRequest.generate;
-        console.log(selectExampleRequest.value);
         responseExample.value = exampleRequest.generateResponse;
     }else{
-        documentsationSelect.value = props.apiDocumentations.translate;
+        documentationSelect.value = props.apiDocumentations.translate;
         selectExampleRequest.value = exampleRequest.translate;
         responseExample.value = exampleRequest.translateResponse;
     }
@@ -321,7 +320,7 @@ const test = {...props.apiDocumentations.generate};
             </template>
 
             <template #content>
-                <vue-json-pretty class="mb-4" :data="documentsationSelect" />
+                <vue-json-pretty class="mb-4" :data="documentationSelect" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example JSON</h3>
                 <vue-json-pretty class="mt-4 mb-4" :data="selectExampleRequest" />
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Example Response</h3>

@@ -340,5 +340,9 @@
     "The password is incorrect.": "Das Passwort ist falsch.",
 
     "Export file deleted!": "Exportdatei gelöscht!",
-    "Error deleting export file!": "Fehler beim Löschen der Exportdatei!"
+    "Error deleting export file!": "Fehler beim Löschen der Exportdatei!",
+
+    "Access denied.": "Access denied.",
+    "API token is disabled. Please enable API token to make a request.": "API token is disabled. Please enable API token to make a request.",
+    "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.": "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan."
 }

@@ -23,7 +23,7 @@ class ApiTokenAudit
     {
         if (!Auth::check()) {
             $response = [
-                "message" => "Access denied",
+                "message" => "Access denied.",
                 "timestamp" => now()
             ];
             return new JsonResponse($response, 401);
@@ -31,7 +31,7 @@ class ApiTokenAudit
 
         if (count($request->user()->currentAccessToken()->abilities) === 0) {
             $response = [
-                "message" => "Access denied",
+                "message" => "API token is disabled. Please enable API token to make a request.",
                 "timestamp" => now()
             ];
 
@@ -43,7 +43,7 @@ class ApiTokenAudit
             SubscriptionPlanEnum::UNLIMITED->slug()
         ])) {
             $response = [
-                "message" => "Access denied",
+                "message" => "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.",
                 "timestamp" => now()
             ];
 

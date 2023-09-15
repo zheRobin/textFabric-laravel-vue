@@ -95,7 +95,7 @@ class WelcomeSeeder extends Seeder
                         'en' => "Watch video",
                         'de' => "Video ansehen"
                     ],
-                    'value' => "https://www.texthub.io"
+                    'value' => "https://www.texthub.io/kontakt"
                 ],
                 'icon' => "fa-solid fa-circle-question"
             ],

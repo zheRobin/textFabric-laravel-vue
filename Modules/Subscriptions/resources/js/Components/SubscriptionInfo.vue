@@ -5,11 +5,16 @@ import InputLabel from "Jetstream/Components/InputLabel.vue";
 import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 import {usePage} from "@inertiajs/vue3";
+import {computed} from "vue";
 
 const props = defineProps({
     planSubscription: Object,
     collectionCount: Number,
-})
+});
+
+const page = usePage();
+
+const locale = computed(() => page.props.localeAll[page.props.locale].regional.replace('_', '-'));
 
 const getUsage = (feature) => {
     return props.planSubscription.usage.find((el) => el.feature_id === feature.id);
@@ -56,7 +61,7 @@ const getFeatureUsage = (feature) => {
 
         <InputLabel class="mt-5">{{ planSubscription.is_active ? $t('Ends at') : $t('Ended at') }}</InputLabel>
         <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
-            {{ toLocaleDate(planSubscription.ends_at, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
+            {{ toLocaleDate(planSubscription.ends_at, locale, {weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit'}) }}
         </time>
     </div>
 </template>

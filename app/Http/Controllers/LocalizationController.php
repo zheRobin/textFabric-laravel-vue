@@ -14,10 +14,10 @@ class LocalizationController extends Controller
 
         LaravelLocalization::getLocalizedURL($locale, null, [], true);
 
-        // Застосовуємо вибрану мову
+        // Apply the selected language
         app()->setLocale($locale);
 
-        // Додаткові дії, які вам потрібні
+        // Additional actions you need
 
         return response()->json(['locale' => $locale]);
     }

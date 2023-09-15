@@ -56,7 +56,7 @@ class HandleInertiaRequests extends Middleware
                 return null;
             },
             'locale' => function () {
-                return LaravelLocalization::getCurrentLocale();
+                return app()->getLocale();
             },
             'localeAll' => function () {
                 return LaravelLocalization::getSupportedLocales();

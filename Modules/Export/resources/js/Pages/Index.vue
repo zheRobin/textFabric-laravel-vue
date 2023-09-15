@@ -615,7 +615,7 @@ fetchCancelledExports();
                                 <Pagination v-if="!loadingSuccessfulJobs" @update:pagination="paginate" :links="exports.links" />
                             </Transition>
                         </div>
-                        <div v-else class="border-b border-gray-200 pb-8 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
+                        <div v-else class="border-b border-gray-200 pb-8 mt-6 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
 
                         <div class="flex justify-between">
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of cancelled and failed compilations')}}</h2>
@@ -646,7 +646,7 @@ fetchCancelledExports();
                                 <Pagination v-if="!loadingCancelledJobs" @update:pagination="paginate" :links="cancelledExports.links" />
                             </Transition>
                         </div>
-                        <div v-else class="border-b border-gray-200 pb-8 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
+                        <div v-else class="border-b border-gray-200 pb-8 mt-6 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
                     </div>
                 </div>
             </div>

@@ -264,14 +264,15 @@ const test = {...props.apiDocumentations.generate};
                         </div>
                         <div class="text-sm text-gray-500">
                             <div class="mb-2">API Token must be passed as Bearer Token in the request header.</div>
-                            <div><code class="border p-1 bg-gray-100 rounded"><strong>Authorization: Bearer &lt;api-token&gt;</strong></code></div>
+                            <div class="my-4"><span class="border p-2 bg-gray-100 dark:bg-gray-900 rounded font-mono">Authorization: Bearer &lt;api-token&gt;</span></div>
                         </div>
                         <div class="mt-8 max-w-xl text-sm text-gray-500">
                             API Endpoints:
                         </div>
-                        <div class="mt-2 flex" v-for="item in names">
+                        <div class="mt-2 flex items-center text-sm font-mono gap-x-2" v-for="item in names">
+                            <span class="font-semibold text-orange-500">POST</span>
                             <div>{{item.url}}</div>
-                            <button @click="documentation(item.id)" class="w-5 inline-flex items-center justify-center">
+                            <button @click="documentation(item.id)" class="w-5 ml-1 inline-flex items-center justify-center">
                                 <InformationCircleIcon />
                             </button>
                         </div>
@@ -301,7 +302,7 @@ const test = {...props.apiDocumentations.generate};
                     </span>
                 </div>
 
-                <Transition>
+                <Transition leave-active-class="transition ease-in" leave-from-class="opacity-0" leave-to-class="opacity-100">
                     <div v-if="isTokenCopied" class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="inline m-1 text-green-500">
                             <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/>

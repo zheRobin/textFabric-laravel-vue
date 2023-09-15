@@ -611,8 +611,8 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Transition>
-                              <Pagination v-if="!loadingSuccessfulJobs" @update:pagination="paginate" :links="exports.links" />
+                            <Transition leave-active-class="transition ease-in" leave-from-class="opacity-0" leave-to-class="opacity-100">
+                                <Pagination v-if="!loadingSuccessfulJobs" @update:pagination="paginate" :links="exports.links" />
                             </Transition>
                         </div>
                         <div v-else class="border-b border-gray-200 pb-8 mb-8 text-center text-gray-700">{{$t('Not found')}}</div>
@@ -642,7 +642,7 @@ fetchCancelledExports();
                                 </li>
                             </ul>
 
-                            <Transition>
+                            <Transition leave-active-class="transition ease-in" leave-from-class="opacity-0" leave-to-class="opacity-100">
                                 <Pagination v-if="!loadingCancelledJobs" @update:pagination="paginate" :links="cancelledExports.links" />
                             </Transition>
                         </div>

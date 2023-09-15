@@ -331,10 +331,10 @@
     "Create": "Erstellen",
     "Please copy your new API token. For your security, it won't be shown again.": "Bitte kopieren Sie Ihr neues API-Token. Zu Ihrer Sicherheit wird er nicht mehr angezeigt.",
     "Close": "Schließen",
-    "Manage API Tokens": "API Tokens verwalten",
-    "You may delete any of your existing tokens if they are no longer needed.": "Sie können alle Ihre vorhandenen Token löschen, wenn sie nicht mehr benötigt werden.",
+    "Manage API Tokens": "API-Schlüssel verwalten",
+    "You may delete any of your existing tokens if they are no longer needed.": "Sie können alle Ihre vorhandenen Schlüssel löschen, wenn sie nicht mehr benötigt werden.",
     "Last used": "Zuletzt verwendet",
-    "API Token Permissions": "API Token Berechtigung",
+    "API Token Permissions": "API-Schlüssel Berechtigung",
 
     "You need to remove all users from the team first": "Sie müssen zuerst alle Benutzer aus dem Team entfernen",
     "The password is incorrect.": "Das Passwort ist falsch.",

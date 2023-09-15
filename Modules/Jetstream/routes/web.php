@@ -71,7 +71,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()],
                 if (Jetstream::hasApiFeatures()) {
                     $apiFeaturesMiddleware = [
                         'subscribed',
-                        implode(':', ['subscription', SubscriptionPlanEnum::ENTERPRISE->slug()]),
+                        'subscription:' . implode(',', [SubscriptionPlanEnum::ENTERPRISE->slug(), SubscriptionPlanEnum::UNLIMITED->slug()]),
                         'team.role:admin',
                     ];
 

@@ -13,7 +13,6 @@ const props = defineProps({
 });
 
 const page = usePage();
-
 const locale = computed(() => page.props.localeAll[page.props.locale].regional.replace('_', '-'));
 
 const getUsage = (feature) => {

@@ -93,13 +93,11 @@ const getFeatureUsage = (feature) => {
                     <template v-for="(feature, key) in planSubscription.plan.features">
                         <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3" :key="feature.id">
                             <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
-                            <div>
-                                <span>{{ feature.description }}</span>
-                                {{ ' ' }}
-                                <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
-                                    {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
-                                </span>
-                            </div>
+                            <span>{{ feature.description }}</span>
+                            {{ ' ' }}
+                            <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
+                                {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
+                            </span>
                         </li>
                     </template>
                 </ul>

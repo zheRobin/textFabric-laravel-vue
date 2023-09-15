@@ -103,7 +103,7 @@ const logout = () => {
                             </div>
                             <div v-if="$page.props.jetstream.hasApiFeatures && $page.props.canUseApiFeatures" class="hidden space-x-8 sm:-my-px sm:ml-4 xl:ml-10 sm:flex">
                                 <NavLink :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                    API
+                                    {{$t('API')}}
                                 </NavLink>
                             </div>
                         </div>

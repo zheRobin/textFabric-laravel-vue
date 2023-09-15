@@ -262,8 +262,12 @@ const test = {...props.apiDocumentations.generate};
                         <div class="text-base font-semibold leading-6 text-gray-900">
                             API Documentation
                         </div>
-                        <div class="mt-5 max-w-xl text-sm text-gray-500">
-                            Api URL:
+                        <div class="text-sm text-gray-500">
+                            <div class="mb-2">API Token must be passed as Bearer Token in the request header.</div>
+                            <div><code class="border p-1 bg-gray-100 rounded"><strong>Authorization: Bearer &lt;api-token&gt;</strong></code></div>
+                        </div>
+                        <div class="mt-8 max-w-xl text-sm text-gray-500">
+                            API Endpoints:
                         </div>
                         <div class="mt-2 flex" v-for="item in names">
                             <div>{{item.url}}</div>

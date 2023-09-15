@@ -10,10 +10,10 @@ class ApiFeaturesUserAbilities
     public function useApiFeatures(User $user): bool
     {
         $team = $user->currentTeam;
+        $subscriptionPlan = $team?->planSubscription?->plan;
 
-        if ($team &&
-            $team->planSubscription &&
-            $team->planSubscription->plan->slug === SubscriptionPlanEnum::ENTERPRISE->slug() &&
+        if ($subscriptionPlan &&
+            in_array($subscriptionPlan->slug, [SubscriptionPlanEnum::ENTERPRISE->slug(), SubscriptionPlanEnum::UNLIMITED->slug()]) &&
             $user->hasTeamRole($team, 'admin')) {
             return true;
         }

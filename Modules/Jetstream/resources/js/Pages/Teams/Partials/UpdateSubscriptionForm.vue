@@ -6,18 +6,21 @@ import DangerBadge from "Jetstream/Components/DangerBadge.vue";
 import { toLocaleDate } from "Modules/Subscriptions/resources/js/subscriptions";
 import TextInput from "Jetstream/Components/TextInput.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
-import {useForm} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import Toggle from "Jetstream/Components/Toggle.vue";
 import InputError from "Jetstream/Components/InputError.vue";
 import ActionMessage from "Jetstream/Components/ActionMessage.vue";
 import {CheckIcon} from "@heroicons/vue/20/solid";
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 
 const props = defineProps({
     planSubscription: Object,
     plans: Array,
 });
+
+const page = usePage();
+const locale = computed(() => page.props.localeAll[page.props.locale].regional.replace('_', '-'));
 
 const formatDateTime = (dateTime) => {
     if (dateTime) {
@@ -88,15 +91,13 @@ const getFeatureUsage = (feature) => {
                 <InputLabel>Plan Features</InputLabel>
                 <ul role="list" class="mt-1 space-y-3 text-sm leading-6 text-gray-600">
                     <template v-for="(feature, key) in planSubscription.plan.features">
-                        <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3">
+                        <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3" :key="feature.id">
                             <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
                             <div>
-                                <span>
-                                    {{ feature.description }}
-                                </span>
+                                <span>{{ feature.description }}</span>
                                 {{ ' ' }}
                                 <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
-                                    {{ `(used: ${getFeatureUsage(feature)})` }}
+                                    {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
                                 </span>
                             </div>
                         </li>
@@ -127,7 +128,7 @@ const getFeatureUsage = (feature) => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel class="">{{ planSubscription.is_active ? 'Ends at' : 'Ended at' }}</InputLabel>
                 <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
-                    {{ toLocaleDate(planSubscription.ends_at, 'en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}
+                    {{ toLocaleDate(planSubscription.ends_at, locale, {weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit'}) }}
                 </time>
             </div>
         </template>

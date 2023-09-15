@@ -53,13 +53,10 @@ const fillFilters = () => {
 
 const apiFeatureSlug = 'api-requests';
 const apiUsage = (team) => {
-    const usage = team.plan_subscription.usage.find((el) => el.feature.slug === apiFeatureSlug);
+    const apiFeatureRelatedToSelectedSubscriptionPlan = team.plan_subscription.plan.features.find(el => el.slug === apiFeatureSlug);
+    const usage = team.plan_subscription.usage.find(el => el.feature_id === apiFeatureRelatedToSelectedSubscriptionPlan.id);
 
-    if (usage) {
-        return usage.used;
-    }
-
-    return 0;
+    return usage ? usage.used : 0;
 }
 
 fillFilters();

@@ -41,7 +41,7 @@ class TeamsFilterService
     {
         foreach ($input as $filter => $value) {
             if (in_array($filter, $this->allowedFilters)) {
-                $methodName = 'apply'.ucfirst($filter);
+                $methodName = 'apply' . ucfirst($filter);
 
                 if (method_exists($this, $methodName)) {
                     $this->$methodName($value);
@@ -78,14 +78,14 @@ class TeamsFilterService
     public function applyTrial($value): void
     {
         if (is_bool($value) || $value === 'true') {
-            $this->teamsQuery->whereHas('planSubscription', fn ($query) => $query->where('on_trial', true));
+            $this->teamsQuery->whereHas('planSubscription', fn($query) => $query->where('on_trial', true));
         }
     }
 
     public function applyPlan($value): void
     {
         if (is_array($value)) {
-            $values = array_map(fn ($e) => intval($e), $value);
+            $values = array_map(fn($e) => intval($e), $value);
 
             $this->teamsQuery->whereHas('planSubscription', function ($query) use ($values) {
                 $query->whereIn('plan_id', $values);
@@ -101,7 +101,7 @@ class TeamsFilterService
                     ->orWhereHas('users', function ($query) use ($value) {
                         $query->where('email', 'like', "%$value%")
                             ->where('role', 'admin');
-                    })->orWhereHas('owner', fn ($owner) => $owner->where('email', 'like', "%$value%"));
+                    })->orWhereHas('owner', fn($owner) => $owner->where('email', 'like', "%$value%"));
             });
         }
     }
@@ -110,7 +110,8 @@ class TeamsFilterService
     {
         if (in_array($value, $this->allowedSorts)) {
             switch ($value) {
-                case 'expires_soon': {
+                case 'expires_soon':
+                {
                     $this->teamsQuery
                         ->join('plan_subscriptions', 'plan_subscriptions.subscriber_id', '=', 'teams.id')
                         ->orderByRaw('DATE(`ends_at`) < CURDATE()')

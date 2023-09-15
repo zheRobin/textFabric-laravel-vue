@@ -4,7 +4,7 @@ import {onUnmounted, ref, onMounted, computed} from 'vue';
 import { notify } from "notiwind";
 import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
-const emit = defineEmits(['idItemsPage']);
+const emit = defineEmits(['idItemsPage', 'itemRight']);
 
 const props = defineProps({
     presets: Array,

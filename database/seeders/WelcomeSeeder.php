@@ -11,12 +11,12 @@ class WelcomeSeeder extends Seeder
         $data = [
             'firstBlock' => [
                 'title' => [
-                    'en' => "Welcome to your Jetstream application!",
-                    'de' => "Willkommen in Ihrer Jetstream-Anwendung!"
+                    'en' => "Welcome to the world of efficient text creation - Welcome to TEXTHUB!",
+                    'de' => "Willkommen in der Welt der effizienten Texterstellung - Willkommen bei TEXTHUB!"
                 ],
                 'value' => [
-                    'en' => "Laravel Jetstream provides a beautiful, robust starting point for your next Laravel application. Laravel is designed to help you build your application using a development environment that is simple, powerful, and enjoyable. We believe you should love expressing your creativity through programming, so we have spent time carefully crafting the Laravel ecosystem to be a breath of fresh air. We hope you love it.",
-                    'de' => "Laravel Jetstream bietet einen schönen, robusten Ausgangspunkt für Ihre nächste Laravel-Anwendung. Laravel wurde entwickelt, um Ihnen beim Aufbau Ihrer Anwendung mit einer einfachen, leistungsstarken und angenehmen Entwicklungsumgebung zu helfen. Wir glauben, dass Sie Ihre Kreativität beim Programmieren lieben sollten, daher haben wir viel Zeit darauf verwendet, das Laravel-Ökosystem sorgfältig zu gestalten, damit es eine frische Brise ist. Wir hoffen, dass es Ihnen gefällt."
+                    'en' => "Our application is the ultimate solution for businesses that need thousands of professional product texts, marketing texts, descriptions, bullet points, keywords, synonyms, features and benefits without compromising on quality. Witness how we revolutionize the way you generate content and help increase your productivity and drive business success.",
+                    'de' => "Unsere Anwendung stellt die ultimative Lösung für Unternehmen dar, die tausende von professionellen Produkttexten, Marketingtexten, Beschreibungen, Bullet Points, Keywords, Synonyme, Features und Benefits benötigen, ohne dabei Kompromisse bei der Qualität eingehen zu wollen. Werden Sie Zeuge, wie wir die Art und Weise, wie Sie Inhalte generieren, revolutionieren und dabei helfen, Ihre Produktivität zu steigern und Ihren Geschäftserfolg voranzutreiben."
                 ],
                 'link' => [
                     'name' => [
@@ -29,75 +29,75 @@ class WelcomeSeeder extends Seeder
             ],
             'secondBlock' => [
                 'title' => [
-                    'en' => "Documentation",
-                    'de' => "Dokumentation"
+                    'en' => "Overview video",
+                    'de' => "Übersichtsvideo"
                 ],
                 'value' => [
-                    'en' => "Laravel has wonderful documentation covering every aspect of the framework. Whether you're new to the framework or have previous experience, we recommend reading all of the documentation from beginning to end.",
-                    'de' => "Laravel verfügt über eine wunderbare Dokumentation, die jeden Aspekt des Frameworks abdeckt. Egal, ob Sie neu im Framework sind oder bereits Erfahrung haben, wir empfehlen Ihnen, die gesamte Dokumentation von Anfang bis Ende zu lesen."
+                    'en' => "In this practical video you will learn step by step how to use the TEXTHUB application for automatic text generation. From the initial installation, to understanding the various functions, to generating high-quality texts, everything will be explained to you in detail.",
+                    'de' => "In diesem praktischen Video lernen Sie Schritt für Schritt, wie Sie die TEXTHUB-Anwendung zur automatischen Texterzeugung nutzen. Von der Erstinstallation, über das Verstehen der verschiedenen Funktionen, bis hin zur Erzeugung von qualitativ hochwertigen Texten wird Ihnen alles detailliert erklärt."
                 ],
                 'link' => [
                     'name' => [
-                        'en' => "Explore the documentation",
-                        'de' => "Erkunden Sie die Dokumentation"
+                        'en' => "Watch video",
+                        'de' => "Video ansehen"
                     ],
-                    'value' => "https://laravel.com/docs"
+                    'value' => "https://www.texthub.io"
                 ],
                 'icon' => "fa-solid fa-video"
             ],
             'thirdBlock' => [
                 'title' => [
-                    'en' => "Laracasts",
-                    'de' => "Laracasts"
+                    'en' => "Customize language models",
+                    'de' => "Sprachmodelle individualisieren"
                 ],
                 'value' => [
-                    'en' => "Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.",
-                    'de' => "Laracasts bietet Tausende von Video-Tutorials zur Laravel-, PHP- und JavaScript-Entwicklung. Schauen Sie sie sich an, überzeugen Sie sich selbst und steigern Sie Ihre Entwicklungsfähigkeiten massiv."
+                    'en' => "In this video, we show you how to configure language models in the editor and adapt them to your needs. Whether product texts, synonyms, bullet points or job references - we create all kinds of texts.",
+                    'de' => "In diesem Video zeigen wir Ihnen, wie Sie Sprachmodelle im Editor konfigurieren und auf Ihre Bedürfnisse anpassen. Egal ob Produkttexte, Synonyme, Bulletpoints oder Arbeitszeugnisse - wir erstellen alle Arten von Texten."
                 ],
                 'link' => [
                     'name' => [
-                        'en' => "Start watching Laracasts",
-                        'de' => "Beginnen Sie mit Laracasts"
+                        'en' => "Watch video",
+                        'de' => "Video ansehen"
                     ],
-                    'value' => "https://laracasts.com"
+                    'value' => "https://www.texthub.io"
                 ],
-                'icon' => "fa-solid fa-video"
+                'icon' => "fa-solid fa-pen-to-square"
             ],
             'fourthBlock' => [
                 'title' => [
-                    'en' => "Tailwind",
-                    'de' => "Tailwind"
+                    'en' => "Export and translations",
+                    'de' => "Export und Übersetzungen"
                 ],
                 'value' => [
-                    'en' => "Laravel Jetstream is built with Tailwind, an amazing utility-first CSS framework that doesn't get in your way. You'll be amazed how easily you can build and maintain fresh, modern designs with this wonderful framework at your fingertips.",
-                    'de' => "Laravel Jetstream basiert auf Tailwind, einem erstaunlichen Utility-First-CSS-Framework, das Sie nicht behindert. Sie werden erstaunt sein, wie einfach Sie mit diesem wunderbaren Framework frische, moderne Designs erstellen und pflegen können."
+                    'en' => "In this helpful how-to video, you will learn how to use TEXTHUB to seamlessly export your created content, have it translated into different languages, and efficiently increase your content creation productivity.",
+                    'de' => "In diesem hilfreichen How-to-Video lernen Sie, wie Sie mit TEXTHUB Ihre erstellten Inhalte nahtlos exportieren, diese in verschiedene Sprachen übersetzen lassen und auf effiziente Weise die Produktivität Ihrer Inhaltserstellung steigern."
                 ],
                 'link' => [
                     'name' => [
-                        'en' => null,
-                        'de' => null
+                        'en' => "Watch video",
+                        'de' => "Video ansehen"
                     ],
-                    'value' => "https://tailwindcss.com/"
+                    'value' => "https://www.texthub.io"
                 ],
-                'icon' => "fa-solid fa-video"
+                'icon' => "fa-solid fa-file-export"
             ],
             'fifthBlock' => [
                 'title' => [
-                    'en' => "Authentication",
-                    'de' => "Authentifizierung"
+                    'en' => "Help and support",
+                    'de' => "Hilfe und Support"
                 ],
                 'value' => [
-                    'en' => "Authentication and registration views are included with Laravel Jetstream, as well as support for user email verification and resetting forgotten passwords. So, you're free to get started with what matters most: building your application.",
-                    'de' => "Die Ansichten für die Authentifizierung und Registrierung sind in Laravel Jetstream enthalten, ebenso wie die Unterstützung für die Überprüfung der Benutzer-E-Mail und das Zurücksetzen vergessener Passwörter. Sie können also ohne Hindernisse mit dem beginnen, was am wichtigsten ist: dem Aufbau Ihrer Anwendung."
+                    'en' => "Do you have questions about a function or need advice on how to achieve your goal most quickly? Our team will be happy to answer your questions and provide valuable tips that will save you time and money.",
+                    'de' => "Sie haben Fragen zu einer Funktion oder brauchen Rat, wie Sie Ihr Ziel am schnellsten erreichen? Unser Team steht Ihnen sehr gerne bei Fragen zur Seite und gibt wertvolle Tipps, welche Zeit und Kosten sparen."
                 ],
                 'link' => [
                     'name' => [
-                        'en' => null,
-                        'de' => null
+                        'en' => "Watch video",
+                        'de' => "Video ansehen"
                     ],
-                    'value' => ""
+                    'value' => "https://www.texthub.io"
                 ],
-                'icon' => "fa-solid fa-video"
+                'icon' => "fa-solid fa-circle-question"
             ],
         ];
 

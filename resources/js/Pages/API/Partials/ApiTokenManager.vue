@@ -46,6 +46,8 @@ const copyApiTokenToClipboard = (e) => navigator.clipboard.writeText(newApiToken
         e.target.parentNode.classList.remove('text-green-500');
         isApiTokenCopied.value = false;
     }, 2000);
+}).catch((err) => {
+    console.error('Unable to copy text to clipboard:', err);
 });
 
 const createApiToken = () => {

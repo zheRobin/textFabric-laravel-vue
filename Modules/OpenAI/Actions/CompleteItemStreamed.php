@@ -25,6 +25,14 @@ class CompleteItemStreamed implements CompletesItemStreamed
 
         $stream = OpenAI::chat()->createStreamed($config);
 
+        // ------------------------------------------------
+        // count subscription plan ------------------------
+        $user->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        $user->currentTeam->planSubscription
+            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+        // ------------------------------------------------
+
         foreach ($stream as $response) {
             if (connection_aborted()) {
                 break;
@@ -61,6 +69,7 @@ class CompleteItemStreamed implements CompletesItemStreamed
     {
         $planSubscription = $user->currentTeam->planSubscription;
 
-        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS) &&
+            $planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS);
     }
 }

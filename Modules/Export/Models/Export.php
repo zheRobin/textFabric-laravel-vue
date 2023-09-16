@@ -3,12 +3,14 @@
 namespace Modules\Export\Models;
 
 use Carbon\Carbon;
+use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Compilations;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 use Modules\Export\Enums\ExportTypeEnum;
 
@@ -77,9 +79,10 @@ class Export extends Model
      */
     public function scopeHistory(Builder $builder): Builder
     {
-        return $builder
-            ->whereNull('job_batch_id')
-            ->whereHas('items');
+        return $builder->whereHas('batch', fn(Builder $query) => $query
+            ->orWhereNotNull('cancelled_at')
+            ->orWhereNotNull('finished_at')
+        )->whereHas('items');
     }
 
     /**
@@ -88,9 +91,28 @@ class Export extends Model
      */
     public function scopeActive(Builder $builder): Builder
     {
-        return $builder->whereHas('batch', function (Builder $query) {
-            $query->whereNull('finished_at');
-        });
+        return $builder->whereHas('batch', fn(Builder $query) => $query
+            ->whereNull('cancelled_at')
+            ->whereNull('finished_at')
+        );
+    }
+
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeLatest(Builder $builder): Builder
+    {
+        return $builder->whereHas('batch');
+    }
+
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeLatestBatch(Builder $builder): Builder
+    {
+        return $builder->whereHas('batch', fn(Builder $query) => $query->whereNull('finished_at'));
     }
 
     /**
@@ -100,8 +122,10 @@ class Export extends Model
     public function scopeCancelled(Builder $builder): Builder
     {
         return $builder
-            ->where(fn($query) => $query
-                ->whereHas('batch', fn($query) => $query->whereNotNull('cancelled_at'))
+            ->where(fn(Builder $query) => $query
+                ->withWhereHas('batch', fn(Builder $query) => $query
+                    ->select(['id', 'name', 'total_jobs', 'pending_jobs', 'failed_jobs', 'cancelled_at', 'created_at', 'finished_at'])
+                    ->whereNotNull('cancelled_at'))
                 ->orWhereDoesntHave('items')
             );
     }

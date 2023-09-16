@@ -21,6 +21,7 @@ import EmptyCollection from "Modules/Collections/resources/js/Components/EmptyCo
 import EmptyImport from "Modules/Imports/resources/js/Components/EmptyImport.vue";
 import ExportDataTable from "Modules/Export/resources/js/Components/ExportDataTable.vue";
 import {trans} from "laravel-vue-i18n";
+import {hasPlanLimit} from "Modules/Subscriptions/resources/js/subscriptions";
 
 const props = defineProps({
     languages: Array,
@@ -42,6 +43,7 @@ const selectedCompilations = ref(null);
 const cancelling = ref(false);
 const loadingSuccessfulJobs = ref(false);
 const loadingCancelledJobs = ref(false);
+const page = usePage();
 
 const dataLabel = props.compilations.map(item => {
     return {
@@ -58,7 +60,12 @@ let data = {
 const activeGenerations = ref(data);
 const loading = ref(false);
 const runningCompilations = ref({pending: 0, total: 0});
-const anyTeamHasRunningCompilations = computed(() => runningCompilations.value.pending !== 0 && runningCompilations.value.pending !== runningCompilations.value.total);
+const anyTeamHasRunningCompilations = computed(() =>
+    runningCompilations.value.pending !== 0 &&
+    runningCompilations.value.pending !== runningCompilations.value.total
+);
+
+const hasLimit = computed(() => hasPlanLimit(page.props.planSubscription));
 
 const form = useForm({
     id: null,
@@ -69,7 +76,6 @@ const form = useForm({
 
 const searchQuery = ref("");
 const progress = ref(null);
-const page = usePage();
 const exports = ref(null);
 const cancelledExports = ref(null);
 const generateActive = ref(false);
@@ -87,49 +93,65 @@ const showProgress = (id) => {
 
     generateActive.value = true;
     progressInterval = setInterval(() => {
-        if (id) {
-            axios.get(route('export.showProgress')).then((res) => {
-                progress.value = res.data.data.progress;
-                runningCompilations.value = res.data.data.compilations;
-                jobBatchId.value = res.data.data.job_batch_id;
+        if (!id) {
+            clearInterval(progressInterval);
+        }
 
+        axios.get(route('export.showProgress')).then((res) => {
+            progress.value = res.data.data.progress;
+            runningCompilations.value = res.data.data.compilations;
+            jobBatchId.value = res.data.data.job_batch_id;
+
+            localStorage.setItem('id_queue', res.data.data.job_batch_id);
+            cancelling.value = false;
+
+            if (res.data.data.finished) {
                 if (res.data.data.cancelled) {
                     cancelling.value = true;
-                }
 
-                if (progress.value === 100 || res.data.data.finished) {
-                    generateActive.value = false;
-                    cancelling.value = false;
-                    generationDone();
-
-                    if (progress.value === 100) {
+                    notify({
+                        group: 'error',
+                        title: 'Error!',
+                        text: 'The compilation is cancelled!',
+                    }, 4000);
+                } else {
+                    if (parseInt(progress.value) === 100 || res.data.data.successful) {
                         notify({
                             group: 'success',
                             title: 'Success!',
-                            text: 'The compilation was generated successfully!',
+                            text: 'The compilation has finished successfully!',
+                        }, 4000);
+                    } else {
+                        notify({
+                            group: 'error',
+                            title: 'Error!',
+                            text: 'The compilation has finished with failure!',
                         }, 4000);
                     }
-
-                    clearInterval(progressInterval);
-                    progress.value = 0;
-
-                    router.reload({ only: ['compilations', 'teamRunningCompilations'] });
                 }
 
-                if (res.data.data.name) {
-                    activeGenerations.value = {label: res.data.data.name, value: progress.value};
-                } else if (localStorage.getItem('selected_queue')) {
-                    activeGenerations.value = dataLabel.find((item) => item.value === parseInt(localStorage.getItem('selected_queue')));
-                } else if (localStorage.getItem('selected_queue_translation')) {
-                    activeGenerations.value = {
-                        label: localStorage.getItem('selected_queue_translation'),
-                        value: progress.value,
-                    }
+                generateActive.value = false;
+                generationDone();
+
+                clearInterval(progressInterval);
+                progress.value = null;
+                router.reload({only: ['teamRunningCompilations']});
+            }
+
+            if (res.data.data.name) {
+                activeGenerations.value = {
+                    label: res.data.data.name,
+                    value: progress.value,
+                };
+            } else if (localStorage.getItem('selected_queue')) {
+                activeGenerations.value = dataLabel.find((item) => item.value === parseInt(localStorage.getItem('selected_queue')));
+            } else if (localStorage.getItem('selected_queue_translation')) {
+                activeGenerations.value = {
+                    label: localStorage.getItem('selected_queue_translation'),
+                    value: progress.value,
                 }
-            });
-        } else {
-            clearInterval(progressInterval);
-        }
+            }
+        });
     }, 2000);
 }
 
@@ -167,6 +189,16 @@ const selectedCompilationHasPreset = () => {
 
 const generate = async () => {
     if (!selectedCompilationHasPreset()) {
+        return;
+    }
+
+    // check requests limit of the subscription plan
+    if (!hasLimit.value.openai || !hasLimit.value.api) {
+        notify({
+            group: 'error',
+            title: 'Error!',
+            text: trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
+        }, 4000);
         return;
     }
 
@@ -244,6 +276,18 @@ const deleteExport = () => {
 }
 const translation = () => {
     if (form.languages.length === 0) {
+        return;
+    }
+
+    // check requests limit of the subscription plan
+    if (!hasLimit.value.deepl || !hasLimit.value.api) {
+        notify({
+          group: 'error',
+          title: 'Error!',
+          text: trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
+        }, 4000);
+        activeModal.value = false;
+        activeLanguages.value = [];
         return;
     }
 
@@ -375,8 +419,7 @@ const search = (uri = null, pageNumber = '1') => {
 
     loadingSuccessfulJobs.value = true;
 
-    axios
-        .post(uri || route('export.search'), {query: searchQuery.value, page: pageNumber})
+    axios.post(uri || route('export.search'), {query: searchQuery.value, page: pageNumber})
         .then((response) => {
             exports.value = response.data.data;
         })
@@ -392,8 +435,7 @@ const fetchCancelledExports = (uri) => {
 
     loadingCancelledJobs.value = true;
 
-    axios
-        .get(uri || route('export.cancelled'))
+    axios.get(uri || route('export.cancelled'))
         .then((response) => {
             cancelledExports.value = response.data.data;
         })
@@ -411,11 +453,12 @@ const cancelQueue = () => {
             title: 'Error!',
             text: trans( 'Error cancelling job, missing job-batch ID'),
         }, 4000);
+        return;
     }
 
     axios.get(`/export/cancel/${id}`).then((res) => {
-        generationDone();
-        clearInterval(progressInterval);
+        // generationDone();
+        // clearInterval(progressInterval);
     });
 }
 

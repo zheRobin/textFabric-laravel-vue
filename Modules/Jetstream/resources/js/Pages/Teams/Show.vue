@@ -34,8 +34,8 @@ const page = usePage();
         <div>
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <template v-if="page.props.planSubscription">
-                    <ShowSubscriptionInfo :planSubscription="page.props.planSubscription" :collectionCount="page.props.team.collections.length" />
+                <template v-if="team.plan_subscription">
+                    <ShowSubscriptionInfo :planSubscription="team.plan_subscription" :collectionCount="page.props.team.collections.length" />
 
                     <SectionBorder />
                 </template>
@@ -66,7 +66,7 @@ const page = usePage();
                 <template v-if="page.props.auth.user.is_admin && team.plan_subscription">
                     <SectionBorder />
 
-                    <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" />
+                    <UpdateSubscriptionForm :planSubscription="team.plan_subscription" :plans="subscriptionPlans" :collectionCount="page.props.team.collections.length" />
                 </template>
                 </div>
                 <template v-if="permissions.canSwitchTeam">

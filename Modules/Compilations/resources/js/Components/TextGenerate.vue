@@ -53,6 +53,7 @@
 <script setup>
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import {onUnmounted, ref} from 'vue';
+import {notify} from "notiwind";
 
 const loading = ref(true);
 const currentLanguage = ref(null);
@@ -103,7 +104,8 @@ const triggerLoading = (value) => {
 const setupStream = () => {
     generatingContent.value = true;
     triggerLoading(true);
-    if(loading.value){
+
+    if (loading.value) {
         currentEventSource.value = streamItemCompletion(props.id, props.activeItem, (data) => {
             activeCopyButton.value = false;
             // TODO: move away from callable
@@ -115,7 +117,15 @@ const setupStream = () => {
             generatingContent.value = false;
             triggerLoading(false);
             activeCopyButton.value = true;
-        })
+        }, (error) => {
+            generatingContent.value = false;
+            triggerLoading(false);
+            notify({
+                group: "error",
+                title: "Error",
+                text: error
+            }, 4000);
+        });
     }
 }
 

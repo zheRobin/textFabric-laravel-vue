@@ -26,10 +26,10 @@ class CompleteCollectionItem implements CompletesCollectionItem
     {
         if (!$this->validate($user)) {
             $response = [
-                "message" => "Plan limit exceeded",
+                "message" => trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
                 "timestamp" => now()
             ];
-            return new JsonResponse($response, 429);
+            return new JsonResponse($response, 403);
         }
 
         $systemMessage = $preset->system_prompt;
@@ -94,7 +94,8 @@ class CompleteCollectionItem implements CompletesCollectionItem
     {
         $planSubscription = $user->currentTeam->planSubscription;
 
-        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS) &&
+            $planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS);
     }
 
 }

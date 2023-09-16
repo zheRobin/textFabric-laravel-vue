@@ -9,18 +9,15 @@ const copied = ref(false);
 
 const copy = () => {
     copied.value = true;
-    navigator.clipboard.writeText(props.content)
-        .then(() => {
-            copied.value = true;
-            setTimeout(() => {
-                copied.value = false;
-            }, 1000)
-        })
-        .catch((err) => {
-            // TODO: handle error
-        });
+    navigator.clipboard.writeText(props.content).then(() => {
+        copied.value = true;
+        setTimeout(() => {
+            copied.value = false;
+        }, 1000)
+    }).catch((err) => {
+        console.error('Unable to copy text to clipboard:', err);
+    });
 }
-
 </script>
 
 <template>

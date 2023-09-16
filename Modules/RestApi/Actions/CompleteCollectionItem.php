@@ -21,15 +21,12 @@ class CompleteCollectionItem implements CompletesCollectionItem
 {
     /**
      * @throws DeepLException
+     * @throws \Exception
      */
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
         if (!$this->validate($user)) {
-            $response = [
-                "message" => trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
-                "timestamp" => now()
-            ];
-            return new JsonResponse($response, 403);
+            throw new \Exception(trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'), 403);
         }
 
         $systemMessage = $preset->system_prompt;

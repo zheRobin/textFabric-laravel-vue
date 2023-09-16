@@ -40,7 +40,7 @@ class RestApiController extends Controller
 
             if (!isset($preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first()->name)) {
                 $response = [
-                    "message" => "Access denied",
+                    "message" => "You do not have access to preset id: {$request['preset-id']}",
                     "timestamp" => now()
                 ];
 
@@ -55,11 +55,12 @@ class RestApiController extends Controller
                 $request['source-list']
             );
 
-            return response()->json(
-                $response
-            );
+            return response()->json($response);
         } catch (\Exception $e) {
-            return new JsonResponse(["message" => $e->getMessage()], 500);
+            return new JsonResponse([
+                "message" => $e->getMessage(),
+                "timestamp" => now()
+            ], $e->getCode());
         }
     }
 
@@ -110,7 +111,10 @@ class RestApiController extends Controller
             return response()->json($result);
         } catch (\Exception $e) {
             // Handle other exceptions
-            return new JsonResponse(["message" => $e->getMessage()], 500);
+            return new JsonResponse([
+                "message" => $e->getMessage(),
+                "timestamp" => now()
+            ], $e->getCode());
         }
     }
 }

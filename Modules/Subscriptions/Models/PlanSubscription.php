@@ -119,7 +119,7 @@ class PlanSubscription extends Model
      */
     public function planIsNotActive(): bool
     {
-        return !$this->active();
+        return $this->ended();
     }
 
     /**
@@ -128,7 +128,7 @@ class PlanSubscription extends Model
     public function ended(): bool
     {
         if ($this->ends_at) {
-            return Carbon::now()->gte($this->ends_at);
+            return Carbon::now()->gt($this->ends_at);
         }
 
         return true;

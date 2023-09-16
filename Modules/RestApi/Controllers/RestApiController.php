@@ -15,11 +15,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+
 class RestApiController extends Controller
 {
     public function generate(Request $request, Preset $preset, CollectionItem $item)
     {
-        try{
+        try {
             $validator = Validator::make($request->all(), [
                 'translate-target-list' => ['array'],
                 'source-list' => ['array'],
@@ -39,7 +40,7 @@ class RestApiController extends Controller
 
             if (!isset($preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first()->name)) {
                 $response = [
-                    "message" => "Access denied",
+                    "message" => "You do not have access to preset id: {$request['preset-id']}",
                     "timestamp" => now()
                 ];
 
@@ -54,25 +55,27 @@ class RestApiController extends Controller
                 $request['source-list']
             );
 
-            return response()->json(
-                $response
-            );
-        }catch (\Exception $e){
-            return new JsonResponse(["message" => $e->getMessage()], 500);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                "message" => $e->getMessage(),
+                "timestamp" => now()
+            ], $e->getCode());
         }
     }
 
     public function translate(Request $request)
     {
-        try{
+        try {
             $planSubscription = $request->user()->currentTeam->planSubscription;
 
-            if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS)) {
+            if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::DEEPL_REQUESTS) ||
+                !$planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS)) {
                 $response = [
-                    "message" => "Plan limit exceeded",
+                    "message" => trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
                     "timestamp" => now()
                 ];
-                return new JsonResponse($response, 429);
+                return new JsonResponse($response, 403);
             }
 
             $validator = Validator::make($request->all(), [
@@ -108,7 +111,10 @@ class RestApiController extends Controller
             return response()->json($result);
         } catch (\Exception $e) {
             // Handle other exceptions
-            return new JsonResponse(["message" => $e->getMessage()], 500);
+            return new JsonResponse([
+                "message" => $e->getMessage(),
+                "timestamp" => now()
+            ], $e->getCode());
         }
     }
 }

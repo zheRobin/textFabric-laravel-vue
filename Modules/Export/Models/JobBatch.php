@@ -15,6 +15,16 @@ class JobBatch extends Model
 
     protected $keyType = 'string';
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'options',
+        'failed_job_ids',
+    ];
+
     public function processedJobs(): int
     {
         return $this->total_jobs - $this->pending_jobs;

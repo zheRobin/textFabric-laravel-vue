@@ -17,6 +17,7 @@ import {computed, reactive} from "vue";
 const props = defineProps({
     planSubscription: Object,
     plans: Array,
+    collectionCount: Number,
 });
 
 const page = usePage();
@@ -95,9 +96,14 @@ const getFeatureUsage = (feature) => {
                             <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
                             <span>{{ feature.description }}</span>
                             {{ ' ' }}
-                            <span v-if="getUsage(feature)" class="font-semibold text-gray-500">
-                                {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
-                            </span>
+                            <template v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" >
+                                <span v-if="feature.slug === 'collections-limit'" class="font-semibold text-gray-500">
+                                    {{ `(${$t('used')}: ${props.collectionCount})` }}
+                                </span>
+                                    <span v-else class="font-semibold text-gray-500">
+                                    {{ `(${$t('used')}: ${getFeatureUsage(feature)})` }}
+                                </span>
+                            </template>
                         </li>
                     </template>
                 </ul>
@@ -126,7 +132,7 @@ const getFeatureUsage = (feature) => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel class="">{{ planSubscription.is_active ? 'Ends at' : 'Ended at' }}</InputLabel>
                 <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
-                    {{ toLocaleDate(planSubscription.ends_at, locale, {weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit'}) }}
+                    {{ toLocaleDate(planSubscription.ends_at, 'de-DE', {year: 'numeric', month: '2-digit', day: '2-digit'}) }}
                 </time>
             </div>
         </template>

@@ -14,7 +14,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('queue:prune-failed --hours=120')->daily();
         $schedule->command('queue:prune-batches --hours=120')->daily();
-        $schedule->command('export:prune-batches')->cron('* * * * *');
+
+        /*
+         * TODO we don't need this pruning of exports table
+         *   @see For discussion see https://3.basecamp.com/4934500/buckets/32019090/card_tables/cards/6513753007#__recording_6556643195
+         */
+        // $schedule->command('export:prune-batches')->cron('* * * * *');
     }
 
     /**

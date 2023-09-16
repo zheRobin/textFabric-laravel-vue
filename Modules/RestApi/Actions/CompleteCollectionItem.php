@@ -21,15 +21,12 @@ class CompleteCollectionItem implements CompletesCollectionItem
 {
     /**
      * @throws DeepLException
+     * @throws \Exception
      */
     public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
         if (!$this->validate($user)) {
-            $response = [
-                "message" => "Plan limit exceeded",
-                "timestamp" => now()
-            ];
-            return new JsonResponse($response, 429);
+            throw new \Exception(trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'), 403);
         }
 
         $systemMessage = $preset->system_prompt;
@@ -94,7 +91,8 @@ class CompleteCollectionItem implements CompletesCollectionItem
     {
         $planSubscription = $user->currentTeam->planSubscription;
 
-        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS) &&
+            $planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS);
     }
 
 }

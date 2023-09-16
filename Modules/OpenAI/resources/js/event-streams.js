@@ -1,5 +1,3 @@
-
-
 export const streamItemCompletion = (preset, item, callable, closeCallable, errorCallable) => {
     const uri = route('openai.item-completion', {
         preset: preset,

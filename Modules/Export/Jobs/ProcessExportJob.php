@@ -50,22 +50,32 @@ class ProcessExportJob implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws \Exception
      */
     public function handle(): void
     {
         $builder = app(BuildsParams::class);
+        $planSubscription = $this->user->currentTeam->planSubscription;
 
         $completions = [];
         foreach ($this->compilation->getPresets() as $preset) {
             $params = $builder->build($this->user, $preset, $this->collectionItem);
+
+            // ------------------------------------------------
+            // check subscription plan limit ------------------
+            if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS) ||
+                !$planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS)) {
+                $this->batch()->cancel();
+                throw new \Exception(trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'), 403);
+            }
+            // ------------------------------------------------
+
             $response = OpenAI::chat()->create($params);
 
             // ------------------------------------------------
             // count subscription plan ------------------------
-            $this->user->currentTeam->planSubscription
-                ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
-            $this->user->currentTeam->planSubscription
-                ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+            $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+            $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
             // ------------------------------------------------
 
             $header = Str::slug($this->compilation->name) . '_' . Str::slug($preset->name);

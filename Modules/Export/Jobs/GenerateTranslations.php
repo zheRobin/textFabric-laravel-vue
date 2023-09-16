@@ -34,10 +34,12 @@ class GenerateTranslations implements ShouldQueue
 
     /**
      * @throws DeepLException
+     * @throws \Exception
      */
     public function handle(): void
     {
         $translator = app(Translator::class);
+        $planSubscription = $this->user->currentTeam->planSubscription;
 
         $translations = [];
         foreach ($this->languages as $languageCode) {
@@ -45,20 +47,30 @@ class GenerateTranslations implements ShouldQueue
 
             foreach ($completions as $completion) {
                 if (isset($completion['header']) && isset($completion['value'])) {
-                    $translations[] = [
-                        'header' => $this->translatedHeader($completion['header'], $languageCode),
-                        'value' => empty($completion['value'])
-                            ? $completion['value']
-                            : $translator->translateText($completion['value'], null, $languageCode)->text
-                    ];
+                    if (empty($completion['value'])) {
+                        $translations[] = [
+                            'header' => $this->translatedHeader($completion['header'], $languageCode),
+                            'value' => $completion['value'],
+                        ];
+                    } else {
+                        // ------------------------------------------------
+                        // check subscription plan limit -----------------
+                        if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::DEEPL_REQUESTS) ||
+                            !$planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS)) {
+                            $this->batch()->cancel();
+                            throw new \Exception(trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'), 403);
+                        }
+                        // ------------------------------------------------
 
-                    if (!empty($completion['value'])) {
+                        $translations[] = [
+                            'header' => $this->translatedHeader($completion['header'], $languageCode),
+                            'value' => $translator->translateText($completion['value'], null, $languageCode)->text,
+                        ];
+
                         // ------------------------------------------------
                         // count subscription plan ------------------------
-                        $this->user->currentTeam->planSubscription
-                            ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
-                        $this->user->currentTeam->planSubscription
-                            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                        $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                        $planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
                         // ------------------------------------------------
                     }
                 }

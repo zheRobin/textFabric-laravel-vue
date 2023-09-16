@@ -8,11 +8,11 @@ use Modules\Export\Models\Export;
 class RunningCompilationService
 {
     /**
-     * Retrieve the running compilations in the personal team (this compilation may be run by any member of the personal team).
+     * Retrieve the running compilations in the current team (this compilation may be run by any member of the team).
      *
      * @return Collection
      */
-    public function inPersonalTeam(): Collection
+    public function inCurrentTeam(): Collection
     {
         $collections = request()->user()?->currentTeam?->collections;
 
@@ -23,7 +23,8 @@ class RunningCompilationService
         return Export::select('id', 'collection_id', 'name', 'job_batch_id')
             ->whereHas('batch', fn($query) => $query
                 ->select(['id', 'total_jobs', 'pending_jobs', 'failed_jobs'])
-                ->whereNull('cancelled_at'))
+                ->whereNull('cancelled_at')
+                ->whereNull('finished_at'))
             ->whereIn('collection_id', $collections->pluck('id'))
             ->whereNotNull('job_batch_id')
             ->get();
@@ -46,7 +47,8 @@ class RunningCompilationService
         $exports = Export::select('id', 'collection_id', 'job_batch_id')
             ->whereHas('batch', fn($query) => $query
                 ->select(['id', 'total_jobs', 'pending_jobs', 'failed_jobs'])
-                ->whereNull('cancelled_at'))
+                ->whereNull('cancelled_at')
+                ->whereNull('finished_at'))
             ->whereNotNull('job_batch_id')
             ->orderBy('id')
             ->get();

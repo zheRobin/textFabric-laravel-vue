@@ -82,7 +82,7 @@ const setupStream = () => {
             group: "error",
             title: "Error",
             text: error
-        }, 4000)
+        }, 4000);
     });
 }
 

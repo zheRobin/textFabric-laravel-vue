@@ -37,7 +37,7 @@ class ExportController extends Controller
             'compilations' => $currentCollection?->compilations ?? [],
             'activeExport' => $currentCollection?->exports()->active()->first(),
             'hasItems' => boolval($currentCollection?->items()->exists()),
-            'teamRunningCompilations' => $runningCompilationService->inPersonalTeam(),
+            'teamRunningCompilations' => $runningCompilationService->inCurrentTeam(),
         ]);
     }
 
@@ -70,9 +70,12 @@ class ExportController extends Controller
         ]);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function generate(Request $request, Compilations $compilation, RunningCompilationService $runningCompilationService)
     {
-        abort_if($runningCompilationService->inPersonalTeam()->count() > 0, 403, __('Team has running compilations'));
+        abort_if($runningCompilationService->inCurrentTeam()->count() > 0, 403, __('Team has running compilations'));
 
         $collectionItems = $request->user()->currentCollection->items()->get();
 
@@ -93,21 +96,19 @@ class ExportController extends Controller
             ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'generate', $batch->id));
-                    DB::transaction(function () use ($export) {
-                        $export->items()->delete();
-                        $export->delete();
-                    });
-                }
-                if ($batch->hasFailures()) {
+                    info(sprintf("[%s@%s] Batch %s is cancelled.", get_called_class(), 'generate', $batch->id));
+//                    DB::transaction(function () use ($export) {
+//                        $export->items()->delete();
+//                        $export->delete();
+//                    });
+                } else if ($batch->hasFailures()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'generate', $batch->id));
-                }
-                if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
+                    info(sprintf("[%s@%s] Batch %s has failed jobs.", get_called_class(), 'generate', $batch->id));
+                } else if ($batch->finished()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is complete", get_called_class(), 'generate', $batch->id));
-                    $export->job_batch_id = null;
-                    $export->save();
+                    info(sprintf("[%s@%s] Batch %s is finished.", get_called_class(), 'generate', $batch->id));
+//                    $export->job_batch_id = null;
+//                    $export->save();
                 }
             })
             ->name('Export Compilation')
@@ -132,7 +133,7 @@ class ExportController extends Controller
      */
     public function translate(Request $request, Export $export, RunningCompilationService $runningCompilationService)
     {
-        abort_if($runningCompilationService->inPersonalTeam()->count() > 0, 403, __('Team has running compilations'));
+        abort_if($runningCompilationService->inCurrentTeam()->count() > 0, 403, __('Team has running compilations'));
 
         // store languages into export model
 
@@ -150,20 +151,18 @@ class ExportController extends Controller
             ->finally(function (Batch $batch) use ($export) {
                 if ($batch->cancelled()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is cancelled", get_called_class(), 'translate', $batch->id));
+                    info(sprintf("[%s@%s] Batch %s is cancelled.", get_called_class(), 'translate', $batch->id));
                     $export->items()->update([
                         'translations' => null
                     ]);
-                }
-                if ($batch->hasFailures()) {
+                } else if ($batch->hasFailures()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s has failed jobs", get_called_class(), 'translate', $batch->id));
-                }
-                if ($batch->pendingJobs === 0 && count($batch->failedJobIds) === 0) {
+                    info(sprintf("[%s@%s] Batch %s has failed jobs.", get_called_class(), 'translate', $batch->id));
+                } else if ($batch->finished()) {
                     // TODO: remove debug message
-                    info(sprintf("[%s@%s] Batch %s is complete", get_called_class(), 'translate', $batch->id));
-                    $export->job_batch_id = null;
-                    $export->save();
+                    info(sprintf("[%s@%s] Batch %s is finished.", get_called_class(), 'translate', $batch->id));
+//                    $export->job_batch_id = null;
+//                    $export->save();
                 }
             })
             ->name('Translate Export Compilation')
@@ -180,14 +179,22 @@ class ExportController extends Controller
 
     public function showProgress(Request $request, RunningCompilationService $runningCompilationService)
     {
-        $export = $request->user()->currentCollection->exports()->active()->first();
+        $exports = $request->user()->currentCollection->exports();
+        $activeExport = (clone $exports)->active();
+
+        $export = $activeExport->get()->count()
+            ? (clone $exports)->active()
+            : (clone $exports);
+
+        $export = $export->latest('updated_at')->first();
         $batch = $export?->batch;
 
         return [
             'data' => [
-                'progress' => $batch?->progress() ?? null,
+                'progress' => $batch?->progress() >= 0 ? $batch?->progress() : null,
                 'finished' => $batch?->finished() ?? true,
                 'cancelled' => $batch?->cancelled() ?? false,
+                'successful' => $batch?->pending_jobs === 0 && $batch?->failed_jobs === 0,
                 'collection_id' => $export?->collection_id,
                 'name' => $export?->name,
                 'type' => $export?->type,
@@ -207,7 +214,7 @@ class ExportController extends Controller
         } catch (\Exception $exception) {
             Log::error($exception->getMessage(), [
                 'file' => $exception->getFile(),
-                'line' => $exception->getLine()
+                'line' => $exception->getLine(),
             ]);
         }
 

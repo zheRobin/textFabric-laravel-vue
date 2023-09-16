@@ -314,5 +314,8 @@
 
     "Access denied.": "Access denied.",
     "API token is disabled. Please enable API token to make a request.": "API token is disabled. Please enable API token to make a request.",
-    "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.": "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan."
+    "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.": "API access is not available in your subscription plan. Please upgrade to Enterprise or Unlimited plan.",
+
+    "Team subscription has expired.": "Team subscription has expired.",
+    "Your subscription plan does not support it.": "Your subscription plan does not support it."
 }

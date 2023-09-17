@@ -2,6 +2,7 @@
 
 namespace Modules\Presets\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,9 @@ use Modules\Collections\Models\Collection;
 use Modules\Presets\Traits\HasLanguage;
 use Modules\Presets\Traits\HasOpenAIParams;
 
+/**
+ * @mixin Builder
+ */
 class Preset extends Model
 {
     use HasFactory, HasLanguage, HasOpenAIParams;

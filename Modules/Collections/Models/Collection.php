@@ -4,6 +4,7 @@ namespace Modules\Collections\Models;
 
 use App\Models\Compilations;
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,9 @@ use Modules\Imports\Traits\HasHeaders;
 use Modules\Imports\Traits\HasImport;
 use Modules\Presets\Models\Preset;
 
+/**
+ * @mixin Builder
+ */
 class Collection extends Model
 {
     use HasFactory, HasImport, HasHeaders;

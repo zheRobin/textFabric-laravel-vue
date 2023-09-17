@@ -9,6 +9,7 @@ use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Laravel\Sanctum\HasApiTokens;
 use Modules\Collections\Models\Collection;
 use Modules\Subscriptions\Traits\HasPlanSubscription;
 
@@ -17,7 +18,7 @@ use Modules\Subscriptions\Traits\HasPlanSubscription;
  */
 class Team extends JetstreamTeam
 {
-    use HasFactory, HasPlanSubscription;
+    use HasFactory, HasPlanSubscription, HasApiTokens;
 
     /**
      * The relationships that should always be loaded.

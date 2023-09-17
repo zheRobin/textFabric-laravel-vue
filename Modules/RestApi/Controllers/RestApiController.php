@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use DeepL\Translator;
 use Illuminate\Support\Facades\Auth;
+use Modules\Collections\Models\Collection;
 use Modules\Imports\Models\CollectionItem;
 use Modules\RestApi\Contracts\CompletesCollectionItem;
 use Modules\Presets\Models\Preset;
@@ -18,8 +19,11 @@ use Illuminate\Validation\ValidationException;
 
 class RestApiController extends Controller
 {
-    public function generate(Request $request, Preset $preset, CollectionItem $item)
+    public function generate(Request $request, CollectionItem $item)
     {
+        // since API Token belongs to Team (support for User api-token is dropped)
+        $team = $request->user();
+
         try {
             $validator = Validator::make($request->all(), [
                 'translate-target-list' => ['array'],
@@ -38,7 +42,13 @@ class RestApiController extends Controller
 
             $completer = app(CompletesCollectionItem::class);
 
-            if (!isset($preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first()->name)) {
+            $teamCollections = Collection::select('id')->where('team_id', $team->id)->pluck('id')->toArray();
+            $preset = Preset::query()
+                ->where('id', $request['preset-id'])
+                ->whereIn('collection_id', $teamCollections)
+                ->first();
+
+            if (!isset($preset)) {
                 $response = [
                     "message" => "You do not have access to preset id: {$request['preset-id']}",
                     "timestamp" => now()
@@ -48,26 +58,29 @@ class RestApiController extends Controller
             }
 
             $response = $completer->complete(
-                $request->user(),
-                $preset->get()->where('id', $request['preset-id'])->where('collection_id', $request->user()->currentCollection->id)->first(),
-                $item->get()->where('collection_id', $request->user()->currentCollection->id)->first(),
+                $team,
+                $preset,
+                $preset->load('collection.items')->collection->items->first(),
                 isset($request['translate-target-list']) ? $request['translate-target-list'] : [],
                 $request['source-list']
             );
 
-            return response()->json($response);
+            return new JsonResponse($response);
         } catch (\Exception $e) {
             return new JsonResponse([
-                "message" => $e->getMessage(),
+                "message" => $e->getTrace(),
                 "timestamp" => now()
-            ], $e->getCode());
+            ], 500);
         }
     }
 
     public function translate(Request $request)
     {
+        // since API Token belongs to Team (support for User api-token is dropped)
+        $team = $request->user();
+
         try {
-            $planSubscription = $request->user()->currentTeam->planSubscription;
+            $planSubscription = $team->planSubscription;
 
             if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::DEEPL_REQUESTS) ||
                 !$planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS)) {
@@ -108,13 +121,12 @@ class RestApiController extends Controller
                 $result[$lang] = $translatedText->text;
             }
 
-            return response()->json($result);
+            return new JsonResponse($result);
         } catch (\Exception $e) {
-            // Handle other exceptions
             return new JsonResponse([
                 "message" => $e->getMessage(),
                 "timestamp" => now()
-            ], $e->getCode());
+            ], 500);
         }
     }
 }

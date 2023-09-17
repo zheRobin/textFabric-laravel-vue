@@ -318,5 +318,7 @@
 
     "Team subscription has expired.": "Team subscription has expired.",
     "Your subscription plan does not support it.": "Your subscription plan does not support it.",
-    "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.": "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month."
+    "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.": "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.",
+
+    "Only team-level API token are supported.": "Only team-level API token are supported."
 }

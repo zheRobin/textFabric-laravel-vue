@@ -4,23 +4,22 @@ namespace Modules\Jetstream\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Jetstream;
 use Modules\RestApi\Requests\GenerateRequest;
-use Modules\RestApi\Requests\TranslateRequest;
-use App\Models\Dashboard;
-use Illuminate\Validation\Rule;
+
 class ApiTokenController extends Controller
 {
     /**
      * Show the user API token screen.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Inertia\Response
      */
     public function index(Request $request)
     {
         return Jetstream::inertia()->render($request, 'API/Index', [
-            'tokens' => $request->user()->tokens->map(function ($token) {
+            'tokens' => $request->user()->currentTeam->tokens->map(function ($token) {
                 return $token->toArray() + [
                         'last_used_ago' => optional($token->last_used_at)->diffForHumans(),
                     ];
@@ -34,7 +33,7 @@ class ApiTokenController extends Controller
     /**
      * Create a new API token.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -45,7 +44,7 @@ class ApiTokenController extends Controller
             })],
         ]);
 
-        $token = $request->user()->createToken(
+        $token = $request->user()->currentTeam->createToken(
             $request->name,
             Jetstream::validPermissions($request->input('permissions', []))
         );
@@ -59,8 +58,8 @@ class ApiTokenController extends Controller
     /**
      * Update the given API token's permissions.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $tokenId
+     * @param \Illuminate\Http\Request $request
+     * @param string $tokenId
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $tokenId)
@@ -70,7 +69,7 @@ class ApiTokenController extends Controller
             'permissions.*' => 'string',
         ]);
 
-        $token = $request->user()->tokens()->where('id', $tokenId)->firstOrFail();
+        $token = $request->user()->currentTeam->tokens()->where('id', $tokenId)->firstOrFail();
 
         $token->forceFill([
             'abilities' => Jetstream::validPermissions($request->input('permissions', [])),
@@ -82,13 +81,13 @@ class ApiTokenController extends Controller
     /**
      * Delete the given API token.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $tokenId
+     * @param \Illuminate\Http\Request $request
+     * @param string $tokenId
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request, $tokenId)
     {
-        $request->user()->tokens()->where('id', $tokenId)->first()->delete();
+        $request->user()->currentTeam->tokens()->where('id', $tokenId)->first()->delete();
 
         return back(303);
     }

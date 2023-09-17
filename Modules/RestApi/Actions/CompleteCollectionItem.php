@@ -2,20 +2,16 @@
 
 namespace Modules\RestApi\Actions;
 
+use App\Models\Team;
 use App\Models\User;
 use DeepL\DeepLException;
 use DeepL\Translator;
-use Illuminate\Http\JsonResponse;
 use Modules\Imports\Models\CollectionItem;
-use Modules\OpenAI\Contracts\BuildsPrompt;
-use Modules\RestApi\Contracts\CompletesCollectionItem;
-use Modules\OpenAI\Services\PromptService;
 use Modules\Presets\Models\Preset;
+use Modules\RestApi\Contracts\CompletesCollectionItem;
 use Modules\Subscriptions\Enums\SubscriptionFeatureEnum;
-use Modules\Translations\Contracts\TranslatesData;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Chat\CreateResponse;
-use Modules\Translations\Models\Language;
 
 class CompleteCollectionItem implements CompletesCollectionItem
 {
@@ -23,9 +19,13 @@ class CompleteCollectionItem implements CompletesCollectionItem
      * @throws DeepLException
      * @throws \Exception
      */
-    public function complete(User $user, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
+    public function complete(User|Team $model, Preset $preset, CollectionItem $collectionItem, $translate, $sourceList)
     {
-        if (!$this->validate($user)) {
+        if ($model instanceof User) {
+            $model = $model->currentTeam;
+        }
+
+        if (!$this->validate($model)) {
             throw new \Exception(trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'), 403);
         }
 
@@ -46,10 +46,8 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
         // ------------------------------------------------
         // count subscription plan ------------------------
-        $user->currentTeam->planSubscription
-            ->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
-        $user->currentTeam->planSubscription
-            ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+        $model->planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::OPENAI_REQUESTS);
+        $model->planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
         // ------------------------------------------------
 
         $formattedResponse = $this->formatResponse($completion);
@@ -63,10 +61,8 @@ class CompleteCollectionItem implements CompletesCollectionItem
 
                 // ------------------------------------------------
                 // count subscription plan ------------------------
-                $user->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
-                $user->currentTeam->planSubscription
-                    ->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
+                $model->planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::DEEPL_REQUESTS);
+                $model->planSubscription->recordFeatureUsage(SubscriptionFeatureEnum::API_REQUESTS);
                 // ------------------------------------------------
 
                 $result[$lang] = $translatedText->text;
@@ -87,9 +83,9 @@ class CompleteCollectionItem implements CompletesCollectionItem
         return implode("\r\n----\r\n", $contents);
     }
 
-    protected function validate(User $user)
+    protected function validate(Team $team): bool
     {
-        $planSubscription = $user->currentTeam->planSubscription;
+        $planSubscription = $team->planSubscription;
 
         return $planSubscription->canUseFeature(SubscriptionFeatureEnum::OPENAI_REQUESTS) &&
             $planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS);

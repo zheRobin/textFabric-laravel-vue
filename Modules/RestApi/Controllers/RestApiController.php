@@ -76,8 +76,11 @@ class RestApiController extends Controller
 
     public function translate(Request $request)
     {
+        // since API Token belongs to Team (support for User api-token is dropped)
+        $team = $request->user();
+
         try {
-            $planSubscription = $request->user()->currentTeam->planSubscription;
+            $planSubscription = $team->planSubscription;
 
             if (!$planSubscription->canUseFeature(SubscriptionFeatureEnum::DEEPL_REQUESTS) ||
                 !$planSubscription->canUseFeature(SubscriptionFeatureEnum::API_REQUESTS)) {

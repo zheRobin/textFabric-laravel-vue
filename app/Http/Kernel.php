@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'subscribed' => \Modules\Subscriptions\Middleware\VerifySubscription::class,
+        'api.subscribed' => \Modules\Subscriptions\Middleware\VerifyApiSubscription::class,
         'subscription' => \Modules\Subscriptions\Middleware\EnsureUserHasSubscription::class,
         'team.enabled' => \Modules\Jetstream\Middleware\TeamEnabled::class,
         'collection.selected' => \Modules\Collections\Middleware\EnsureUserHasCollection::class,

@@ -5,21 +5,22 @@ import InputError from 'Jetstream/Components/InputError.vue';
 import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
+import {trans} from "laravel-vue-i18n";
 
 const emit = defineEmits(['confirmed']);
 
 defineProps({
     title: {
         type: String,
-        default: 'Confirm Password',
+        default: trans('Confirm Password'),
     },
     content: {
         type: String,
-        default: 'For your security, please confirm your password to continue.',
+        default: trans('For your security, please confirm your password to continue.'),
     },
     button: {
         type: String,
-        default: 'Confirm',
+        default: trans('Confirm'),
     },
 });
 
@@ -101,7 +102,7 @@ const closeModal = () => {
 
             <template #footer>
                 <SecondaryButton class="" @click="closeModal">
-                    Cancel
+                    {{ $t('Cancel') }}
                 </SecondaryButton>
 
                 <PrimaryButton

@@ -43,7 +43,7 @@ const rename = () => {
         <template #title>
             <div class="flex items-center">
                 <PencilSquareIcon class="mr-2 w-5 text-tf-blue-500" aria-hidden="true"/>
-                <span>Rename</span>
+                <span>{{ $t('Rename') }}</span>
             </div>
         </template>
 

@@ -4,6 +4,7 @@ import {onUnmounted, ref, onMounted, computed} from 'vue';
 import { notify } from "notiwind";
 import { useForm } from "@inertiajs/vue3";
 import TextGenerate from "./TextGenerate.vue";
+import {trans} from "laravel-vue-i18n";
 const emit = defineEmits(['idItemsPage', 'itemRight']);
 
 const props = defineProps({
@@ -143,7 +144,7 @@ const updatePreset = (right) => {
             notify({
                 group: "error",
                 title: "Error",
-                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000) // 4s
         }
     })

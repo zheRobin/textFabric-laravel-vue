@@ -31,7 +31,7 @@ const deletePreset = () => {
 
     <ConfirmationModal :show="confirmingPresetDeletion" @close="confirmingPresetDeletion = false">
         <template #title>
-            {{$t('Delete Preset')}}
+            {{$t('Delete Compilation')}}
         </template>
 
         <template #content>

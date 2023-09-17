@@ -18,6 +18,7 @@ import {ref, watch} from "vue";
 import {notify} from "notiwind";
 import {useForm, usePage} from "@inertiajs/vue3";
 import { onMounted } from 'vue';
+import {trans} from "laravel-vue-i18n";
 const props = defineProps({
     complications: Array,
     positions: Array,
@@ -130,14 +131,14 @@ const createPreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Compilation created!"
+                text: trans("Compilation created!")
             }, 4000)
         },
         onError: (error) => {
             notify({
                 group: "error",
                 title: "Error",
-                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000)
         }
     })
@@ -157,7 +158,7 @@ const deletePreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Compilation deleted!"
+                text: trans("Compilation deleted!")
             }, 4000)
             localStorage.removeItem('selected-compilations');
             form.name = null;
@@ -178,14 +179,14 @@ const updatePreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Compilation updated!"
+                text: trans("Compilation updated!")
             }, 4000)
         },
         onError: (error) => {
             notify({
                 group: "error",
                 title: "Error",
-                text: error[Object.keys(error)[0]] ?? "Something wrong happens."
+                text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000) // 4s
         }
     })

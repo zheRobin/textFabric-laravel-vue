@@ -182,11 +182,11 @@ const test = {...props.apiDocumentations.generate};
         <!-- Generate API Token -->
         <FormSection @submitted="createApiToken">
             <template #title>
-                Create API Token
+                {{ $t('Create API Token') }}
             </template>
 
             <template #description>
-                API tokens allow third-party services to authenticate with our application on your behalf.
+                {{ $t('API tokens allow third-party services to authenticate with our application on your behalf.') }}
             </template>
 
             <template #form>
@@ -220,11 +220,11 @@ const test = {...props.apiDocumentations.generate};
 
             <template #actions>
                 <ActionMessage :on="createApiTokenForm.recentlySuccessful" class="mr-3">
-                    Created.
+                    {{ $t('Created.') }}
                 </ActionMessage>
 
                 <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
-                    Create
+                    {{ $t('Create') }}
                 </PrimaryButton>
             </template>
         </FormSection>
@@ -236,7 +236,7 @@ const test = {...props.apiDocumentations.generate};
             <div class="mt-10 sm:mt-0">
                 <ActionSection>
                     <template #title>
-                        Manage API Tokens
+                        {{ $t('Manage API Tokens') }}
                     </template>
 
                     <template #description>
@@ -261,11 +261,11 @@ const test = {...props.apiDocumentations.generate};
                                         class="cursor-pointer ml-6 text-sm text-gray-400 underline"
                                         @click="manageApiTokenPermissions(token)"
                                     >
-                                        Permissions
+                                        {{ $t('Permissions') }}
                                     </button>
 
                                     <button class="cursor-pointer ml-6 text-sm text-red-500" @click="confirmApiTokenDeletion(token)">
-                                        Delete
+                                        {{ $t('Delete') }}
                                     </button>
                                 </div>
                             </div>
@@ -279,14 +279,14 @@ const test = {...props.apiDocumentations.generate};
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="text-base font-semibold leading-6 text-gray-900">
-                            API Documentation
+                            {{ $t('API Documentation') }}
                         </div>
                         <div class="text-sm text-gray-500">
                             <div class="mb-2">API Token must be passed as Bearer Token in the request header.</div>
                             <div class="my-4"><span class="border p-2 bg-gray-100 dark:bg-gray-900 rounded font-mono">Authorization: Bearer &lt;api-token&gt;</span></div>
                         </div>
                         <div class="mt-8 max-w-xl text-sm text-gray-500">
-                            API Endpoints:
+                            {{ $t('API Endpoints:') }}
                         </div>
                         <div class="relative flex items-center border mt-2 p-2 rounded bg-gray-100" v-for="item in names" :key="item.id">
                             <div class="flex items-center gap-x-2 pr-10">
@@ -314,12 +314,12 @@ const test = {...props.apiDocumentations.generate};
         <!-- Token Value Modal -->
         <DialogModal :show="displayingToken" @close="displayingToken = false">
             <template #title>
-                API Token
+                {{ $t('API Token') }}
             </template>
 
             <template #content>
                 <div>
-                    Please copy your new API token. For your security, it won't be shown again.
+                    {{ $t("Please copy your new API token. For your security, it won't be shown again.") }}
                 </div>
 
                 <div v-if="newApiToken" class="relative flex items-center justify-between my-4 bg-gray-100 dark:bg-gray-900 pl-4 pr-10 py-2 rounded font-mono text-sm text-gray-500 break-all">
@@ -336,14 +336,14 @@ const test = {...props.apiDocumentations.generate};
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="inline m-1 text-green-500">
                             <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/>
                         </svg>
-                        <span>API Token copied to clipboard!</span>
+                        <span>{{ $t('API Token copied to clipboard!') }}</span>
                     </div>
                 </Transition>
             </template>
 
             <template #footer>
                 <SecondaryButton @click="displayingToken = false">
-                    Close
+                    {{ $t('Close') }}
                 </SecondaryButton>
             </template>
         </DialogModal>
@@ -363,7 +363,7 @@ const test = {...props.apiDocumentations.generate};
 
             <template #footer>
                 <SecondaryButton @click="showDocumentation = false">
-                    Close
+                    {{ $t('Close') }}
                 </SecondaryButton>
             </template>
         </ApiModal>
@@ -371,7 +371,7 @@ const test = {...props.apiDocumentations.generate};
         <!-- API Token Permissions Modal -->
         <DialogModal :show="managingPermissionsFor != null" @close="managingPermissionsFor = null">
             <template #title>
-                API Token Permissions
+                {{ $t('API Token Permissions') }}
             </template>
 
             <template #content>
@@ -387,7 +387,7 @@ const test = {...props.apiDocumentations.generate};
 
             <template #footer>
                 <SecondaryButton @click="managingPermissionsFor = null">
-                    Cancel
+                    {{ $t('Cancel') }}
                 </SecondaryButton>
 
                 <PrimaryButton
@@ -396,7 +396,7 @@ const test = {...props.apiDocumentations.generate};
                     :disabled="updateApiTokenForm.processing"
                     @click="updateApiToken"
                 >
-                    Save
+                    {{ $t('Save') }}
                 </PrimaryButton>
             </template>
         </DialogModal>
@@ -404,16 +404,16 @@ const test = {...props.apiDocumentations.generate};
         <!-- Delete Token Confirmation Modal -->
         <ConfirmationModal :show="apiTokenBeingDeleted != null" @close="apiTokenBeingDeleted = null">
             <template #title>
-                Delete API Token
+                {{ $t('Delete API Token') }}
             </template>
 
             <template #content>
-                Are you sure you would like to delete this API token?
+                {{ $t('Are you sure you would like to delete this API token?') }}
             </template>
 
             <template #footer>
                 <SecondaryButton @click="apiTokenBeingDeleted = null">
-                    Cancel
+                    {{ $t('Cancel') }}
                 </SecondaryButton>
 
                 <DangerButton
@@ -422,7 +422,7 @@ const test = {...props.apiDocumentations.generate};
                     :disabled="deleteApiTokenForm.processing"
                     @click="deleteApiToken"
                 >
-                    Delete
+                    {{ $t('Delete') }}
                 </DangerButton>
             </template>
         </ConfirmationModal>

@@ -10,6 +10,7 @@ import UserInfoStep from "Jetstream/Pages/Auth/Partials/UserInfoStep.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import StepBullets from "Jetstream/Components/StepBullets.vue";
 import ApplicationLogo from "Jetstream/Components/ApplicationLogo.vue";
+import {trans} from "laravel-vue-i18n";
 
 const form = useForm({
     first_name: '',
@@ -79,7 +80,7 @@ let totalSteps = ref(steps.length);
 
 const nextStep = () => {
     if(currentIndex.value === 1 && !form.employees){
-        form.errors.employees = 'The employees field is required.';
+        form.errors.employees = trans('The employees field is required.');
     }else{
         if (currentIndex.value + 1 === totalSteps.value) {
             reCaptcha();

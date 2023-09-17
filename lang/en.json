@@ -33,6 +33,7 @@
     "Profile": "Profile",
     "Team Settings": "Team Settings",
     "Create New Team": "Create New Team",
+    "API Token": "API Token",
     "API Tokens": "API Tokens",
     "Switch Team": "Switch Team",
     "Log Out": "Log Out",
@@ -71,6 +72,7 @@
     "Cancel": "Cancel",
     "Rename": "Rename",
     "Delete": "Delete",
+    "Clear": "Clear",
 
     "Sign in to your account": "Sign in to your account",
     "Or": "Or",
@@ -110,6 +112,7 @@
     "to switch to a subscription that suits you the best": "to a subscription that suits you the best",
     "Your current subscription plan ends": "Your current subscription plan ends",
     "in": "in",
+    "days": "days",
     "to renew": "to renew",
     "expired": "expired",
     "Your subscription has": "Your subscription has",
@@ -287,6 +290,7 @@
     "Click to copy": "Click to copy",
     "re-generate": "re-generate",
 
+    "Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.": "Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.",
     "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.": "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.",
     "Wrong importer file extension": "Wrong importer file extension",
     "System": "System",
@@ -297,6 +301,7 @@
     "Current Password": "Current Password",
     "New Password": "New Password",
     "Confirm Password": "Confirm Password",
+    "For your security, please confirm your password to continue.": "For your security, please confirm your password to continue.",
 
     "Status": "Status",
     "Plan Type": "Plan Type",
@@ -305,6 +310,43 @@
     "used": "used",
     "Ends at": "Ends at",
     "Ended at": "Ended at",
+
+    "up to 2 collections": "up to 2 collections",
+    "up to 10 items per collection": "up to 10 items per collection",
+    "up to 300 request per month": "up to 300 request per month",
+
+    "up to 3 collections": "up to 3 collections",
+    "up to 100 items per collection": "up to 100 items per collection",
+    "up to 3.000 request per month": "up to 3.000 request per month",
+
+    "up to 5 collections": "up to 5 collections",
+    "up to 300 items per collection": "up to 300 items per collection",
+    "up to 10.000 request per month": "up to 10.000 request per month",
+
+    "up to 15 collections": "up to 15 collections",
+    "up to 1.000 items per collection": "up to 1.000 items per collection",
+    "up to 30.000 request per month": "up to 30.000 request per month",
+    "possibility to configure parameters": "possibility to configure parameters",
+
+    "up to 100 collections": "up to 100 collections",
+    "up to 10.000 items per collection": "up to 10.000 items per collection",
+    "up to 500.000 request per month": "up to 500.000 request per month",
+
+    "Create API Token": "Create API Token",
+    "API tokens allow third-party services to authenticate with our application on your behalf.": "API tokens allow third-party services to authenticate with our application on your behalf.",
+    "Permissions": "Permissions",
+    "Create": "Create",
+    "Created.": "Created.",
+    "Please copy your new API token. For your security, it won't be shown again.": "Please copy your new API token. For your security, it won't be shown again.",
+    "Close": "Close",
+    "Manage API Tokens": "Manage API Tokens",
+    "You may delete any of your existing tokens if they are no longer needed.": "You may delete any of your existing tokens if they are no longer needed.",
+    "Last used": "Last used",
+    "API Token Permissions": "API Token Permissions",
+    "API Documentation": "API Documentation",
+    "API Endpoints:": "API Endpoints:",
+    "API Token copied to clipboard!": "API Token copied to clipboard!",
+    "Are you sure you would like to delete this API token?": "Are you sure you would like to delete this API token?",
 
     "You need to remove all users from the team first": "You need to remove all users from the team first",
     "The password is incorrect.": "The password is incorrect.",
@@ -320,5 +362,33 @@
     "Your subscription plan does not support it.": "Your subscription plan does not support it.",
     "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.": "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.",
 
-    "Only team-level API token are supported.": "Only team-level API token are supported."
+    "Only team-level API token are supported.": "Only team-level API token are supported.",
+    "Try without login": "Try without login",
+    "These credentials do not match our records.": "These credentials do not match our records.",
+    "The header type was updated!": "The header type was updated!",
+    "Something wrong happens.": "Something wrong happens.",
+    "Compilation created!": "Compilation created!",
+    "Compilation deleted!": "Compilation deleted!",
+    "Compilation updated!": "Compilation updated!",
+    "The compilation is cancelled!": "The compilation is cancelled!",
+    "The compilation has finished successfully!": "The compilation has finished successfully!",
+    "The compilation has finished with failure!": "The compilation has finished with failure!",
+    "The item was updated!": "The item was updated!",
+    "The image was updated!": "The image was updated!",
+    "Preset created!": "Preset created!",
+    "Preset updated!": "Preset updated!",
+    "Preset deleted!": "Preset deleted!",
+    "The employees field is required.": "The employees field is required.",
+    "Add file": "Add file",
+    "Are you sure you want to delete": "Are you sure you want to delete",
+    "preset": "preset",
+    "Select format": "Select format",
+
+    "Administrator Role": "Administrator",
+    "Administrator users can perform any action.": "Administrator users can perform any action.",
+    "Editor Role": "Editor",
+    "Editor users have the ability to read, create, and update.": "Editor users have the ability to read, create, and update.",
+    "Viewer Role": "Viewer",
+    "Viewer users": "Viewer users"
+
 }

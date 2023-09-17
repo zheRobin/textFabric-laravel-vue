@@ -33,6 +33,7 @@
     "Profile": "Profil",
     "Team Settings": "Team-Einstellungen",
     "Create New Team": "Neues Team erstellen",
+    "API Token": "API-Schlüssel",
     "API Tokens": "API-Schlüssel",
     "Switch Team": "Team wechseln",
     "Log Out": "Abmelden",
@@ -71,6 +72,7 @@
     "Cancel": "Abbrechen",
     "Rename": "Umbenennen",
     "Delete": "Löschen",
+    "Clear": "Clear",
 
     "Sign in to your account": "Melden Sie sich in Ihrem Konto an",
     "Or": "Oder",
@@ -114,6 +116,7 @@
     "to renew": " um zu erneuern",
     "expired": "abgelaufen",
     "Your subscription has": "Ihr Abonnement ist",
+
     "Welcome to your Jetstream application!": "Willkommen in Ihrer Jetstream-Anwendung!",
     "Laravel Jetstream provides a beautiful, robust starting point for your next Laravel application. Laravel is designed to help you build your application using a development environment that is simple, powerful, and enjoyable. We believe you should love expressing your creativity through programming, so we have spent time carefully crafting the Laravel ecosystem to be a breath of fresh air. We hope you love it.": "Laravel Jetstream bietet einen schönen und robusten Ausgangspunkt für Ihre nächste Laravel-Anwendung. Laravel wurde entwickelt, um Ihnen beim Aufbau Ihrer Anwendung mit einer Entwicklungsumgebung zu helfen, die einfach, leistungsstark und angenehm ist. Wir glauben, dass Sie Ihre Kreativität durch Programmieren zum Ausdruck bringen sollten, daher haben wir die Zeit investiert, das Laravel-Ökosystem sorgfältig zu gestalten, um wie ein frischer Wind zu sein. Wir hoffen, dass es Ihnen gefällt.",
     "Documentation": "Dokumentation",
@@ -287,6 +290,7 @@
     "Click to copy": "Zum Kopieren klicken",
     "re-generate": "neu generieren",
 
+    "Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.": "Browse additional file to append or to replace. We support .xls, .xlsx, .csv, .json, .xml.",
     "Browse file to upload. We support .xls, .xlsx, .csv, .json, .xml.": "Durchsuchen Sie die Datei, die hochgeladen werden soll. Wir unterstützen .xls, .xlsx, .csv, .json, .xml.",
     "Wrong importer file extension": "Falsche Dateierweiterung für den Import",
     "System": "System",
@@ -297,6 +301,7 @@
     "Current Password": "Aktuelles Passwort",
     "New Password": "Neues Passwort",
     "Confirm Password": "Passwort bestätigen",
+    "For your security, please confirm your password to continue.": "For your security, please confirm your password to continue.",
 
     "Status": "Status",
     "Plan Type": "Abonnement",
@@ -304,6 +309,7 @@
     "Plan Features": "Abonnement Eigenschaften",
     "used": "verwendet",
     "Ends at": "Endet am",
+    "Ended at": "Ended at",
 
     "up to 2 collections": "Bis zu 2 Sammlungen",
     "up to 10 items per collection": "Bis zu 10 Zeilen pro Datei",
@@ -330,12 +336,17 @@
     "API tokens allow third-party services to authenticate with our application on your behalf.": "API-Tokens ermöglichen es Diensten von Drittanbietern, sich in Ihrem Namen bei unserer Anwendung zu authentifizieren.",
     "Permissions": "Berechtigungen",
     "Create": "Erstellen",
+    "Created.": "Created.",
     "Please copy your new API token. For your security, it won't be shown again.": "Bitte kopieren Sie Ihr neues API-Token. Zu Ihrer Sicherheit wird er nicht mehr angezeigt.",
     "Close": "Schließen",
     "Manage API Tokens": "API-Schlüssel verwalten",
     "You may delete any of your existing tokens if they are no longer needed.": "Sie können alle Ihre vorhandenen Schlüssel löschen, wenn sie nicht mehr benötigt werden.",
     "Last used": "Zuletzt verwendet",
     "API Token Permissions": "API-Schlüssel Berechtigung",
+    "API Documentation": "API Documentation",
+    "API Endpoints:": "API Endpoints:",
+    "API Token copied to clipboard!": "API Token copied to clipboard!",
+    "Are you sure you would like to delete this API token?": "Are you sure you would like to delete this API token?",
 
     "You need to remove all users from the team first": "Sie müssen zuerst alle Benutzer aus dem Team entfernen",
     "The password is incorrect.": "Das Passwort ist falsch.",
@@ -351,5 +362,33 @@
     "Your subscription plan does not support it.": "Your subscription plan does not support it.",
     "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.": "Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.",
 
-    "Only team-level API token are supported.": "Only team-level API token are supported."
+    "Only team-level API token are supported.": "Only team-level API token are supported.",
+    "Try without login": "Try without login",
+    "These credentials do not match our records.": "These credentials do not match our records.",
+    "The header type was updated!": "The header type was updated!",
+    "Something wrong happens.": "Something wrong happens.",
+    "Compilation created!": "Compilation created!",
+    "Compilation deleted!": "Compilation deleted!",
+    "Compilation updated!": "Compilation updated!",
+    "The compilation is cancelled!": "The compilation is cancelled!",
+    "The compilation has finished successfully!": "The compilation has finished successfully!",
+    "The compilation has finished with failure!": "The compilation has finished with failure!",
+    "The item was updated!": "The item was updated!",
+    "The image was updated!": "The image was updated!",
+    "Preset created!": "Preset created!",
+    "Preset updated!": "Preset updated!",
+    "Preset deleted!": "Preset deleted!",
+    "The employees field is required.": "The employees field is required.",
+    "Add file": "Add file",
+    "Are you sure you want to delete": "Are you sure you want to delete",
+    "preset": "preset",
+    "Select format": "Select format",
+
+    "Administrator Role": "Administrator",
+    "Administrator users can perform any action.": "Administrator users can perform any action.",
+    "Editor Role": "Editor",
+    "Editor users have the ability to read, create, and update.": "Editor users have the ability to read, create, and update.",
+    "Viewer Role": "Viewer",
+    "Viewer users": "Viewer users"
+
 }

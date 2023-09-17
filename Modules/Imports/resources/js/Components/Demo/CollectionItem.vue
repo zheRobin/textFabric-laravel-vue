@@ -1,7 +1,7 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import CellInput from "Modules/Imports/resources/js/Components/CellInput.vue";
-import {getActiveLanguage} from "laravel-vue-i18n";
+import {getActiveLanguage, trans} from "laravel-vue-i18n";
 import {saveItem} from "Modules/Imports/resources/js/collection";
 import {notify} from "notiwind";
 
@@ -21,7 +21,7 @@ const updateItem = () => {
     notify({
         group: "success",
         title: "Success",
-        text: "The item was updated!"
+        text: trans("The item was updated!")
     }, 4000);
 }
 </script>

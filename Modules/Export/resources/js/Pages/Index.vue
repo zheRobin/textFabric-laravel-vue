@@ -112,20 +112,20 @@ const showProgress = (id) => {
                     notify({
                         group: 'error',
                         title: 'Error!',
-                        text: 'The compilation is cancelled!',
+                        text: trans('The compilation is cancelled!'),
                     }, 4000);
                 } else {
                     if (parseInt(progress.value) === 100 || res.data.data.successful) {
                         notify({
                             group: 'success',
                             title: 'Success!',
-                            text: 'The compilation has finished successfully!',
+                            text: trans('The compilation has finished successfully!'),
                         }, 4000);
                     } else {
                         notify({
                             group: 'error',
                             title: 'Error!',
-                            text: 'The compilation has finished with failure!',
+                            text: trans('The compilation has finished with failure!'),
                         }, 4000);
                     }
                 }
@@ -733,7 +733,7 @@ fetchCancelledExports();
 
             <template #content>
                 <div class="mt-5">
-                    <InputLabel value="Select format"></InputLabel>
+                    <InputLabel value="{{ $t('Select format') }}"></InputLabel>
                     <SelectMenuForDownload @update:modelValue="changeDownloadFormat" v-model="selectedDownloadFormat" class="mt-3"  :options="options"/>
                 </div>
             </template>

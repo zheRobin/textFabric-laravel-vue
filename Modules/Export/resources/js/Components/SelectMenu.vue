@@ -2,7 +2,7 @@
 import {computed} from "vue"
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
-import { wTrans } from 'laravel-vue-i18n';
+import {trans} from 'laravel-vue-i18n';
 
 const props = defineProps({
     options: Array,
@@ -10,7 +10,7 @@ const props = defineProps({
     label: String,
     placeholder: {
         type: String,
-        default: wTrans('Select option').value,
+        default: trans('Select option'),
     },
     multiple: Boolean,
 });

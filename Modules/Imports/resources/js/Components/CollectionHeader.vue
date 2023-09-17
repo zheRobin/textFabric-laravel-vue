@@ -4,6 +4,7 @@ import Dropdown from "Jetstream/Components/Dropdown.vue";
 import {headers} from "Modules/Imports/resources/js/headers";
 import {useForm, usePage} from "@inertiajs/vue3";
 import {notify} from "notiwind";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     header: Object,
@@ -25,7 +26,7 @@ const updateHeaderType = (header) => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "The header type was updated!"
+                text: trans("The header type was updated!")
             }, 4000) // 4s
         }
     })

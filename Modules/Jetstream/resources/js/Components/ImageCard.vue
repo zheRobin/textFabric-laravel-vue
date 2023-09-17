@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import {notify} from "notiwind";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     item: Object,
@@ -40,7 +41,7 @@ const updateImage = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "The image was updated!"
+                text: trans("The image was updated!")
             }, 4000) // 4s
         }
     })

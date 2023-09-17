@@ -155,7 +155,7 @@ const savePreset = () => {
 }
 
 const notifyValidationError = (error) => {
-    return error[Object.keys(error)[0]] ?? "Something wrong happens.";
+    return error[Object.keys(error)[0]] ?? trans("Something wrong happens.");
 }
 
 const createPreset = () => {
@@ -167,7 +167,7 @@ const createPreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset created!"
+                text: trans("Preset created!")
             }, 4000)
         },
         onError: (error) => {
@@ -194,7 +194,7 @@ const updatePreset = (onSuccess) => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset updated!"
+                text: trans("Preset updated!")
             }, 4000);
         },
         onError: (error) => {
@@ -223,7 +223,7 @@ const deletePreset = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "Preset deleted!"
+                text: trans("Preset deleted!")
             }, 4000)
         },
     })
@@ -315,12 +315,12 @@ const promptHasWrongAttribute = (prompt) => {
 
                         <template v-else>
                             <div class="flex">
-                                <label class="mr-2 mt-1.5 font-medium">Preset:</label>
+                                <label class="mr-2 mt-1.5 font-medium">{{ $t('Preset') }}:</label>
                                 <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
                             </div>
 
                             <template v-if="permissions.canManagePresets">
-                                <div class="block flex justify-center sm:hidden ml-1 sm:ml-5 mt-2 text-gray-500 text-sm" v-if="selectedPresetId">
+                                <div class="flex justify-center sm:hidden ml-1 sm:ml-5 mt-2 text-gray-500 text-sm" v-if="selectedPresetId">
                                     ID: {{selectedPresetId}}
                                 </div>
                                 <div class="flex mt-5 md:mt-0">

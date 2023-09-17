@@ -3,6 +3,7 @@ import {useForm} from "@inertiajs/vue3";
 import {notify} from "notiwind";
 import ImageCard from "Jetstream/Components/ImageCard.vue";
 import CellInput from "Modules/Imports/resources/js/Components/CellInput.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     item: Object,
@@ -23,7 +24,7 @@ const updateItem = () => {
             notify({
                 group: "success",
                 title: "Success",
-                text: "The item was updated!"
+                text: trans("The item was updated!")
             }, 4000) // 4s
         }
     })

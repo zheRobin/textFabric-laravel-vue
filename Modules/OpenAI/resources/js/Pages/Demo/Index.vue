@@ -6,7 +6,7 @@ import PromptEditor from "Modules/OpenAI/resources/js/Components/PromptEditor.vu
 import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/Demo/ItemCompletionPreview.vue";
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 import {getPresets} from "Modules/OpenAI/resources/js/presets";
-import {getActiveLanguage, trans} from "laravel-vue-i18n";
+import {getActiveLanguage} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 
@@ -48,7 +48,7 @@ const changePreset = (value) => {
             <div class="flex border-b border-gray-200 pb-8 items-center">
                 <div class="items-center flex flex-1">
                     <label class="mr-2 font-medium">{{$t('Preset')}}:</label>
-                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetOption" :options="presetOptions()" class="w-60" :placeholder="trans('Select')" />
+                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetOption" :options="presetOptions()" class="w-60" :placeholder="$t('Select')" />
                 </div>
             </div>
 

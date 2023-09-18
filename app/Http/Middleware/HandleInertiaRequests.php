@@ -77,9 +77,7 @@ class HandleInertiaRequests extends Middleware
             'canUseApiFeatures' => function () use ($user) {
                 return Gate::forUser($user)->allows('use-api-features');
             },
-            'mainLogoPath' => AppSettings::get(AppSettingEnum::LOGO)
-                ? Storage::url(AppSettings::get(AppSettingEnum::LOGO))
-                : '/texthub-logo.svg',
+            'mainLogoPath' => '/' . (AppSettings::get(AppSettingEnum::LOGO) ?? 'texthub-logo.svg'),
         ]);
     }
 }

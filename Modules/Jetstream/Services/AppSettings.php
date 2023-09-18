@@ -2,9 +2,13 @@
 
 namespace Modules\Jetstream\Services;
 
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Jetstream\Enums\AppSettingEnum;
 use Modules\Jetstream\Models\AppSetting;
 
+/**
+ * @mixin Builder
+ */
 class AppSettings
 {
     /**

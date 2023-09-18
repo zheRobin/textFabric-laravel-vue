@@ -111,20 +111,20 @@ const showProgress = (id) => {
 
                     notify({
                         group: 'error',
-                        title: 'Error!',
+                        title: trans('Error'),
                         text: trans('The compilation is cancelled!'),
                     }, 4000);
                 } else {
                     if (parseInt(progress.value) === 100 || res.data.data.successful) {
                         notify({
                             group: 'success',
-                            title: 'Success!',
+                            title: trans('Success'),
                             text: trans('The compilation has finished successfully!'),
                         }, 4000);
                     } else {
                         notify({
                             group: 'error',
-                            title: 'Error!',
+                            title: trans('Error'),
                             text: trans('The compilation has finished with failure!'),
                         }, 4000);
                     }
@@ -165,7 +165,7 @@ const activeQueue = ref(null);
 
 const alertCompilationWithNoPreset = () => notify({
     group: 'error',
-    title: 'Error!',
+    title: trans('Error'),
     text: trans("This compilation doesn't contain any presets. Please add presets to the selected compilation to start an export."),
 }, 4000);
 
@@ -196,7 +196,7 @@ const generate = async () => {
     if (!hasLimit.value.openai || !hasLimit.value.api) {
         notify({
             group: 'error',
-            title: 'Error!',
+            title: trans('Error'),
             text: trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
         }, 4000);
         return;
@@ -283,7 +283,7 @@ const translation = () => {
     if (!hasLimit.value.deepl || !hasLimit.value.api) {
         notify({
           group: 'error',
-          title: 'Error!',
+          title: trans('Error'),
           text: trans('Your team is out of remaining requests for this month. Please adjust your plan or wait until the next month.'),
         }, 4000);
         activeModal.value = false;
@@ -313,7 +313,7 @@ const translation = () => {
         generateActive.value = false;
         notify({
             group: 'error',
-            title: 'Error!',
+            title: trans('Error'),
             text: error.response.data?.message || trans( 'Error generating translation'),
         }, 4000);
     }).finally(() => {
@@ -450,7 +450,7 @@ const cancelQueue = () => {
     if (!id) {
         notify({
             group: 'error',
-            title: 'Error!',
+            title: trans('Error'),
             text: trans( 'Error cancelling job, missing job-batch ID'),
         }, 4000);
         return;

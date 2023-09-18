@@ -5,6 +5,7 @@ import {ChevronDownIcon, UsersIcon} from '@heroicons/vue/20/solid'
 import Checkbox from "Jetstream/Components/Checkbox.vue";
 import InputLabel from "Jetstream/Components/InputLabel.vue";
 import TextInput from "Jetstream/Components/TextInput.vue";
+import {trans} from "laravel-vue-i18n";
 
 defineEmits(['submitted', 'sorted']);
 
@@ -41,7 +42,7 @@ const props = defineProps({
                 <div class="px-4">
                     <PopoverGroup>
                         <Popover as="div" class="relative">
-                            <PopoverButton class="flex focus:outline-none items-center group block text-sm font-medium leading-6 text-gray-700 hover:text-gray-900">
+                            <PopoverButton class="flex focus:outline-none items-center group text-sm font-medium leading-6 text-gray-700 hover:text-gray-900">
                                 {{ $t('Subscription') }}
                                 <ChevronDownIcon class="mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                             </PopoverButton>
@@ -68,7 +69,7 @@ const props = defineProps({
                 <div class="px-4">
                     <PopoverGroup>
                         <Popover as="div" class="relative">
-                            <PopoverButton class="flex items-center group block text-sm font-medium leading-6 text-gray-700 hover:text-gray-900 focus:outline-none">
+                            <PopoverButton class="flex items-center group text-sm font-medium leading-6 text-gray-700 hover:text-gray-900 focus:outline-none">
                                 {{$t('Plan')}}
                                 <ChevronDownIcon class="mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                             </PopoverButton>

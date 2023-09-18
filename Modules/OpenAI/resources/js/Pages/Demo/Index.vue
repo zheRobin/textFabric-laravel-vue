@@ -47,8 +47,8 @@ const changePreset = (value) => {
         <DashboardPanel>
             <div class="flex border-b border-gray-200 pb-8 items-center">
                 <div class="items-center flex flex-1">
-                    <label class="mr-2 font-medium">{{$t('Presets')}}:</label>
-                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetOption" :options="presetOptions()" class="w-60" placeholder="Select" />
+                    <label class="mr-2 font-medium">{{$t('Preset')}}:</label>
+                    <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetOption" :options="presetOptions()" class="w-60" :placeholder="trans('Select')" />
                 </div>
             </div>
 

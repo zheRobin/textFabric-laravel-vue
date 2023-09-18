@@ -34,7 +34,7 @@ const selectedCompilation = ref(compilationOptions()[0].value);
             <div class="flex border-b border-gray-200 pb-8 items-center">
                 <div class="items-center flex flex-1">
                     <label class="mr-2 font-medium dark:text-white">{{$t('Compilations')}}:</label>
-                    <SelectMenu class="w-60" v-model="selectedCompilation" :options="compilationOptions()" :placeholder="$t('Select')" />
+                    <SelectMenu class="w-60" v-model="selectedCompilation" :options="compilationOptions()" :placeholder="trans('Select')" />
                 </div>
             </div>
 

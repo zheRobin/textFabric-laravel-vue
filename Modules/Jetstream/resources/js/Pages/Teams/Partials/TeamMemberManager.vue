@@ -13,6 +13,7 @@ import PrimaryButton from 'Jetstream/Components/PrimaryButton.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import SectionBorder from 'Jetstream/Components/SectionBorder.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     team: Object,
@@ -114,7 +115,7 @@ const displayableRole = (role) => {
 
                     <!-- Member Email -->
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="email" value="Email" />
+                        <InputLabel for="email" :value="trans('Email')" />
                         <TextInput
                             id="email"
                             v-model="addTeamMemberForm.email"
@@ -126,7 +127,7 @@ const displayableRole = (role) => {
 
                     <!-- Role -->
                     <div v-if="availableRoles.length > 0" class="col-span-6 lg:col-span-4">
-                        <InputLabel for="roles" value="Role" />
+                        <InputLabel for="roles" :value="trans('Role')" />
                         <InputError :message="addTeamMemberForm.errors.role" class="mt-2" />
 
                         <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
@@ -142,7 +143,7 @@ const displayableRole = (role) => {
                                     <!-- Role Name -->
                                     <div class="flex items-center">
                                         <div class="text-sm text-gray-600" :class="{'font-semibold': addTeamMemberForm.role == role.key}">
-                                            {{ role.name }}
+                                            {{ $t(role.name + ' Role') }}
                                         </div>
 
                                         <svg v-if="addTeamMemberForm.role == role.key" class="ml-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -152,7 +153,7 @@ const displayableRole = (role) => {
 
                                     <!-- Role Description -->
                                     <div class="mt-2 text-xs text-gray-600 text-left">
-                                        {{ role.description }}
+                                        {{ $t(role.description) }}
                                     </div>
                                 </div>
                             </button>

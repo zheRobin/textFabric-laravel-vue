@@ -143,7 +143,7 @@ const updatePreset = (right) => {
         onError: (error) => {
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000) // 4s
         }

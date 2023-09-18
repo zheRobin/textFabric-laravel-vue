@@ -25,7 +25,7 @@ const updateHeaderType = (header) => {
         onSuccess: () => {
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("The header type was updated!")
             }, 4000) // 4s
         }

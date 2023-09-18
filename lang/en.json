@@ -243,6 +243,7 @@
     "Code": "Code",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.",
     "Enable": "Enable",
+    "Disable": "Disable",
     "Regenerate Recovery Codes": "Regenerate Recovery Codes",
     "Show Recovery Codes": "Show Recovery Codes",
     "Subscription plan": "Subscription plan",
@@ -389,6 +390,16 @@
     "Editor Role": "Editor",
     "Editor users have the ability to read, create, and update.": "Editor users have the ability to read, create, and update.",
     "Viewer Role": "Viewer",
-    "Viewer users": "Viewer users"
+    "Viewer users": "Viewer users",
+
+    "Step": "Step",
+    "of": "of",
+    "Role": "Role",
+    "Enter some items": "Enter some items",
+    "Enter text and then type @ to trigger the attribute": "Enter text and then type @ to trigger the attribute",
+    "Select a model": "Select a model",
+    "Success": "Success",
+    "Error": "Error",
+    "Demo mode. If you want to save your project for later — sign up or log in": "Demo mode. If you want to save your project for later — sign up or log in"
 
 }

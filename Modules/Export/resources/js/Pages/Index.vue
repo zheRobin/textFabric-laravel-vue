@@ -219,7 +219,7 @@ const generate = async () => {
             generateActive.value = false;
             notify({
                 group: 'error',
-                title: 'Error!',
+                title: trans('Error'),
                 text: error.response?.data?.message || trans('Error generating compilation'),
             }, 4000);
         });
@@ -263,13 +263,13 @@ const deleteExport = () => {
 
         notify({
             group: "success",
-            title: "Success",
+            title: trans("Success"),
             text: trans("Export file deleted!")
         }, 4000);
     }).catch(() => {
         notify({
             group: "error",
-            title: "Error",
+            title: trans("Error"),
             text: trans("Error deleting export file!")
         }, 4000);
     });
@@ -609,7 +609,7 @@ fetchCancelledExports();
                             <h2 class="mt-3 text-base font-semibold leading-6 text-gray-900">{{$t('History of created compilations')}}</h2>
                             <div>
                                 <div class="relative mt-2 flex items-center">
-                                    <input type="text" @keyup="() => search(null)" v-model="searchQuery" name="search" :placeholder="`${$t('Search')}...`" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
+                                    <input type="text" @keyup="() => search(null)" v-model="searchQuery" name="search" :placeholder="trans('Search')" id="search" class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-tf-blue-500 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                         </div>

@@ -36,7 +36,7 @@ const label = computed(() => {
              :model-value="props.modelValue"
              :multiple="props.multiple"
              @update:modelValue="value => emit('update:modelValue', value)">
-        <ListboxLabel v-show="props.label" class="block text-sm font-medium leading-6 text-gray-900">Plan type</ListboxLabel>
+        <ListboxLabel v-show="props.label" class="block text-sm font-medium leading-6 text-gray-900">{{ $t('Plan type') }}</ListboxLabel>
         <div class="relative">
             <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-tf-blue-500 sm:text-sm sm:leading-6">
                 <span v-if="label" class="block truncate">{{ label }}</span>
@@ -51,7 +51,6 @@ const label = computed(() => {
                     <ListboxOption as="template" v-for="option in options" :key="option.value" :value="option.value" v-slot="{ active, selected }" :title="option.label">
                         <li :class="[active ? 'bg-tf-blue-500 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
                             <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ option.label }}</span>
-
                             <span v-if="selected" :class="[active ? 'text-white' : 'text-tf-blue-500', 'absolute inset-y-0 right-0 flex items-center pr-4']">
                                 <CheckIcon class="h-5 w-5" aria-hidden="true" />
                             </span>

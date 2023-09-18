@@ -130,14 +130,14 @@ const createPreset = () => {
             changePreset(res.props.complications[res.props.complications.length - 1].id);
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Compilation created!")
             }, 4000)
         },
         onError: (error) => {
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000)
         }
@@ -157,7 +157,7 @@ const deletePreset = () => {
             selectedPreset.value = null;
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Compilation deleted!")
             }, 4000)
             localStorage.removeItem('selected-compilations');
@@ -178,14 +178,14 @@ const updatePreset = () => {
         onSuccess: () => {
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Compilation updated!")
             }, 4000)
         },
         onError: (error) => {
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
             }, 4000) // 4s
         }
@@ -200,7 +200,7 @@ initSelectedCompilation();
         <div class="md:items-center flex flex-1 flex-col md:flex-row">
             <template v-if="!complications.length || addingPreset">
                 <template v-if="canManageCompilations">
-                    <div class="flex">
+                    <div class="flex items-center">
                         <label class="mr-2 font-medium">{{$t('Name:')}}</label>
                         <TextInput v-model="form.name" type="text" class="w-60"/>
                         <PrimaryButton @click="savePreset('create')" class="ml-2 gap-x-1.5">
@@ -218,7 +218,7 @@ initSelectedCompilation();
 
             <template v-else>
                 <label class="mr-2 font-medium dark:text-white mb-3 md:mb-0">{{$t('Compilation')}}:</label>
-                <SelectMenu @update:modelValue="changePreset" class="w-60 mb-3 md:mb-0" v-model="selectedPreset" :options="presetOptions()" :placeholder="$t('Select')" />
+                <SelectMenu @update:modelValue="changePreset" class="w-60 mb-3 md:mb-0" v-model="selectedPreset" :options="presetOptions()" :placeholder="trans('Select')" />
                 <template v-if="canManageCompilations">
                     <div>
                         <PrimaryButton @click="addPreset" class="ml-2 gap-x-1.5">

@@ -166,14 +166,14 @@ const createPreset = () => {
             changePreset(props.selectedPreset)
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Preset created!")
             }, 4000)
         },
         onError: (error) => {
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: notifyValidationError(error)
             }, 4000)
         }
@@ -193,14 +193,14 @@ const updatePreset = (onSuccess) => {
 
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Preset updated!")
             }, 4000);
         },
         onError: (error) => {
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: notifyValidationError(error)
             }, 4000)
         }
@@ -222,7 +222,7 @@ const deletePreset = () => {
             resetForm();
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("Preset deleted!")
             }, 4000)
         },
@@ -316,7 +316,7 @@ const promptHasWrongAttribute = (prompt) => {
                         <template v-else>
                             <div class="flex">
                                 <label class="mr-2 mt-1.5 font-medium">{{ $t('Preset') }}:</label>
-                                <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" placeholder="Select" />
+                                <SelectMenu @update:modelValue="changePreset" v-model="selectedPresetId" :options="presetOptions()" class="w-60" :placeholder="trans('Select')" />
                             </div>
 
                             <template v-if="permissions.canManagePresets">
@@ -357,7 +357,7 @@ const promptHasWrongAttribute = (prompt) => {
                                             <MinusCircleIcon class="-mr-0.5 w-4" aria-hidden="true" />
                                         </DangerButton>
                                     </DeletePreset>
-                                    <div class="hidden sm:block ml-5 mt-1 text-gray-500" v-if="selectedPresetId">
+                                    <div class="hidden sm:block ml-5 mt-1 text-gray-500 w-max" v-if="selectedPresetId">
                                         ID: {{selectedPresetId}}
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@ const promptHasWrongAttribute = (prompt) => {
                     <section v-if="permissions.canChangeOpenAIParams" aria-labelledby="filter-heading" class="pt-8">
                         <div class="grid grid-cols-2 sm:grid-cols-2 md:flex items-center justify-between sm:space-x-6">
                             <div class="col-span-2">
-                                <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="ml-5 mr-8 mb-5 md:ml-0 md:mr-0 md:mb-0 md:min-w-44 md:inline-block" placeholder="Select a model" />
+                                <SelectMenu :disabled="!permissions.canManagePresets" v-model="form.model" :options="modelOptions()" class="ml-5 mr-8 mb-5 md:ml-0 md:mr-0 md:mb-0 md:min-w-44 md:inline-block" :placeholder="trans('Select a model')" />
                             </div>
 
                             <div class="w-23 sm:w-56 mr-2 sm:mr-0">

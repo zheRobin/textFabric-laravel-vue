@@ -2,7 +2,7 @@
 import {computed, onMounted, ref} from 'vue';
 import TextGenerate from "Modules/Compilations/resources/js/Components/Demo/TextGenerate.vue";
 import {getItems} from "Modules/Imports/resources/js/collection";
-import {getActiveLanguage} from "laravel-vue-i18n";
+import {getActiveLanguage, trans} from "laravel-vue-i18n";
 import {getPresets} from "Modules/OpenAI/resources/js/presets";
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/vue/20/solid";
 
@@ -203,7 +203,7 @@ const truncatedTitleHeader = computed(() => {
                 </div>
             </div>
             <div v-else class="mx-auto mt-5 mb-10">
-                <div class="text-base font-semibold leading-7 text-gray-500 text-center mt-10">Drag, drop rearrange available presets here</div>
+                <div class="text-base font-semibold leading-7 text-gray-500 text-center mt-10">{{ $t('Drag, drop rearrange available presets here') }}</div>
             </div>
         </div>
     </div>

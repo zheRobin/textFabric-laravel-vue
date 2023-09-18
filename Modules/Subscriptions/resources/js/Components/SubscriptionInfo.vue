@@ -44,7 +44,7 @@ const getFeatureUsage = (feature) => {
             <template v-for="(feature, key) in planSubscription.plan.features">
                 <li v-if="feature.slug !== 'openai-requests' && feature.slug !== 'deepl-requests'" class="flex gap-x-3" :key="feature.id">
                     <CheckIcon class="h-6 w-5 flex-none text-tf-blue-600" aria-hidden="true" />
-                    <span>{{ feature.description }}</span>
+                    <span>{{ $t(feature.description) }}</span>
                     {{ ' ' }}
                     <template v-if="feature.slug !== 'collection-items-limit' && feature.slug !== 'openai-params'" >
                         <span v-if="feature.slug === 'collections-limit'" class="font-semibold text-gray-500">

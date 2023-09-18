@@ -733,7 +733,7 @@ fetchCancelledExports();
 
             <template #content>
                 <div class="mt-5">
-                    <InputLabel value="{{ $t('Select format') }}"></InputLabel>
+                    <InputLabel :value="$t('Select format')"></InputLabel>
                     <SelectMenuForDownload @update:modelValue="changeDownloadFormat" v-model="selectedDownloadFormat" class="mt-3"  :options="options"/>
                 </div>
             </template>

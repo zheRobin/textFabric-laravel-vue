@@ -14,7 +14,7 @@ defineProps({
 
 <template>
     <nav class="flex items-center justify-center" aria-label="Progress">
-        <p class="text-sm font-medium">Step {{ currentStep }} of {{ totalSteps }}</p>
+        <p class="text-sm font-medium">{{ $t('Step') }} {{ currentStep }} {{ $t('of') }} {{ totalSteps }}</p>
         <ol role="list" class="ml-8 flex items-center space-x-5">
             <li v-for="step in totalSteps" :key="step">
                 <a v-if="currentStep > step" class="block h-2.5 w-2.5 rounded-full bg-tf-blue-500">

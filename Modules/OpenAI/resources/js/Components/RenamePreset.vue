@@ -54,7 +54,7 @@ const rename = () => {
                     v-model="name"
                     type="text"
                     class="mt-1 block w-3/4"
-                    placeholder="Name"
+                    :placeholder="trans('Name')"
                     @keyup.enter="rename"
                 />
             </div>

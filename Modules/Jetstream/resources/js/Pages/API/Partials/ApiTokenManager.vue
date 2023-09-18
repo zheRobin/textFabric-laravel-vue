@@ -205,13 +205,13 @@ const test = {...props.apiDocumentations.generate};
 
                 <!-- Token Permissions -->
                 <div v-if="availablePermissions.length > 0" class="col-span-6">
-                    <InputLabel for="permissions" value="Permissions" />
+                    <InputLabel for="permissions" value="{{ $t('Permissions') }}" />
 
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div v-for="permission in availablePermissions" :key="permission">
                             <label class="flex items-center">
                                 <Checkbox v-model:checked="createApiTokenForm.permissions" :value="permission" />
-                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ permission }}</span>
+                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $t(permission) }}</span>
                             </label>
                         </div>
                     </div>
@@ -240,7 +240,7 @@ const test = {...props.apiDocumentations.generate};
                     </template>
 
                     <template #description>
-                        You may delete any of your existing tokens if they are no longer needed.
+                        {{ $t('You may delete any of your existing tokens if they are no longer needed.') }}
                     </template>
 
                     <!-- API Token List -->

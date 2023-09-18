@@ -80,7 +80,7 @@ const setupStream = () => {
         triggerLoading(false);
         notify({
             group: "error",
-            title: "Error",
+            title: trans("Error"),
             text: error
         }, 4000);
     });

@@ -129,11 +129,11 @@ const deleteApiToken = () => {
 
             <template #actions>
                 <ActionMessage :on="createApiTokenForm.recentlySuccessful" class="mr-3">
-                    Created.
+                    {{ $t('Created.') }}
                 </ActionMessage>
 
                 <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
-                    Create
+                    {{ $t('Create') }}
                 </PrimaryButton>
             </template>
         </FormSection>
@@ -145,11 +145,11 @@ const deleteApiToken = () => {
             <div class="mt-10 sm:mt-0">
                 <ActionSection>
                     <template #title>
-                        Manage API Tokens
+                        {{ $t('Manage API Tokens') }}
                     </template>
 
                     <template #description>
-                        You may delete any of your existing tokens if they are no longer needed.
+                        {{ $t('You may delete any of your existing tokens if they are no longer needed.') }}
                     </template>
 
                     <!-- API Token List -->

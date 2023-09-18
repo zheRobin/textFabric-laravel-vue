@@ -54,6 +54,7 @@
 import {streamItemCompletion} from "Modules/OpenAI/resources/js/event-streams";
 import {onUnmounted, ref} from 'vue';
 import {notify} from "notiwind";
+import {trans} from "laravel-vue-i18n";
 
 const loading = ref(true);
 const currentLanguage = ref(null);
@@ -122,7 +123,7 @@ const setupStream = () => {
             triggerLoading(false);
             notify({
                 group: "error",
-                title: "Error",
+                title: trans("Error"),
                 text: error
             }, 4000);
         });

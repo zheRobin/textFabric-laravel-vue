@@ -2,6 +2,7 @@
 import {ref, watch} from "vue";
 import { onClickOutside } from '@vueuse/core';
 import TextInput from "Jetstream/Components/TextInput.vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     modelValue: {
@@ -77,7 +78,7 @@ const removeTag = (index) => {
             <div class="relative" @keydown.enter.prevent="addTag(textInput)">
                 <TextInput type="text"
                            class="w-full"
-                           placeholder="Enter some items"
+                           :placeholder="trans('Enter some items')"
                            :ref="textInput"
                            v-model="textInput"
                            @input="search($event.target.value)"/>

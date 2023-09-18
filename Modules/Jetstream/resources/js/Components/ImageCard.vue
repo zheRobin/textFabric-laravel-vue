@@ -40,7 +40,7 @@ const updateImage = () => {
         onSuccess: () => {
             notify({
                 group: "success",
-                title: "Success",
+                title: trans("Success"),
                 text: trans("The image was updated!")
             }, 4000) // 4s
         }

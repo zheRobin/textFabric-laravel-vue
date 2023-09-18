@@ -5,6 +5,7 @@ import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import {PencilSquareIcon} from "@heroicons/vue/20/solid";
 import {ref, watch} from "vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     name: String,

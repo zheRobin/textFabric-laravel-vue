@@ -52,7 +52,8 @@ const previousButtonDisabled = computed(() => {
 
 const props = defineProps({
     canEdit: Boolean,
-    demo: Boolean
+    demo: Boolean,
+    presets: Array,
 });
 
 const availablePresets = ref(props.demo ? null : presets);

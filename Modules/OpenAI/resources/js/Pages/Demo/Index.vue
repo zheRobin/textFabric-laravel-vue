@@ -6,7 +6,7 @@ import PromptEditor from "Modules/OpenAI/resources/js/Components/PromptEditor.vu
 import ItemCompletionPreview from "Modules/OpenAI/resources/js/Components/Demo/ItemCompletionPreview.vue";
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 import {getPresets} from "Modules/OpenAI/resources/js/presets";
-import {getActiveLanguage} from "laravel-vue-i18n";
+import {getActiveLanguage, trans} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 

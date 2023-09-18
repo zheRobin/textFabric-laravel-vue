@@ -5,7 +5,7 @@ import SelectMenu from "Jetstream/Components/SelectMenu.vue";
 import DashboardPanel from "Jetstream/Components/DashboardPanel.vue";
 import {ref} from 'vue'
 import {getPresets} from "Modules/OpenAI/resources/js/presets";
-import {getActiveLanguage} from "laravel-vue-i18n";
+import {getActiveLanguage, trans} from "laravel-vue-i18n";
 
 const presets = getPresets(getActiveLanguage());
 

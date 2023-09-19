@@ -10,7 +10,7 @@ const props = defineProps({
     label: String,
     placeholder: {
         type: String,
-        default: 'Select option',
+        default: trans('Select option'),
     },
     multiple: Boolean,
 });

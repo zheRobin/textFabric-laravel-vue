@@ -13,6 +13,7 @@ import InputError from "Jetstream/Components/InputError.vue";
 import ActionMessage from "Jetstream/Components/ActionMessage.vue";
 import {CheckIcon} from "@heroicons/vue/20/solid";
 import {computed, reactive} from "vue";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps({
     planSubscription: Object,
@@ -110,7 +111,7 @@ const getFeatureUsage = (feature) => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <SelectMenu v-model="form.plan_id" :options="planOptions()" class="mt-1" label="Plan type"/>
+                <SelectMenu v-model="form.plan_id" :options="planOptions()" class="mt-1" :label="trans('Plan type')"/>
                 <InputError :message="form.errors.plan_id" class="mt-2" />
             </div>
 

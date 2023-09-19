@@ -243,7 +243,7 @@
     "Code": "Code",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Speichern Sie diese Wiederherstellungscodes in einem sicheren Passwort-Manager. Sie können verwendet werden, um den Zugriff auf Ihr Konto wiederherzustellen, wenn Ihr Gerät zur Zwei-Faktor-Authentifizierung verloren geht.",
     "Enable": "Aktivieren",
-    "Disable": "Disable",
+    "Disable": "Deaktiviert",
     "Regenerate Recovery Codes": "Wiederherstellungscodes erneut generieren",
     "Show Recovery Codes": "Wiederherstellungscodes anzeigen",
     "Subscription plan": "Abonnementplan",
@@ -392,15 +392,15 @@
     "Viewer Role": "Betrachter",
     "Viewer users": "Betrachter",
 
-    "Step": "Step",
-    "of": "of",
-    "Role": "Role",
-    "Enter some items": "Enter some items",
-    "Enter text and then type @ to trigger the attribute": "Enter text and then type @ to trigger the attribute",
-    "Select a model": "Select a model",
-    "Success": "Success",
-    "Error": "Error",
-    "Demo mode. If you want to save your project for later — sign up or log in": "Demo mode. If you want to save your project for later — sign up or log in",
+    "Step": "Schritt",
+    "of": "von",
+    "Role": "Rolle",
+    "Enter some items": "Text eingeben",
+    "Enter text and then type @ to trigger the attribute": "Text eingeben und dann @ eingeben, um das Attribut auszuwählen",
+    "Select a model": "Wählen Sie ein Modell",
+    "Success": "Erfolg",
+    "Error": "Fehler",
+    "Demo mode. If you want to save your project for later — sign up or log in": "Demo-Modus. Wenn Sie Ihr Projekt für später speichern möchten - registrieren Sie sich kostenlos oder melden Sie sich an",
     "Select languages": "Select languages"
 
 }

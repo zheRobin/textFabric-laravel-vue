@@ -573,7 +573,7 @@ fetchCancelledExports();
                             </div>
                             <div class="flex items-center">
                                 <label class="mr-2 font-medium dark:text-white">{{$t('Compilation')}}:</label>
-                                <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" />
+                                <SelectMenu @update:modelValue="changePreset" v-model="form.compilations" :options="dataLabel" id="employees" class="w-60" :placeholder="trans('Select option')" />
                                 <PrimaryButton v-if="!generateActive && selectedCompilations && props.teamRunningCompilations.length === 0" class="ml-2 gap-x-1.5" @click="generate">
                                     {{ $t('Generate') }}
                                 </PrimaryButton>

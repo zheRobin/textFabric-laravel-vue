@@ -702,7 +702,7 @@ fetchCancelledExports();
 
             <template #content>
                 <div class="mt-4">
-                    <InputLabel for="title" value="Select languages" />
+                    <InputLabel for="title" :value="trans('Select languages')" />
                     <span @click="setLanguage(language.code)" v-for="language in props.languages" :class="activeLanguages.includes(language.code) ? style.enable : style.disable">
                       {{ language.name }}
                       <button v-if="activeLanguages.includes(language.code)" type="button" class="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-gray-500/20">

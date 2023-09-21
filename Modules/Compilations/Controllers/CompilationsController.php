@@ -57,8 +57,23 @@ class CompilationsController extends Controller
 
     public function store(Request $request)
     {
+        $collectionId = $request->user()->currentCollection->id;
+
+        Validator::extend('max_compilations', function ($attribute, $value, $parameters, $validator) {
+            $collectionId = $parameters[0];
+            $existingCompilationsCount = Compilations::where('collection_id', $collectionId)->count();
+            return $existingCompilationsCount < 5;
+        }, trans('The maximum number of compilations for this collection has been reached.'));
+
         $data = $request->validate([
-            "name" => ["required", "string", "min:3", "max:60", Rule::unique('compilations')->where('collection_id', $request->user()->currentCollection->id)],
+            "name" => [
+                'required',
+                'string',
+                'min:3',
+                'max:60',
+                Rule::unique('compilations')->where('collection_id', $request->user()->currentCollection->id),
+                'max_compilations:' . $collectionId,
+            ],
             "preset_ids" => ["array"],
         ]);
 
@@ -66,7 +81,7 @@ class CompilationsController extends Controller
         $compilation->name = $data['name'];
         $compilation->owner = $request->user()->current_team_id;
         $compilation->preset_ids = $data['preset_ids'];
-        $compilation->collection_id = $request->user()->currentCollection->id;
+        $compilation->collection_id = $collectionId;
 
         $compilation->save();
 
@@ -95,8 +110,7 @@ class CompilationsController extends Controller
                     'string',
                     'min:3',
                     'max:60',
-                    Rule::unique('compilations')
-                        ->where('collection_id', $request->user()->currentCollection->id),
+                    Rule::unique('compilations')->where('collection_id', $request->user()->currentCollection->id),
                 ],
             ]);
             $compilation->name = $data['name'];

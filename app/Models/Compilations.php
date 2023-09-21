@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Presets\Models\Preset;
 
+/**
+ * @mixin Builder
+ */
 class Compilations extends Model
 {
     protected $fillable = ['name', 'owner', 'preset_ids', 'collection_id'];

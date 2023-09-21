@@ -4,6 +4,7 @@ namespace Modules\Collections\Actions;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Modules\Collections\Contracts\DeletesCollection;
 use Modules\Collections\Models\Collection;
@@ -21,6 +22,11 @@ class DeleteCollection implements DeletesCollection
 
             $user->currentTeam->planSubscription
                 ->reduceFeatureUsage(SubscriptionFeatureEnum::COLLECTIONS_LIMIT);
+
+            $collectionDirectory = "storage/team-{$collection->team_id}/collection-{$collection->id}";
+            if (File::exists(public_path($collectionDirectory))) {
+                File::deleteDirectory(public_path($collectionDirectory));
+            }
         });
     }
 }

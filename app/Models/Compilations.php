@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Presets\Models\Preset;
 
 class Compilations extends Model
@@ -27,6 +28,14 @@ class Compilations extends Model
     protected $attributes = [
         'collection_id' => null, // Replace 1 with the default value you want to set.
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function collection(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Collections\Models\Collection::class);
+    }
 
     /**
      * @return Collection|array

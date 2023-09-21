@@ -114,59 +114,57 @@ const logout = () => {
                                 <Dropdown align="right" width="60">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                                            <button type="button" :title="currentCollection ? currentCollection.name : $t('Collections')" class="max-2-lines inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
                                                 {{ currentCollection ? currentCollection.name : $t('Collections') }}
 
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <svg class="ml-2 -mr-0.5 h-4 w-4 min-w-4 self-center" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                                 </svg>
                                             </button>
                                         </span>
                                     </template>
                                     <template #content>
-                                        <div class="w-60">
-                                            <!-- Collection Management -->
-                                            <template v-if="$page.props.jetstream.hasTeamFeatures">
-                                                <template v-if="currentCollection && $page.props.collections.canViewCollection">
-                                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                                        {{ $t('Manage Collections') }}
-                                                    </div>
+                                        <!-- Collection Management -->
+                                        <template v-if="$page.props.jetstream.hasTeamFeatures">
+                                            <template v-if="currentCollection && $page.props.collections.canViewCollection">
+                                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                                    {{ $t('Manage Collections') }}
+                                                </div>
 
-                                                    <!-- Collection Settings -->
-                                                    <DropdownLink :href="route('collections.show', currentCollection)">
-                                                        {{ $t('Collection Settings') }}
-                                                    </DropdownLink>
-                                                </template>
-
-                                                <DropdownLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')">
-                                                    {{$t('Create New Collection')}}
+                                                <!-- Collection Settings -->
+                                                <DropdownLink :href="route('collections.show', currentCollection)">
+                                                    {{ $t('Collection Settings') }}
                                                 </DropdownLink>
+                                            </template>
 
-                                                <template v-if="$page.props.auth.user.current_team.collections.length">
-                                                    <div class="border-t border-gray-200 dark:border-gray-600" />
+                                            <DropdownLink v-if="$page.props.collections.canCreateCollection" :href="route('collections.create')">
+                                                {{$t('Create New Collection')}}
+                                            </DropdownLink>
 
-                                                    <!-- Collection Switcher -->
-                                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                                        {{$t('Switch Collections')}}
-                                                    </div>
+                                            <template v-if="$page.props.auth.user.current_team.collections.length">
+                                                <div class="border-t border-gray-200 dark:border-gray-600" />
 
-                                                    <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
-                                                        <form @submit.prevent="switchToCollection(collection)">
-                                                            <DropdownLink as="button">
-                                                                <div class="flex items-center">
-                                                                    <svg v-if="collection.id == $page.props.auth.user.current_collection_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <!-- Collection Switcher -->
+                                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                                    {{$t('Switch Collections')}}
+                                                </div>
+
+                                                <template v-for="collection in $page.props.auth.user.current_team.collections" :key="collection.id">
+                                                    <form @submit.prevent="switchToCollection(collection)">
+                                                        <DropdownLink as="button">
+                                                            <div class="flex items-center">
+                                                                <div class="mr-2 h-5 w-5 min-w-5">
+                                                                    <svg v-if="collection.id === $page.props.auth.user.current_collection_id" class="text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                     </svg>
-                                                                    <span v-else class="mr-2 h-5 w-5"></span>
-
-                                                                    <div>{{ collection.name }}</div>
                                                                 </div>
-                                                            </DropdownLink>
-                                                        </form>
-                                                    </template>
+                                                                <div>{{ collection.name }}</div>
+                                                            </div>
+                                                        </DropdownLink>
+                                                    </form>
                                                 </template>
                                             </template>
-                                        </div>
+                                        </template>
                                     </template>
                                 </Dropdown>
                             </div>
@@ -183,7 +181,7 @@ const logout = () => {
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
                                                 {{ $page.props.auth.user.first_name }}
 
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <svg class="ml-2 -mr-0.5 h-4 w-4 min-w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                                 </svg>
                                             </button>
@@ -217,11 +215,11 @@ const logout = () => {
                                             <form @submit.prevent="switchToTeam(team)">
                                                 <DropdownLink as="button">
                                                     <div class="flex items-center">
-                                                        <svg v-if="team.id == $page.props.auth.user.current_team_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                        <span v-else class="mr-2 h-5 w-5"></span>
-
+                                                        <div class="mr-2 h-5 w-5 min-w-5">
+                                                            <svg v-if="team.id === $page.props.auth.user.current_team_id" class="text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
                                                         <div>{{ team.name }}</div>
                                                     </div>
                                                 </DropdownLink>
@@ -397,10 +395,11 @@ const logout = () => {
                                         <form @submit.prevent="switchToCollection(collection)">
                                             <ResponsiveNavLink as="button">
                                                 <div class="flex items-center">
-                                                    <svg v-if="collection.id === $page.props.auth.user.current_collection_id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    <span v-else class="mr-2 h-5 w-5"></span>
+                                                    <div class="mr-2 h-5 w-5 min-w-5">
+                                                        <svg v-if="collection.id === $page.props.auth.user.current_collection_id" class="text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                    </div>
                                                     <div>{{ collection.name }}</div>
                                                 </div>
                                             </ResponsiveNavLink>
@@ -437,10 +436,11 @@ const logout = () => {
                                     <form @submit.prevent="switchToTeam(team)">
                                         <ResponsiveNavLink as="button">
                                             <div class="flex items-center">
-                                                <svg v-if="team.id === currentTeam.id" class="mr-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span v-else class="mr-2 h-5 w-5"></span>
+                                                <div class="mr-2 h-5 w-5 min-w-5">
+                                                    <svg v-if="team.id === currentTeam.id" class="text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
                                                 <div>{{ team.name }}</div>
                                             </div>
                                         </ResponsiveNavLink>
@@ -466,3 +466,17 @@ const logout = () => {
         </div>
     </div>
 </template>
+
+<style>
+.max-2-lines {
+    padding: 0;
+    width: 12rem;
+    max-height: 49px;
+    align-items: flex-start;
+    justify-content: flex-end;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    border: 8px solid white;
+}
+</style>

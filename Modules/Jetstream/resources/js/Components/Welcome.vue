@@ -41,10 +41,8 @@ const isYouTubeLink = (url) => {
 }
 
 const editTitle = (active) => {
-    console.log(props.data.find(item => item.block_name === active))
     activeBlock.value = props.data.find(item => item.block_name === active);
     displayingModal.value = true;
-    console.log('title')
 }
 
 </script>

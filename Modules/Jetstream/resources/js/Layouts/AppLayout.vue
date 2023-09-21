@@ -470,13 +470,13 @@ const logout = () => {
 <style>
 .max-2-lines {
     padding: 0;
-    width: 12rem;
+    max-width: 12rem;
     max-height: 49px;
     align-items: flex-start;
     justify-content: flex-end;
     text-overflow: ellipsis;
     word-wrap: break-word;
     overflow: hidden;
-    border: 8px solid white;
+    border: 8px solid transparent;
 }
 </style>

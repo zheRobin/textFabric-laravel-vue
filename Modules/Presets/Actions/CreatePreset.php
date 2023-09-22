@@ -22,7 +22,7 @@ class CreatePreset implements CreatesPreset
             $collectionId = $parameters[0];
             $existingPresetsCount = Preset::where('collection_id', $collectionId)->count();
             return $existingPresetsCount < 5;
-        }, trans('The maximum number of presets for this collection has been reached.'));
+        }, trans('The maximum number of presets for this collection has been reached.', [], app()->getLocale()));
 
         Validator::make($presetInput->all(), [
             'name' => [

@@ -155,7 +155,7 @@ const savePreset = () => {
 }
 
 const notifyValidationError = (error) => {
-    return error[Object.keys(error)[0]] ?? trans("Something wrong happens.");
+    return trans(error[Object.keys(error)[0]]) ?? trans("Something wrong happens.");
 }
 
 const createPreset = () => {

@@ -1,11 +1,5 @@
 <script setup>
-import {
-    ArrowDownTrayIcon,
-    MinusCircleIcon,
-    PencilSquareIcon,
-    PlusCircleIcon,
-    XCircleIcon
-} from "@heroicons/vue/20/solid";
+import {ArrowDownTrayIcon, MinusCircleIcon, PencilSquareIcon, PlusCircleIcon, XCircleIcon} from "@heroicons/vue/20/solid";
 import TextInput from "Jetstream/Components/TextInput.vue";
 import SelectMenu from "Jetstream/Components/SelectMenu.vue";
 import DangerButton from "Jetstream/Components/DangerButton.vue";
@@ -14,11 +8,11 @@ import DeletePreset from "./DeletePreset.vue";
 import PrimaryButton from "Jetstream/Components/PrimaryButton.vue";
 import SecondaryButton from "Jetstream/Components/SecondaryButton.vue";
 
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {notify} from "notiwind";
-import {useForm, usePage} from "@inertiajs/vue3";
-import { onMounted } from 'vue';
+import {useForm} from "@inertiajs/vue3";
 import {trans} from "laravel-vue-i18n";
+
 const props = defineProps({
     complications: Array,
     positions: Array,
@@ -120,8 +114,7 @@ const savePreset = (status) => {
 }
 
 const createPreset = () => {
-    const newPresetIds = [];
-    form.preset_ids = newPresetIds;
+    form.preset_ids = [];
     form.patch(route('compilations.store'), {
         errorBag: 'errors',
         preserveScroll: true,
@@ -138,7 +131,7 @@ const createPreset = () => {
             notify({
                 group: "error",
                 title: trans("Error"),
-                text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
+                text: trans(error[Object.keys(error)[0]]) ?? trans("Something wrong happens.")
             }, 4000)
         }
     })

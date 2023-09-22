@@ -16,21 +16,18 @@ class CompilationsController extends Controller
     public function index(Request $request)
     {
         $title = '';
-        if($request->user()->currentCollection?->headers) {
-            foreach ($request->user()->currentCollection->headers as $item){
-                if($item['type'] === 'title'){
+        if ($request->user()->currentCollection?->headers) {
+            foreach ($request->user()->currentCollection->headers as $item) {
+                if ($item['type'] === 'title') {
                     $title = $item;
                 }
             }
         }
 
-
-
         $compilations = Compilations::where('owner', $request->user()->current_team_id)
             ->where('collection_id', $request->user()->currentCollection?->id)
             ->get();
 
-//        dd($compilations);
         // verify collection needed to be picked (or throw exception)
         return Inertia::render('Compilations::Index', [
             'presets' => $request->user()->currentCollection?->presets,
@@ -63,7 +60,7 @@ class CompilationsController extends Controller
             $collectionId = $parameters[0];
             $existingCompilationsCount = Compilations::where('collection_id', $collectionId)->count();
             return $existingCompilationsCount < 5;
-        }, trans('The maximum number of compilations for this collection has been reached.', [], app()->getLocale()));
+        }, 'The maximum number of compilations for this collection has been reached.');
 
         $data = $request->validate([
             "name" => [

@@ -60,7 +60,7 @@ class CompilationsController extends Controller
             $collectionId = $parameters[0];
             $existingCompilationsCount = Compilations::where('collection_id', $collectionId)->count();
             return $existingCompilationsCount < 5;
-        }, trans('The maximum number of compilations for this collection has been reached.', [], app()->getLocale()));
+        }, 'The maximum number of compilations for this collection has been reached.');
 
         $data = $request->validate([
             "name" => [

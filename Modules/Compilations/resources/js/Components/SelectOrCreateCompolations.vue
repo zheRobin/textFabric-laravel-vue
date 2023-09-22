@@ -131,7 +131,7 @@ const createPreset = () => {
             notify({
                 group: "error",
                 title: trans("Error"),
-                text: error[Object.keys(error)[0]] ?? trans("Something wrong happens.")
+                text: trans(error[Object.keys(error)[0]]) ?? trans("Something wrong happens.")
             }, 4000)
         }
     })

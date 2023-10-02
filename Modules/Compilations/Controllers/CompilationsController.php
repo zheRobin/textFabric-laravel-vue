@@ -59,7 +59,7 @@ class CompilationsController extends Controller
         Validator::extend('max_compilations', function ($attribute, $value, $parameters, $validator) {
             $collectionId = $parameters[0];
             $existingCompilationsCount = Compilations::where('collection_id', $collectionId)->count();
-            return $existingCompilationsCount < 15;
+            return $existingCompilationsCount < 10;
         }, 'The maximum number of compilations for this collection has been reached.');
 
         $data = $request->validate([

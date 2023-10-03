@@ -17,6 +17,8 @@ use Modules\Subscriptions\Models\Plan;
 use Illuminate\Support\Facades\Mail;
 use Modules\Fortify\Mail\RegistrationEmail;
 use App\Jobs\SendNewTeamAccountEmail;
+use App\Jobs\SendNewTeamAccountToWoodpecker;
+
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
@@ -68,6 +70,7 @@ class CreateNewUser implements CreatesNewUsers
             SendNewTeamAccountEmail::dispatch($mail, $subject, $content);
         }
 
+        SendNewTeamAccountToWoodpecker::dispatch($data['email'], $data['first_name'], $data['last_name']);
 
         return DB::transaction(function () use ($input) {
             return tap(User::create([

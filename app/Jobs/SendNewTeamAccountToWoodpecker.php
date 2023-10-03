@@ -27,12 +27,8 @@ class SendNewTeamAccountToWoodpecker implements ShouldQueue
 
     public function handle()
     {
-
         $woodpeckerAuth = env('WOODPECKER_AUTH', '');
         $woodpeckerCampaignId = env('WOODPECKER_CAMPAIGN_ID', '');
-
-        Log::debug('Handle woodpecker.');
-        Log::debug(print_r($woodpeckerAuth, true));
 
         $response = Http::withHeaders([
             'Authorization' => $woodpeckerAuth
@@ -50,9 +46,6 @@ class SendNewTeamAccountToWoodpecker implements ShouldQueue
             ]
          ]
         ]);
-
-        Log::debug(print_r($response, true));
-        Log::debug('end woodpecker.');
 
     }
 }

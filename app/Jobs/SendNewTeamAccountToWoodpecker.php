@@ -31,10 +31,10 @@ class SendNewTeamAccountToWoodpecker implements ShouldQueue
         $woodpeckerCampaignId = config('app.woodpecker_campaign_id', '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Basic MjkwODY2LmUwZWJlM2Y4OGQ1YWEwNmQyMjQ5NzQwYWM3MDc2NjMxNzY1ZGEzNjAzOGViYjBiZmNiYzhjMzljZjkyYjkwNjQ'
+            'Authorization' => $woodpeckerAuth
         ])->post('https://api.woodpecker.co/rest/v1/add_prospects_campaign', [
             "campaign" => [
-            "campaign_id" => 1888480
+            "campaign_id" => $woodpeckerCampaignId
             ],
             "update" => "true",
             "prospects" => [

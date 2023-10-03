@@ -28,8 +28,8 @@ class SendNewTeamAccountToWoodpecker implements ShouldQueue
     public function handle()
     {
 
-        $woodpeckerAuth = config('app.woodpecker_auth', '');
-        $woodpeckerCampaignId = config('app.woodpecker_campaign_id', '');
+        $woodpeckerAuth = env('WOODPECKER_AUTH', '');
+        $woodpeckerCampaignId = env('WOODPECKER_CAMPAIGN_ID', '');
 
         Log::debug('Handle woodpecker.');
         Log::debug(print_r($woodpeckerAuth, true));

@@ -23,10 +23,10 @@ class ProcessExportJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 2; // The number of times the job may be attempted.
+    public int $tries = 3; // The number of times the job may be attempted.
     public bool $failOnTimeout = false; // Indicate if the job should be marked as failed on timeout.
     public int $timeout = 150; // The number of seconds the job can run before timing out.
-    public array $backoff = [1, 5]; // The number of seconds to wait before retrying the job.
+    public array $backoff = [3, 5, 10]; // The number of seconds to wait before retrying the job.
     public int $maxExceptions = 2; // The maximum number of unhandled exceptions to allow before failing.
 
     /**

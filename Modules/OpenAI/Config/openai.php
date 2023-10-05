@@ -16,7 +16,7 @@ return [
     'organization' => env('OPENAI_ORGANIZATION'),
 
     'default-params' => [
-        'model' => 'gpt-3.5-turbo-16k',
+        'model' => 'gpt-3.5-turbo',
         'temperature' => 1,
         'top_p' => 1,
         'presence_penalty' => 0,

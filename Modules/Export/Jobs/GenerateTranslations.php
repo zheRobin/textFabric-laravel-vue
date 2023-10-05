@@ -19,11 +19,11 @@ class GenerateTranslations implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 5; // The number of times the job may be attempted.
+    public int $tries = 7; // The number of times the job may be attempted.
     public bool $failOnTimeout = false; // Indicate if the job should be marked as failed on timeout.
     public int $timeout = 120; // The number of seconds the job can run before timing out.
-    public array $backoff = [16, 31, 61, 121, 181]; // The number of seconds to wait before retrying the job.
-    public int $maxExceptions = 5; // The maximum number of unhandled exceptions to allow before failing.
+    public array $backoff = [31, 121, 361, 31, 181, 361, 61]; // The number of seconds to wait before retrying the job.
+    public int $maxExceptions = 7; // The maximum number of unhandled exceptions to allow before failing.
 
     public function __construct(
         protected User $user,

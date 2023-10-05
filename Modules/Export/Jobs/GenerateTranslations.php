@@ -23,7 +23,7 @@ class GenerateTranslations implements ShouldQueue
     public bool $failOnTimeout = false; // Indicate if the job should be marked as failed on timeout.
     public int $timeout = 120; // The number of seconds the job can run before timing out.
     public int $backoff = 31; // The number of seconds to wait before retrying the job.
-    public int $maxExceptions = 5; // The maximum number of unhandled exceptions to allow before failing.
+    public int $maxExceptions = 60; // The maximum number of unhandled exceptions to allow before failing.
 
     public function __construct(
         protected User $user,

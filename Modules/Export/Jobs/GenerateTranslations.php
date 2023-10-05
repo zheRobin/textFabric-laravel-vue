@@ -19,7 +19,7 @@ class GenerateTranslations implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 30; // The number of times the job may be attempted.
+    public int $tries = 60; // The number of times the job may be attempted.
     public bool $failOnTimeout = false; // Indicate if the job should be marked as failed on timeout.
     public int $timeout = 120; // The number of seconds the job can run before timing out.
     public int $backoff = 31; // The number of seconds to wait before retrying the job.

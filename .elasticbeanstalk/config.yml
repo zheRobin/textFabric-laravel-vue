@@ -1,8 +1,8 @@
 branch-defaults:
   master:
-    environment: Texthub-prod-env-php82-env
+    environment: Textfabrik-prod-env-php82-env
 environment-defaults:
-  Texthub-prod-env-php82-env:
+  Textfabrik-prod-env-php82-env:
     branch: null
     repository: null
 global:

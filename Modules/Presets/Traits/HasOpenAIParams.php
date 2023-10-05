@@ -24,6 +24,7 @@ trait HasOpenAIParams
             'top_p' => $this->top_p,
             'presence_penalty' => $this->presence_penalty,
             'frequency_penalty' => $this->frequency_penalty,
+            'max_tokens' => config('openai.default-params.max_tokens')
         ]);
     }
 

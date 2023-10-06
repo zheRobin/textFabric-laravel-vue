@@ -59,7 +59,7 @@ const getFeatureUsage = (feature) => {
         </ul>
 
         <InputLabel class="mt-5">{{ planSubscription.is_active ? $t('Ends at') : $t('Ended at') }}</InputLabel>
-        <time class="flex mt-q mt-1 text-gray-800 italic text-sm" :datetime="planSubscription.ends_at">
+        <time class="flex mt-q mt-1 text-gray-800 text-sm" :datetime="planSubscription.ends_at">
             {{ toLocaleDate(planSubscription.ends_at, 'de-DE', {year: 'numeric', month: '2-digit', day: '2-digit'}) }}
         </time>
     </div>

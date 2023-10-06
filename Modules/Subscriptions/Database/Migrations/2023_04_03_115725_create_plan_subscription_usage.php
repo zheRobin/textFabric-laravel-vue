@@ -21,7 +21,7 @@ return new class extends Migration
                 ->constrained('plan_features')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->unsignedSmallInteger('used');
+            $table->unsignedBigInteger('used');
             $table->dateTime('valid_until')->nullable();
             $table->timestamps();
         });

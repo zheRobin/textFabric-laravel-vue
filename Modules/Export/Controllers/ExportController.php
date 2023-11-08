@@ -49,7 +49,7 @@ class ExportController extends Controller
             ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%');
             })
-            ->orderBy('id', 'DESC')
+            ->orderBy('exports.id', 'DESC')
             ->paginate(10);
 
         return response()->json([

@@ -46,12 +46,10 @@ class ExportController extends Controller
         $exports = $request->user()->currentCollection
             ->exports()
             ->history()
-            ->leftJoin('job_batches', 'job_batches.id', '=', 'exports.job_batch_id')
-            ->where('job_batches.pending_jobs', '=', 0)
             ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->offsetGet('query') . '%');
             })
-            ->orderBy('exports.id', 'DESC')
+            ->orderBy('id', 'DESC')
             ->paginate(10);
 
         return response()->json([

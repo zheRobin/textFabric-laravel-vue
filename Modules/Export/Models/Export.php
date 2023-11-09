@@ -122,11 +122,10 @@ class Export extends Model
     public function scopeCancelled(Builder $builder): Builder
     {
         return $builder
-            ->where(fn(Builder $query) => $query
-                ->withWhereHas('batch', fn(Builder $query) => $query
-                    ->select(['id', 'name', 'total_jobs', 'pending_jobs', 'failed_jobs', 'cancelled_at', 'created_at', 'finished_at'])
-                    ->whereNotNull('cancelled_at'))
-                ->orWhereDoesntHave('items')
-            );
+            ->select('exports.*')
+            ->leftJoin('job_batches', 'exports.job_batch_id', '=', 'job_batches.id')
+            ->where(function (Builder $nestedQuery) {
+                $nestedQuery->whereNotNull('cancelled_at');
+            });
     }
 }

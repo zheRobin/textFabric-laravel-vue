@@ -125,7 +125,10 @@ class Export extends Model
             ->where(fn(Builder $query) => $query
                 ->withWhereHas('batch', fn(Builder $query) => $query
                     ->select(['id', 'name', 'total_jobs', 'pending_jobs', 'failed_jobs', 'cancelled_at', 'created_at', 'finished_at'])
-                    ->whereNotNull('cancelled_at'))
+                    ->whereNotNull('cancelled_at')
+                    ->where('pending_jobs', '=', 0)
+                    ->where('failed_jobs', '<>', 0)
+                )
                 ->orWhereDoesntHave('items')
             );
     }

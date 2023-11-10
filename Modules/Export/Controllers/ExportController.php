@@ -53,7 +53,7 @@ class ExportController extends Controller
             ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
                 $query->where('exports.name', 'LIKE', '%' . $request->offsetGet('query') . '%');
             })
-            ->orWhereNull('job_batches.id')  // Додайте умову для записів, які не мають відповідних записів у job_batches
+            ->orWhereNull('job_batches.id')
             ->select('exports.*')
             ->orderBy('exports.id', 'DESC')
             ->paginate(10);

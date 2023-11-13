@@ -9,15 +9,15 @@ echo "Supervisor Started.."
 # update supervisor config
 echo "Updating Supervisor Config.."
 
-sudo supervisorctl reread
+supervisorctl reread
 
-sudo supervisorctl update
+supervisorctl update
 
-sudo supervisorctl restart all
+supervisorctl restart all
 
 # check supervisor status
 echo "Checking Supervisor Status.."
-sudo supervisorctl status
+supervisorctl status
 
 # Start Laravel Queue Worker using Supervisor
 echo "Starting Laravel Queue Worker.."

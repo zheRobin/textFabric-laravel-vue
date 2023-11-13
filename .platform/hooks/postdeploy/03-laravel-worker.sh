@@ -7,13 +7,13 @@ export $(cat /opt/elasticbeanstalk/deployment/env | xargs) && sudo supervisord -
 echo "Supervisor Started.."
 
 # update supervisor config
-echo "Updating Supervisor Config.."
+# echo "Updating Supervisor Config.."
 
-supervisorctl reread
+# supervisorctl reread
 
-supervisorctl update
+# supervisorctl update
 
-supervisorctl restart all
+# supervisorctl restart all
 
 # check supervisor status
 echo "Checking Supervisor Status.."

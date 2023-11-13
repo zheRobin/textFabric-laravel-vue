@@ -2,7 +2,7 @@
 
 # Start supervisor
 echo "Starting Supervisor.."
-sudo supervisord -c /etc/supervisor/supervisord.conf
+supervisord -c /etc/supervisor/supervisord.conf
 
 echo "Supervisor Started.."
 

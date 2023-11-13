@@ -2,7 +2,7 @@
 
 # Start supervisor
 echo "Starting Supervisor.."
-export $(cat /opt/elasticbeanstalk/deployment/env | xargs) && sudo supervisord -c /etc/supervisor/supervisord.conf
+export $(cat /opt/elasticbeanstalk/deployment/env | xargs) && supervisord -c /etc/supervisor/supervisord.conf
 
 echo "Supervisor Started.."
 

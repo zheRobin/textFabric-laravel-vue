@@ -53,7 +53,6 @@ class ExportController extends Controller
             ->when(!empty($request->offsetGet('query')), function ($query) use ($request) {
                 $query->where('exports.name', 'LIKE', '%' . $request->offsetGet('query') . '%');
             })
-            ->orWhereNull('job_batches.id')
             ->select('exports.*')
             ->orderBy('exports.id', 'DESC')
             ->paginate(10);

@@ -7,7 +7,6 @@ import InputError from 'Jetstream/Components/InputError.vue';
 import SecondaryButton from 'Jetstream/Components/SecondaryButton.vue';
 import TextInput from 'Jetstream/Components/TextInput.vue';
 import DangerButton from "Jetstream/Components/DangerButton.vue";
-import {trans} from "laravel-vue-i18n";
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);

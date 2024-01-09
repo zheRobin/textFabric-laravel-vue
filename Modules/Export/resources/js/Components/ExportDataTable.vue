@@ -1,6 +1,8 @@
 <script setup>
 import Pagination from "Modules/Export/resources/js/Components/Pagination.vue";
-import CollectionItem from "./CollectionItem.vue";
+import CollectionItemDatas from "./CollectionItemDatas.vue";
+import CollectionItemCompletions from "./CollectionItemCompletions.vue";
+import CollectionItemTranslations from "./CollectionItemTranslations.vue";
 import {computed} from "vue";
 import {ref} from "vue";
 import axios from "axios";
@@ -17,9 +19,13 @@ const items = ref(false);
 const loading = ref(false);
 
 const colsCount = ref(null);
-const rowsCount = ref(null);
+const rowsDCount = ref(null);
+const rowsCCount = ref(null);
+const rowsTCount = ref(null);
 const gridColsCount = computed(() => `grid-cols-${colsCount.value + 1}`);
-const gridRowsCount = computed(() => rowsCount.value);
+const gridRowsDCount = computed(() => rowsDCount.value);
+const gridRowsCCount = computed(() => rowsCCount.value);
+const gridRowsTCount = computed(() => rowsTCount.value);
 
 const colNumberRange = ref([]);
 
@@ -36,7 +42,9 @@ const paginate = (destination = false) => {
             items.value = response.data.data;
             loading.value = false;
 
-            rowsCount.value = response.data.data.data[0].data.length;
+            rowsDCount.value = response.data.data.data[0]?.data?.length;
+            rowsCCount.value = response.data.data.data[0]?.completions?.length;
+            rowsTCount.value = response.data.data.data[0]?.translations?.length;
             colNumberRange.value = Array.from({length: items.value?.to - items.value?.from + 1}, (x, i) => i + items.value?.from);
         });
 }
@@ -61,11 +69,23 @@ paginate();
                     </div>
                 </div>
 
-                <div v-if="!loading" class="grid" :class="gridColsCount" v-for="indexNumber in gridRowsCount" :key="`grid-row-${indexNumber}`">
+                <div v-if="!loading && items && items.data && items.data[0] && items.data[0].data" class="grid" :class="gridColsCount" v-for="indexNumber in gridRowsDCount" :key="`grid-row-${indexNumber}`">
                     <div class="truncate border p-2 font-medium bg-gray-200 whitespace-normal" :title="items.data[0].data[indexNumber-1].header">
                         {{ items.data[0].data[indexNumber-1].header }}
                     </div>
-                    <CollectionItem :item="items.data" :colsCount="colsCount" :indexNumber="indexNumber" />
+                    <CollectionItemDatas :item="items.data" :colsCount="colsCount" :indexNumber="indexNumber" />
+                </div>
+                <div v-if="!loading && items && items.data && items.data[0] && items.data[0].completions" class="grid" :class="gridColsCount" v-for="indexNumber in gridRowsCCount" :key="`grid-row-${indexNumber}`">
+                    <div class="truncate border p-2 font-medium bg-gray-200 whitespace-normal" :title="items.data[0].completions[indexNumber-1].header">
+                        {{ items.data[0].completions[indexNumber-1].header }}
+                    </div>
+                    <CollectionItemCompletions :item="items.data" :colsCount="colsCount" :indexNumber="indexNumber" />
+                </div>
+                <div v-if="!loading && items && items.data && items.data[0] && items.data[0].translations" class="grid" :class="gridColsCount" v-for="indexNumber in gridRowsTCount" :key="`grid-row-${indexNumber}`">
+                    <div class="truncate border p-2 font-medium bg-gray-200 whitespace-normal" :title="items.data[0].translations[indexNumber-1].header">
+                        {{ items.data[0].translations[indexNumber-1].header }}
+                    </div>
+                    <CollectionItemTranslations :item="items.data" :colsCount="colsCount" :indexNumber="indexNumber" />
                 </div>
             </div>
         </div>

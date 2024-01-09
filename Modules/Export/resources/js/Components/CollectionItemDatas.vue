@@ -39,7 +39,7 @@ const updateItem = () => {
     <div v-for="(item, index) in form.items" :key="`grid-cell-${indexNumber}-${index}`" class="flex flex-col flex-auto h-auto border pt-2 pl-2" :class="(index+1) % 2 === 0 ? 'bg-gray-100' : 'bg-white'">
         <CellInput
             v-model="item.data[indexNumber-1].value"
-            editable="true"
+            :editable="true"
             @update:modelValue="updateItem"
             :colsCount="colsCount"
             :colNumber="colNumber"

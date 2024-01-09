@@ -23,6 +23,8 @@ class ExportCollectionItemController extends Controller
             $exportItem = ExportCollectionItem::findOrFail($item['id']);
             $exportItem->update([
                 'data' => $item['data'],
+                'completions' => $item['completions'],
+                'translations' => $item['translations'],
             ]);
         }
 

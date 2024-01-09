@@ -30,7 +30,7 @@ class ExportCollectionItem extends Model
     /**
      * @return Attribute
      */
-    protected function data(): Attribute
+    protected function exports(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => [
@@ -44,8 +44,8 @@ class ExportCollectionItem extends Model
     public function dataToExport(): array
     {
         return array_combine(
-            array_column($this->data, 'header'),
-            array_column($this->data, 'value'),
+            array_column($this->exports, 'header'),
+            array_column($this->exports, 'value'),
         );
     }
 }
